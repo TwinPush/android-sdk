@@ -1,0 +1,20 @@
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
+
+	<style name="TwinPushButton" parent="@android:style/Widget.Button">
+	    <item name="android:background">@drawable/button_drawable</item>
+	    <item name="android:textColor">@android:color/white</item>
+	    <item name="android:textSize">18sp</item>
+	    <item name="android:textStyle">bold</item>
+	</style>
+	
+	<style name="TwinPushEditText" parent="@android:style/Widget.EditText">
+	    <item name="android:background">@drawable/text_field_drawable</item>
+	</style>
+	
+	<style name="TwinPushTextView" parent="@android:style/Widget.TextView">
+	    <item name="android:textColor">#246CB4</item>
+	    <item name="android:textSize">18sp</item>
+	    
+	</style>
+
+</resources>

@@ -1,0 +1,256 @@
+package com.twincoders.twinpush.sdk;
+
+import java.util.List;
+
+import android.app.Activity;
+import android.content.Context;
+import android.location.Location;
+
+import com.twincoders.twinpush.sdk.communications.requests.notifications.GetNotificationsRequest;
+import com.twincoders.twinpush.sdk.entities.LocationPrecision;
+import com.twincoders.twinpush.sdk.notifications.PushNotification;
+
+public abstract class TwinPushSDK {
+	
+	/* Callbacks */
+	public interface OnRegistrationListener {
+		void onRegistrationError(Exception exception);
+		void onRegistrationSuccess(String deviceAlias);
+	}
+
+	private static TwinPushSDK sharedInstance = null;
+	
+	/* Public instance getter */
+	/** 
+	 * Obtains a shared instance of the TwinPush SDK for the given context
+	 */
+	public static TwinPushSDK getInstance(Context context) {
+		if (sharedInstance == null) {
+			sharedInstance = new DefaultTwinPushSDK(context);
+		}
+		return sharedInstance;
+	}
+	
+	/* Public API Methods */
+	
+	/* Register methods */
+	
+	/**
+	 * Registers the device on TwinPush service without assigning any alias. If the device already has an alias, it will be kept.
+	 * This method will register to GCM previously if needed
+	 */
+	public abstract void register();
+	
+	/**
+	 * Registers the device on TwinPush service with the given alias. This method will register to GCM previously if needed
+	 * @param deviceAlias Alias to assign to device. If alias parameter is null, previously set alias will remain
+	 */
+	public abstract void register(final String deviceAlias);
+	
+	/**
+	 * Registers the device on TwinPush service with the given alias. This method will register to GCM previously if needed
+	 * @param deviceAlias Alias to assign to device. If alias parameter is null, previously set alias will remain
+	 * @param listener Listener to be notified of the result of the registration process. Can be null if result is not relevant.
+	 */
+	public abstract void register(final String deviceAlias, final OnRegistrationListener listener);
+    
+	/* Obtain notifications methods */
+	
+    /**
+     * Method to obtain notifications sent to current device
+     * @param page Page to obtain notifications from. First page is 0
+     * @param resultsPerPage Number of results to obtain per page
+     * @param listener Listener object to notify result to
+     */
+    public abstract void getNotifications(int page, int resultsPerPage, GetNotificationsRequest.Listener listener);
+    
+    /**
+     * Method to obtain notifications sent to current device
+     * @param page Page to obtain notifications from. First page is 0
+     * @param resultsPerPage Number of results to obtain per page
+     * @param tags List of the tags that the notifications must contain to be returned
+     * @param noTags List of the tags that the notifications must not contain to be returned
+     * @param ignoreNonRichNotifications Defines if the non rich notifications will be ignored (if true) from the search results
+     * @param listener Listener object to notify result to
+     */
+    public abstract void getNotifications(int page, int resultsPerPage, List<String> tags, List<String> noTags, boolean ignoreNonRichNotifications ,GetNotificationsRequest.Listener listener);
+    
+    /* Properties */
+    /**
+     * Set the String value to a custom property for the current device
+     * @param name Name of the custom property
+     * @param value Value to set. If null, previous value will be deleted.
+     */
+    public abstract void setProperty(String name, String value);
+    
+    /**
+     * Set the Boolean value to a custom property for the current device
+     * @param name Name of the custom property
+     * @param value Value to set. If null, previous value will be deleted.
+     */
+    public abstract void setProperty(String name, Boolean value);
+    
+    /**
+     * Set the Integer value to a custom property for the current device
+     * @param name Name of the custom property
+     * @param value Value to set. If null, previous value will be deleted.
+     */
+    public abstract void setProperty(String name, Integer value);
+    
+    /**
+     * Set the Float value to a custom property for the current device
+     * @param name Name of the custom property
+     * @param value Value to set. If null, previous value will be deleted.
+     */
+    public abstract void setProperty(String name, Float value);
+    
+    /**
+     * Set the Float value to a custom property for the current device
+     * @param name Name of the custom property
+     * @param value Value to set. If null, previous value will be deleted.
+     */
+    public abstract void setProperty(String name, Double value);
+    
+    /**
+     * Clears the properties registered for the current device
+     */
+    public abstract void clearProperties();
+    
+    /* Location */
+    
+    /**
+     *  Starts monitoring user location and sends to TwinPush significant changes.
+     *  Uses the LocationPrecision.MEDIUM by default
+     */
+    public abstract void startMonitoringLocationChanges();
+    
+    /**
+     *  Starts monitoring user location and sends to TwinPush significant changes.
+     */
+    public abstract void startMonitoringLocationChanges(LocationPrecision precision);
+    
+    /**
+     * Returns true if the application is already monitoring changes on the device location
+     */
+    public abstract boolean isMonitoringLocationChanges();
+    
+    /**
+     *  Stops monitoring user location
+     */
+    public abstract void stopMonitoringLocationChanges();
+    
+    /**
+     * Updates user current location 
+     */
+    public abstract void setLocation(double latitude, double longitude);
+    
+    /**
+     * Updates user current location 
+     */
+    public abstract void setLocation(Location location);
+    
+    /**
+     * Check the different location sources from device to obtain user location with medium precision
+     */
+    public abstract void updateLocation();
+    
+    /**
+     * Check the different location sources from device to obtain user location with required precision
+     */
+    public abstract void updateLocation(LocationPrecision precision);
+    
+    /* Use statistics */
+    
+    /**
+     * Notifies the start of an activity in order to register user application use
+     * @param activity
+     */
+    public abstract void activityStart(Activity activity);
+    
+    /**
+     * Notifies the stop of an activity in order to register user application use
+     * @param activity
+     */
+    public abstract void activityStop(Activity activity);
+    
+    /**
+     * Notifies that the user has opened a received notification
+     * @param notification
+     */
+    public abstract void onNotificationOpen(PushNotification notification);
+    
+    /* API Setup methods */
+    
+    /**
+	 * Resource for notifications small icon (shown on notifications or status bar)
+	 */
+	public abstract void setNotificationSmallIcon(int notificationSmallIcon);
+	
+	/**
+	 * Obtains previously set resource ID for notifications small icon (shown on notifications or status bar)
+	 */
+	public abstract int getNotificationSmallIcon();
+	
+	/**
+	 * @return Last alias used to register this device
+	 */
+	public abstract String getDeviceAlias();
+	
+	/**
+	 * Returns the device ID assigned by TwinPush API
+	 * @return Device ID assigned by TwinPush API
+	 */
+	public abstract String getDeviceId();
+	
+	/**
+	 * Setup GCM sender ID (aka Project number) to receive notifications
+	 * @see #setup(String twinPushAppId, String twinPushToken, String gcmSenderId)
+	 */
+	public abstract void setGCMSenderId(String gcmSenderId);
+	
+	/**
+	 * Returns the GCM sender ID (aka Project number)
+	 * @return Project number previously setup
+	 */
+	public abstract String getGCMSenderId();
+	
+	/**
+	 * Setup TwinPush Application token
+	 * @see #setup(String twinPushAppId, String twinPushToken, String gcmSenderId)
+	 */
+	public abstract void setToken(String token);
+	
+	/**
+	 * Obtains previously set TwinPush Application token
+	 */
+	public abstract String getToken();
+	
+	/**
+	 * Setup TwinPush Application ID
+	 * @see #setup(String twinPushAppId, String twinPushToken, String gcmSenderId)
+	 */
+	public abstract void setAppId(String appId);
+	
+	/**
+	 * Setup TwinPush SDK with the needed parameters
+	 * @param twinPushAppId Application ID obtained from TwinPush WebApp
+	 * @param twinPushToken Application Token obtained from TwinPush WebApp
+	 * @param gcmSenderId GCM sender ID (aka Project number) to receive notifications
+	 */
+	public abstract void setup(String twinPushAppId, String twinPushToken, String gcmSenderId);
+	
+	/**
+	 * Obtains the last obtained location
+	 */
+	public abstract Location getLastKnownLocation();
+	
+	/**
+	 *  Minimum time required between location updates.
+	 */
+	public abstract long getLocationMinUpdateTime();
+	
+	/**
+	 * Minimum distance before we require a location update.
+	 */
+	public abstract int getLocationMinUpdateDistance();
+}
