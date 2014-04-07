@@ -9,8 +9,13 @@
 *.class
 
 # generated files
-bin/
+sdk/bin/*
+demo/bin/*
 gen/
+
+# Include SDK .jar file
+!sdk/bin/twinpush-sdk.jar
+
 
 # Local configuration file (sdk path, etc)
 local.properties
