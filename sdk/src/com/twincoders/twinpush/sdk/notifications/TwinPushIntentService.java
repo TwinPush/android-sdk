@@ -116,6 +116,7 @@ public class TwinPushIntentService extends GCMBaseIntentService {
         .setDefaults(Notification.DEFAULT_LIGHTS | Notification.DEFAULT_VIBRATE | Notification.DEFAULT_SOUND)
 		.setContentIntent(intent)
 		.setAutoCancel(true)
+		.setStyle(new NotificationCompat.BigTextStyle().bigText(notification.getMessage()))
 		.build();
 		
 		WakeLocker.acquire(context);
@@ -160,16 +161,18 @@ public class TwinPushIntentService extends GCMBaseIntentService {
     	try {
     		// Extract raw custom String
     		String custom = messageIntent.getStringExtra(EXTRA_NOTIFICATION_CUSTOM);
-    		JSONObject json = new JSONObject(custom);
-    		Iterator<?> iter = json.keys();
-    		while (iter.hasNext()) {
-    			String key = (String) iter.next();
-    			try {
-    				String value = (String) json.get(key);
-    				propertiesMap.put(key, value);
-    			} catch (JSONException e) {
-    				Ln.e(e, "Could not find property %1$s on Custom properties JSON");
-    			}
+    		if (custom != null) {
+	    		JSONObject json = new JSONObject(custom);
+	    		Iterator<?> iter = json.keys();
+	    		while (iter.hasNext()) {
+	    			String key = (String) iter.next();
+	    			try {
+	    				String value = (String) json.get(key);
+	    				propertiesMap.put(key, value);
+	    			} catch (JSONException e) {
+	    				Ln.e(e, "Could not find property %1$s on Custom properties JSON");
+	    			}
+	    		}
     		}
     	} catch (Exception e) {
     		Ln.e(e, "Error while trying to parse JSON object");
