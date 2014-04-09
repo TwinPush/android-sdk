@@ -11,7 +11,6 @@ import com.twincoders.twinpush.sdk.communications.asyhttp.AsyncHttpClient;
 public abstract class TwinPushRequest extends RESTJSONRequest {
 	
 	/* Constants */
-	// TODO Point URL to production
 	private static final String TWINPUSH_URL = "https://app.twinpush.com/api/v2";
 	private static final String TOKEN_KEY = "X-TwinPush-REST-API-Token";
 	/* Status code */
