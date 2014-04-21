@@ -14,6 +14,7 @@ public abstract class NotifListAdapter extends BaseAdapter implements Notificati
 
 	public interface Listener {
 		void onNotificationSelected(PushNotification notification);
+		void onNotificationLongClicked(PushNotification notification);
 	}
 
 	List<PushNotification> notifications;
@@ -90,6 +91,11 @@ public abstract class NotifListAdapter extends BaseAdapter implements Notificati
 			TwinPushSDK.getInstance(context).onNotificationOpen(notification);
 			listener.onNotificationSelected(notification);
 		}
+	}
+	
+	@Override
+	public void onNotificationLongClicked(PushNotification notification) {
+		if (listener != null) listener.onNotificationLongClicked(notification);
 	}
 
 }

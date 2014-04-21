@@ -6,6 +6,7 @@ public interface NotificationListItemView {
 	
 	public interface Listener {
 		void onNotificationSelected(PushNotification notification);
+		void onNotificationLongClicked(PushNotification notification);
 	}
 	
 	void setListener(Listener listener);
