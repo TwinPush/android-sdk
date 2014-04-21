@@ -91,11 +91,11 @@ public class GetNotificationsRequest extends TwinPushRequest {
 			for (int i=0; i<notifJsonArray.length(); i++) {
 				JSONObject json = notifJsonArray.getJSONObject(i);
 				PushNotification n = new PushNotification();
-				n.setId(json.getString(RESPONSE_NOTIF_ID_KEY));
-				n.setTitle(json.getString(RESPONSE_NOTIF_TITLE_KEY));
-				n.setMessage(json.getString(RESPONSE_NOTIF_MESSAGE_KEY));
-				n.setSound(json.getString(RESPONSE_NOTIF_SOUND_KEY));
-				n.setRichURL(json.getString(RESPONSE_NOTIF_RICH_URL_KEY));
+				n.setId(getNullableString(json, RESPONSE_NOTIF_ID_KEY));
+				n.setTitle(getNullableString(json, RESPONSE_NOTIF_TITLE_KEY));
+				n.setMessage(getNullableString(json, RESPONSE_NOTIF_MESSAGE_KEY));
+				n.setSound(getNullableString(json, RESPONSE_NOTIF_SOUND_KEY));
+				n.setRichURL(getNullableString(json, RESPONSE_NOTIF_RICH_URL_KEY));
 				n.setCustomProperties(getCustomPropertiesMap(json.getJSONObject(RESPONSE_NOTIF_CUSTOM_PROPERTIES_KEY)));
 				if (!json.isNull(RESPONSE_NOTIF_TAGS_KEY)) {
 					n.setTags(getTags(json.getJSONArray(RESPONSE_NOTIF_TAGS_KEY)));
@@ -105,7 +105,7 @@ public class GetNotificationsRequest extends TwinPushRequest {
 				dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
 				Date date;
 				try {
-					date = dateFormat.parse(json.getString(RESPONSE_NOTIF_DATE));
+					date = dateFormat.parse(getNullableString(json, RESPONSE_NOTIF_DATE));
 				} catch (ParseException e) {
 					Ln.e(e, "Error while trying to parse notification date");
 					date = new Date();

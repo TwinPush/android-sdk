@@ -75,6 +75,10 @@ public abstract class TwinPushRequest extends RESTJSONRequest {
 		}
 	}
 	
+	protected String getNullableString(JSONObject json, String name) throws JSONException {
+		return json.has(name) && !json.isNull(name) ? json.getString(name) : null;
+	}
+	
 	public boolean isSequential() {
 		return sequential;
 	}
