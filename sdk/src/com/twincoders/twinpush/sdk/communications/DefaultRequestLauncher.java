@@ -1,5 +1,6 @@
 package com.twincoders.twinpush.sdk.communications;
 
+import java.security.KeyStore;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -9,9 +10,12 @@ import org.apache.http.entity.StringEntity;
 import android.content.Context;
 import android.os.Handler;
 
+import com.twincoders.twinpush.sdk.TwinPushSDK;
 import com.twincoders.twinpush.sdk.communications.asyhttp.AsyncHttpClient;
 import com.twincoders.twinpush.sdk.communications.asyhttp.AsyncHttpResponseHandler;
 import com.twincoders.twinpush.sdk.communications.asyhttp.PersistentCookieStore;
+import com.twincoders.twinpush.sdk.communications.security.TwinPushSSLSocketFactory;
+import com.twincoders.twinpush.sdk.communications.security.TwinPushTrustManager;
 import com.twincoders.twinpush.sdk.logging.Ln;
 
 public class DefaultRequestLauncher implements TwinRequestLauncher {
@@ -104,6 +108,23 @@ public class DefaultRequestLauncher implements TwinRequestLauncher {
 		
 		// Include request in active requests map
 		activeRequests.put(request, asyncHttpClient);
+		
+		// Add certificate pinning check
+		try {
+			KeyStore trustStore = KeyStore.getInstance(KeyStore.getDefaultType());
+			trustStore.load(null, null);
+			TwinPushTrustManager trustManager = new TwinPushTrustManager();
+			TwinPushSDK twinPush = TwinPushSDK.getInstance(context);
+			trustManager.setPublicKey(twinPush.getSSLPublicKeyCheck());
+			trustManager.setIssuerChecks(twinPush.getSSLIssuerChecks());
+			trustManager.setSubjectChecks(twinPush.getSSLSubjectChecks());
+			TwinPushSSLSocketFactory sf = new TwinPushSSLSocketFactory(trustStore, trustManager);
+			sf.setHostnameVerifier(TwinPushSSLSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER);
+			asyncHttpClient.setSSLSocketFactory(sf);
+		} catch (Exception e) {
+			e.printStackTrace();
+		} 
+		
 		// Launch request
 		if (!request.isDummy()) {
 			String requestURL = request.getURL();

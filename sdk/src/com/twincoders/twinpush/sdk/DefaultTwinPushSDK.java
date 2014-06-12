@@ -2,7 +2,10 @@ package com.twincoders.twinpush.sdk;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import android.app.Activity;
 import android.content.BroadcastReceiver;
@@ -51,6 +54,10 @@ public class DefaultTwinPushSDK extends TwinPushSDK implements LocationListener 
 	private static final String PREF_MONITOR_LOCATION_CHANGES = "MONITOR_LOCATION_CHANGES";
 	private static final String PREF_LOCATION_MIN_UPDATE_TIME = "LOCATION_MIN_UPDATE_TIME";
 	private static final String PREF_LOCATION_MIN_UPDATE_DISTANCE = "LOCATION_MIN_UPDATE_DISTANCE";
+	// Security constants
+	private static final String PREF_SSL_PUBLIC_KEY = "PREF_SSL_PUBLIC_KEY";
+	private static final String PREF_SSL_ISSUER = "PREF_SSL_ISSUER";
+	private static final String PREF_SSL_SUBJECT = "PREF_SSL_SUBJECT";
 
 	/* Private properties */
 	private Context _context = null;
@@ -352,7 +359,11 @@ public class DefaultTwinPushSDK extends TwinPushSDK implements LocationListener 
     
     /* Storage */
 	private SharedPreferences getSharedPreferences() {
-		SharedPreferences prefs = getContext().getSharedPreferences(PREF_FILE_NAME, Context.MODE_PRIVATE);
+		return getSharedPreferences(PREF_FILE_NAME);
+	}
+	
+	private SharedPreferences getSharedPreferences(String preferencesName) {
+		SharedPreferences prefs = getContext().getSharedPreferences(preferencesName, Context.MODE_PRIVATE);
 		return prefs;
 	}
 	
@@ -459,6 +470,7 @@ public class DefaultTwinPushSDK extends TwinPushSDK implements LocationListener 
 		setAppId(twinPushAppId);
 		setToken(twinPushToken);
 		setGCMSenderId(gcmSenderId);
+		resetSSLChecks();
 	}
 	
 	private TwinPushRequestFactory getRequestFactory() {
@@ -560,6 +572,47 @@ public class DefaultTwinPushSDK extends TwinPushSDK implements LocationListener 
 	
 	boolean isDeviceRegistered() {
 		return getDeviceId() != null;
+	}
+	
+	/* Security */
+	
+	private void resetSSLChecks() {
+		// Reset SSL Checks
+		setSSLPublicKeyCheck(null);
+		getSharedPreferences(PREF_SSL_ISSUER).edit().clear().commit();
+		getSharedPreferences(PREF_SSL_SUBJECT).edit().clear().commit();
+	}
+	
+	public void setSSLPublicKeyCheck(String encodedKey) {
+		getSharedPreferences().edit().putString(PREF_SSL_PUBLIC_KEY, encodedKey).commit();
+	}
+	
+	public String getSSLPublicKeyCheck() {
+		return getSharedPreferences().getString(PREF_SSL_PUBLIC_KEY, null);
+	}
+	
+	public void addSSLIssuerCheck(String field, String expectedValue) {
+		getSharedPreferences(PREF_SSL_ISSUER).edit().putString(field, expectedValue).commit();
+	}
+	
+	public void addSSLSubjectCheck(String field, String expectedValue) {
+		getSharedPreferences(PREF_SSL_SUBJECT).edit().putString(field, expectedValue).commit();
+	}
+
+	public Map<String, String> getSSLIssuerChecks() {
+		Map<String, String> map = new HashMap<String, String>();
+		for( Entry<?, ?> entry : getSharedPreferences(PREF_SSL_ISSUER).getAll().entrySet() ) {
+			map.put( entry.getKey().toString(), entry.getValue().toString() );
+		}
+		return map;
+	}
+	
+	public Map<String, String> getSSLSubjectChecks() {
+		Map<String, String> map = new HashMap<String, String>();
+		for( Entry<?, ?> entry : getSharedPreferences(PREF_SSL_SUBJECT).getAll().entrySet() ) {
+			map.put( entry.getKey().toString(), entry.getValue().toString() );
+		}
+		return map;
 	}
 	
 }

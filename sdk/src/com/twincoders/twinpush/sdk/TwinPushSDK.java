@@ -1,6 +1,7 @@
 package com.twincoders.twinpush.sdk;
 
 import java.util.List;
+import java.util.Map;
 
 import android.app.Activity;
 import android.content.Context;
@@ -253,4 +254,44 @@ public abstract class TwinPushSDK {
 	 * Minimum distance before we require a location update.
 	 */
 	public abstract int getLocationMinUpdateDistance();
+	
+	// Security
+	
+	/**
+	 * Includes a SSL certificate pinning to check the Public Key
+	 * @param encodedKey Encoded public key to check
+	 */
+	public abstract void setSSLPublicKeyCheck(String encodedKey);
+	
+	/**
+	 * Obtains the SSL certificate Public Key check previously set
+	 * @return
+	 */
+	public abstract String getSSLPublicKeyCheck();
+	
+	/**
+	 * Adds a SSL certificate pinning check. It will validate that the given issuer field will have the expected value 
+	 * @param field Issuer field to check (i.e. "CN" for Certificate Name, "O" for Organization)
+	 * @param expectedValue Value that should match the certificate to be considered valid
+	 */
+	public abstract void addSSLIssuerCheck(String field, String expectedValue);
+	
+	/**
+	 * Adds a SSL certificate pinning check. It will validate that the given subject field will have the expected value 
+	 * @param field Issuer field to check (i.e. "CN" for Certificate Name, "O" for Organization)
+	 * @param expectedValue Value that should match the certificate to be considered valid
+	 */
+	public abstract void addSSLSubjectCheck(String field, String expectedValue);
+
+	/**
+	 * Obtains the map of checks for the SSL Certificate Issuer
+	 * @return
+	 */
+	public abstract Map<String, String> getSSLIssuerChecks();
+	
+	/**
+	 * Obtains the map of checks for the SSL Certificate Subject
+	 * @return
+	 */
+	public abstract Map<String, String> getSSLSubjectChecks();
 }
