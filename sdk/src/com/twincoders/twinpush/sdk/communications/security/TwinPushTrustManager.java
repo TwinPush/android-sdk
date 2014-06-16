@@ -6,6 +6,7 @@ import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
 import java.security.interfaces.RSAPublicKey;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 import javax.net.ssl.TrustManager;
@@ -29,8 +30,8 @@ public final class TwinPushTrustManager implements X509TrustManager {
 			throw new IllegalArgumentException("checkServerTrusted: X509Certificate is empty");
 		}
 
-		if (!(null != authType && authType.equalsIgnoreCase("RSA"))) {
-			throw new CertificateException("checkServerTrusted: AuthType is not RSA");
+		if (!(null != authType && authType.toUpperCase(Locale.ENGLISH).contains("RSA"))) {
+			throw new CertificateException(String.format("checkServerTrusted: Expected AuthType RSA, got %s", authType));
 		}
 
 		// Perform customary SSL/TLS checks
