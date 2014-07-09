@@ -632,7 +632,7 @@ public class DefaultTwinPushSDK extends TwinPushSDK implements LocationListener 
 			try {
 				return SimpleCrypto.decrypt(getDeviceId(), encryptedValue);
 			} catch (Exception e) {
-				Ln.e(e, "Error trying to encrypt string");
+				Ln.e(e, "Error trying to decrypt string");
 			}
 		}
 		return null;
