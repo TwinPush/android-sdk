@@ -33,6 +33,7 @@ import com.twincoders.twinpush.sdk.notifications.PushNotification;
 import com.twincoders.twinpush.sdk.notifications.TwinPushIntentService;
 import com.twincoders.twinpush.sdk.services.LocationService;
 import com.twincoders.twinpush.sdk.util.LastLocationFinder;
+import com.twincoders.twinpush.sdk.util.SimpleCrypto;
 
 public class DefaultTwinPushSDK extends TwinPushSDK implements LocationListener {
 	
@@ -389,13 +390,13 @@ public class DefaultTwinPushSDK extends TwinPushSDK implements LocationListener 
 	@Override
 	public String getDeviceAlias() {
 		if (deviceAlias == null) {
-			deviceAlias = getSharedPreferences().getString(PREF_DEVICE_ALIAS, null);
+			deviceAlias = decrypt(getSharedPreferences().getString(PREF_DEVICE_ALIAS, null));
 		}
 		return deviceAlias;
 	}
 	
 	private void setDeviceAlias(String deviceAlias) {
-		getSharedPreferences().edit().putString(PREF_DEVICE_ALIAS, deviceAlias).commit();
+		getSharedPreferences().edit().putString(PREF_DEVICE_ALIAS, encrypt(deviceAlias)).commit();
 		this.deviceAlias = deviceAlias;
 	}
 	
@@ -613,6 +614,28 @@ public class DefaultTwinPushSDK extends TwinPushSDK implements LocationListener 
 			map.put( entry.getKey().toString(), entry.getValue().toString() );
 		}
 		return map;
+	}
+	
+	private String encrypt(String rawValue) {
+		if (rawValue != null) {
+			try {
+				return SimpleCrypto.encrypt(getDeviceId(), rawValue);
+			} catch (Exception e) {
+				Ln.e(e, "Error trying to encrypt string");
+			}
+		}
+		return null;
+	}
+	
+	private String decrypt(String encryptedValue) {
+		if (encryptedValue != null) {
+			try {
+				return SimpleCrypto.decrypt(getDeviceId(), encryptedValue);
+			} catch (Exception e) {
+				Ln.e(e, "Error trying to encrypt string");
+			}
+		}
+		return null;
 	}
 	
 }
