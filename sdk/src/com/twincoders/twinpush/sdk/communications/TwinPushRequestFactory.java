@@ -1,11 +1,13 @@
 package com.twincoders.twinpush.sdk.communications;
 
 import java.util.List;
+import java.util.Map;
 
 import android.content.Context;
 
 import com.twincoders.twinpush.sdk.communications.TwinRequest.DefaultListener;
 import com.twincoders.twinpush.sdk.communications.requests.TwinPushRequest;
+import com.twincoders.twinpush.sdk.communications.requests.forms.ReportFormRequest;
 import com.twincoders.twinpush.sdk.communications.requests.notifications.GetNotificationsRequest;
 import com.twincoders.twinpush.sdk.communications.requests.notifications.GetNotificationsRequest.Listener;
 import com.twincoders.twinpush.sdk.communications.requests.properties.ClearCustomPropertiesRequest;
@@ -89,6 +91,14 @@ public class TwinPushRequestFactory {
 	
 	public TwinPushRequest createOpenNotificationRequest(PushNotification notification, DefaultListener listener, String deviceId) {
 		TwinPushRequest request = new OpenNotificationRequest(notification, listener, deviceId);
+		request.setRequestLauncher(requestLauncher);
+		return request;
+	}
+	
+	/* Forms */
+	
+	public TwinPushRequest createReportFormRequest(String deviceId, String alias, String appToken, String reporterToken, PushNotification notification, Map<String, Object> form, ReportFormRequest.Listener listener) {
+		TwinPushRequest request = new ReportFormRequest(deviceId, alias, appToken, reporterToken, notification, form, listener);
 		request.setRequestLauncher(requestLauncher);
 		return request;
 	}
