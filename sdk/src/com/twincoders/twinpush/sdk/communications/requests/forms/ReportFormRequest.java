@@ -54,7 +54,7 @@ public class ReportFormRequest extends TwinPushRequest {
 	}
 	
 	@Override
-	protected void onSuccess(JSONObject response) {
+	public void onResponseProcess(String response) {
 		getListener().onSuccess();
 	}
 	
@@ -63,8 +63,9 @@ public class ReportFormRequest extends TwinPushRequest {
 	}
 
 	@Override
-	protected void onResponseProcess(JSONObject response) {
-		onSuccess(response);
-	}
+	protected void onResponseProcess(JSONObject response) { /* Unused method */ }
+
+	@Override
+	protected void onSuccess(JSONObject response) { /* Unused method */ }
 
 }
