@@ -1,15 +1,7 @@
 package com.twincoders.twinpush.sdk.communications.requests.notifications;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.TimeZone;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -40,15 +32,6 @@ public class GetNotificationsRequest extends TwinPushRequest {
 	/* Response fields */
 	private final static String RESPONSE_TOTAL_PAGES_KEY = "total_pages";
 	private final static String RESPONSE_NOTIF_ARRAY_KEY = "objects";
-	private final static String RESPONSE_NOTIF_ID_KEY = "id";
-	private final static String RESPONSE_NOTIF_TITLE_KEY = "title";
-	private final static String RESPONSE_NOTIF_MESSAGE_KEY = "alert";
-	private final static String RESPONSE_NOTIF_TAGS_KEY = "tags";
-	private final static String RESPONSE_NOTIF_SOUND_KEY = "sound";
-	private final static String RESPONSE_NOTIF_RICH_URL_KEY = "tp_rich_url";
-	private final static String RESPONSE_NOTIF_CUSTOM_PROPERTIES_KEY = "custom_properties";
-	private final static String RESPONSE_NOTIF_DATE = "last_sent_at";
-	private final static String RESPONSE_NOTIF_DATE_FORMAT = "yyyy-MM-dd HH:mm:ss 'UTC'";
 	
 	/* Properties */
 	Listener listener;
@@ -90,28 +73,7 @@ public class GetNotificationsRequest extends TwinPushRequest {
 			JSONArray notifJsonArray = response.getJSONArray(RESPONSE_NOTIF_ARRAY_KEY);
 			for (int i=0; i<notifJsonArray.length(); i++) {
 				JSONObject json = notifJsonArray.getJSONObject(i);
-				PushNotification n = new PushNotification();
-				n.setId(getNullableString(json, RESPONSE_NOTIF_ID_KEY));
-				n.setTitle(getNullableString(json, RESPONSE_NOTIF_TITLE_KEY));
-				n.setMessage(getNullableString(json, RESPONSE_NOTIF_MESSAGE_KEY));
-				n.setSound(getNullableString(json, RESPONSE_NOTIF_SOUND_KEY));
-				n.setRichURL(getNullableString(json, RESPONSE_NOTIF_RICH_URL_KEY));
-				n.setCustomProperties(getCustomPropertiesMap(json.getJSONObject(RESPONSE_NOTIF_CUSTOM_PROPERTIES_KEY)));
-				if (!json.isNull(RESPONSE_NOTIF_TAGS_KEY)) {
-					n.setTags(getTags(json.getJSONArray(RESPONSE_NOTIF_TAGS_KEY)));
-				}
-				// Parse date
-				SimpleDateFormat dateFormat = new SimpleDateFormat(RESPONSE_NOTIF_DATE_FORMAT, Locale.UK);
-				dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
-				Date date;
-				try {
-					date = dateFormat.parse(getNullableString(json, RESPONSE_NOTIF_DATE));
-				} catch (ParseException e) {
-					Ln.e(e, "Error while trying to parse notification date");
-					date = new Date();
-					Ln.i("Current format: %s", dateFormat.format(date));
-				}
-				n.setDate(date);
+				PushNotification n = parseNotification(json);
 				notifications.add(n);
 			}
 			getListener().onSuccess(notifications, totalPages);
@@ -119,36 +81,6 @@ public class GetNotificationsRequest extends TwinPushRequest {
 			Ln.e(e, "Error while trying to parse notifications from response");
 			getListener().onError(e);
 		}
-	}
-	
-	protected Map<String, String> getCustomPropertiesMap(JSONObject json) {
-		Map<String, String> propertiesMap = new HashMap<String, String>();
-		Iterator<?> iter = json.keys();
-		while (iter.hasNext()) {
-			String key = (String) iter.next();
-			try {
-				if (!json.isNull(key)) {
-					String value = (String) json.get(key);
-					propertiesMap.put(key, value);
-				}
-			} catch (JSONException e) {
-				Ln.e(e, "Could not find property %1$s on Custom properties JSON");
-			}
-		}
-		return propertiesMap;
-    }
-	
-	protected List<String> getTags(JSONArray json) {
-		List<String> tags = new ArrayList<String>();
-		try {
-			for (int i=0; i<json.length(); i++) {
-				String tag = json.getString(i);
-				tags.add(tag);
-			}
-		} catch (JSONException e) {
-			Ln.e(e, "Error while trying to obtain tags for notification");
-		}
-		return tags;
 	}
 	
 	public Listener getListener() {

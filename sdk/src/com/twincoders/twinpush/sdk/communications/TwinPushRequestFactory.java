@@ -8,6 +8,7 @@ import android.content.Context;
 import com.twincoders.twinpush.sdk.communications.TwinRequest.DefaultListener;
 import com.twincoders.twinpush.sdk.communications.requests.TwinPushRequest;
 import com.twincoders.twinpush.sdk.communications.requests.forms.ReportFormRequest;
+import com.twincoders.twinpush.sdk.communications.requests.notifications.GetNotificationDetailsRequest;
 import com.twincoders.twinpush.sdk.communications.requests.notifications.GetNotificationsRequest;
 import com.twincoders.twinpush.sdk.communications.requests.notifications.GetNotificationsRequest.Listener;
 import com.twincoders.twinpush.sdk.communications.requests.properties.ClearCustomPropertiesRequest;
@@ -51,6 +52,12 @@ public class TwinPushRequestFactory {
 	
 	public TwinPushRequest createGetNotificationsRequest(int page, int resultsPerPage, List<String> tags, List<String> noTags, boolean ignoreNonRichNotifications, Listener listener, String applicationId, String deviceId) {
 		TwinPushRequest request = new GetNotificationsRequest(page, resultsPerPage, tags, noTags, ignoreNonRichNotifications, listener, applicationId, deviceId);
+		request.setRequestLauncher(requestLauncher);
+		return request;
+	}
+	
+	public TwinPushRequest createGetNotificationRequest(String notificationId, GetNotificationDetailsRequest.Listener listener, String applicationId) {
+		TwinPushRequest request = new GetNotificationDetailsRequest(notificationId, listener, applicationId);
 		request.setRequestLauncher(requestLauncher);
 		return request;
 	}

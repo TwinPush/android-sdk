@@ -7,6 +7,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.location.Location;
 
+import com.twincoders.twinpush.sdk.communications.requests.notifications.GetNotificationDetailsRequest;
 import com.twincoders.twinpush.sdk.communications.requests.notifications.GetNotificationsRequest;
 import com.twincoders.twinpush.sdk.entities.LocationPrecision;
 import com.twincoders.twinpush.sdk.notifications.PushNotification;
@@ -75,6 +76,13 @@ public abstract class TwinPushSDK {
      * @param listener Listener object to notify result to
      */
     public abstract void getNotifications(int page, int resultsPerPage, List<String> tags, List<String> noTags, boolean ignoreNonRichNotifications ,GetNotificationsRequest.Listener listener);
+    
+    /**
+     * Obtains the details for the selected notification
+     * @param notificationId Notification id
+     * @param listener Listener object to notify result to
+     */
+    public abstract void getNotification(String notificationId, GetNotificationDetailsRequest.Listener listener);
     
     /* Properties */
     /**

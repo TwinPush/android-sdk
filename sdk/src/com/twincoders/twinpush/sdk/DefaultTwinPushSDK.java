@@ -23,6 +23,7 @@ import com.twincoders.twinpush.sdk.communications.TwinPushRequestFactory;
 import com.twincoders.twinpush.sdk.communications.TwinRequest.DefaultListener;
 import com.twincoders.twinpush.sdk.communications.TwinRequest.OnRequestFinishListener;
 import com.twincoders.twinpush.sdk.communications.requests.TwinPushRequest;
+import com.twincoders.twinpush.sdk.communications.requests.notifications.GetNotificationDetailsRequest;
 import com.twincoders.twinpush.sdk.communications.requests.notifications.GetNotificationsRequest;
 import com.twincoders.twinpush.sdk.communications.requests.notifications.GetNotificationsRequest.Listener;
 import com.twincoders.twinpush.sdk.communications.requests.register.RegisterRequest;
@@ -225,6 +226,13 @@ public class DefaultTwinPushSDK extends TwinPushSDK implements LocationListener 
     @Override
     public void getNotifications(int page, int resultsPerPage, GetNotificationsRequest.Listener listener) {
     	getNotifications(page, resultsPerPage, null, null, true, listener);
+    }
+    
+    @Override
+    public void getNotification(String notificationId, GetNotificationDetailsRequest.Listener listener) {
+    	TwinPushRequest getNotifRequest = getRequestFactory().
+    			createGetNotificationRequest(notificationId, listener, getAppId());
+    	launchRequest(getNotifRequest);
     }
     
     /* Properties */
