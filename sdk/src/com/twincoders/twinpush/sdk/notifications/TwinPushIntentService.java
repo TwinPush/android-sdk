@@ -68,10 +68,9 @@ public class TwinPushIntentService extends GCMBaseIntentService {
     	Ln.i("Received message");
         
         PushNotification notification = getNotification(paramsIntent);
-        PendingIntent pendingIntent = getPendingIntent(context, notification);
         
         // notifies user
-        displayNotification(context, notification, pendingIntent);
+        displayNotification(context, notification);
     }
  
     /**
@@ -99,7 +98,14 @@ public class TwinPushIntentService extends GCMBaseIntentService {
         return super.onRecoverableError(context, errorId);
     }
     
-    private void displayNotification(Context context, PushNotification notification, PendingIntent intent) {
+    /**
+     * Method that displays the obtained message in the Android notifications center
+     * @param context Application center
+     * @param notification Notification to be displayed
+     */
+    protected void displayNotification(Context context, PushNotification notification) {
+    	PendingIntent pendingIntent = getContentIntent(context, notification);
+    	
 		String title = notification.getTitle();
 		// It title is empty, display application name
 		if (title == null || title.trim().length() == 0) {
@@ -114,7 +120,7 @@ public class TwinPushIntentService extends GCMBaseIntentService {
         .setTicker(notification.getMessage())
         .setSmallIcon(TwinPushSDK.getInstance(context).getNotificationSmallIcon())
         .setDefaults(Notification.DEFAULT_LIGHTS | Notification.DEFAULT_VIBRATE | Notification.DEFAULT_SOUND)
-		.setContentIntent(intent)
+		.setContentIntent(pendingIntent)
 		.setAutoCancel(true)
 		.setStyle(new NotificationCompat.BigTextStyle().bigText(notification.getMessage()))
 		.build();
@@ -125,7 +131,13 @@ public class TwinPushIntentService extends GCMBaseIntentService {
 		manager.notify(notification.getId().hashCode(), push);
 	}
     
-    private PendingIntent getPendingIntent(Context context, PushNotification notification) {
+    /**
+     * Obtains the content intent for a given notification. This intent will be launched when the user clicks on the notification 
+     * @param context Application context
+     * @param notification PushNotification object with the information of the received message
+     * @return Content intent for the given notification
+     */
+    protected PendingIntent getContentIntent(Context context, PushNotification notification) {
     	// Prepare the intent which should be launched on notification action
     	Intent intent = getPackageManager().getLaunchIntentForPackage(context.getPackageName());
     	intent.setAction(ON_NOTIFICATION_OPENED_ACTION);
@@ -136,7 +148,12 @@ public class TwinPushIntentService extends GCMBaseIntentService {
         return pendingIntent;
     }
     
-    private PushNotification getNotification(Intent messageIntent) {
+    /**
+     * Creates an instance of a PushNotification object with the info contained in the message intent
+     * @param messageIntent Intent containing the push notification info
+     * @return PushNotification object retrieved from message
+     */
+    protected PushNotification getNotification(Intent messageIntent) {
     	// Extract info from message intent
     	String notificationId = messageIntent.getStringExtra(EXTRA_NOTIFICATION_ID);
     	String title = messageIntent.getStringExtra(EXTRA_NOTIFICATION_TITLE);
@@ -156,7 +173,7 @@ public class TwinPushIntentService extends GCMBaseIntentService {
 		return notification;
     }
     
-    protected Map<String, String> getCustomPropertiesMap(Intent messageIntent) {
+    private Map<String, String> getCustomPropertiesMap(Intent messageIntent) {
     	Map<String, String> propertiesMap = new HashMap<String, String>();
     	try {
     		// Extract raw custom String
