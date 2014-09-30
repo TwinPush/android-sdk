@@ -302,4 +302,15 @@ public abstract class TwinPushSDK {
 	 * @return
 	 */
 	public abstract Map<String, String> getSSLSubjectChecks();
+	
+	/**
+	 * Sets the custom subdomain for the TwinPush server
+	 * @param subdomain Custom subdomain for TwinPush server (e.g: domain of 'beta' will result in 'https://beta.twinpush.com' url)
+	 */
+	public abstract void setSubdomain(String subdomain);
+	
+	/**
+	 * Obtains the current subdomain for the TwinPush server. Default subdomain is 'app'
+	 */
+	public abstract String getSubdomain();
 }

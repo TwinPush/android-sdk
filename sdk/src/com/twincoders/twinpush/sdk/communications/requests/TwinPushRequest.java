@@ -24,7 +24,7 @@ import com.twincoders.twinpush.sdk.notifications.PushNotification;
 public abstract class TwinPushRequest extends RESTJSONRequest {
 	
 	/* Constants */
-	private static final String TWINPUSH_URL = "https://app.twinpush.com/api/v2";
+	private static final String TWINPUSH_URL = "https://%s.twinpush.com/api/v2";
 	private static final String TOKEN_KEY = "X-TwinPush-REST-API-Token";
 	/* Status code */
 	private static final int STATUS_CODE_INVALID_ELEMENT = 422;
@@ -40,7 +40,8 @@ public abstract class TwinPushRequest extends RESTJSONRequest {
 	
 	@Override
 	public String getBaseURL () {
-		return TWINPUSH_URL;
+		String subdomain = TwinPushSDK.getInstance(getRequestLauncher().getContext()).getSubdomain();
+		return String.format(TWINPUSH_URL, subdomain);
 	}
 	
 	@Override

@@ -46,6 +46,8 @@ public class DefaultTwinPushSDK extends TwinPushSDK implements LocationListener 
 	private static final String PREF_GCM_SENDER_ID = "GCM_SENDER_ID";
 	private static final String PREF_TWINPUSH_TOKEN = "TWINPUSH_TOKEN";
 	private static final String PREF_TWINPUSH_APP_ID = "TWINPUSH_APP_ID";
+	private static final String PREF_TWINPUSH_SUBDOMAIN = "TWINPUSH_SUBDOMAIN";
+	private static final String DEFAULT_SUBDOMAIN = "app";
 	// Location constants
 	private static final String PREF_LOCATION_LATITUDE = "LOCATION_LATITUDE";
 	private static final String PREF_LOCATION_LONGITUDE = "LOCATION_LONGITUDE";
@@ -644,6 +646,14 @@ public class DefaultTwinPushSDK extends TwinPushSDK implements LocationListener 
 			}
 		}
 		return null;
+	}
+	
+	public void setSubdomain(String subdomain) {
+		getSharedPreferences().edit().putString(PREF_TWINPUSH_SUBDOMAIN, subdomain).commit();
+	}
+	
+	public String getSubdomain() {
+		return getSharedPreferences().getString(PREF_TWINPUSH_SUBDOMAIN, DEFAULT_SUBDOMAIN);
 	}
 	
 }
