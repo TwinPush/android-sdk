@@ -47,7 +47,9 @@ public class DefaultTwinPushSDK extends TwinPushSDK implements LocationListener 
 	private static final String PREF_TWINPUSH_TOKEN = "TWINPUSH_TOKEN";
 	private static final String PREF_TWINPUSH_APP_ID = "TWINPUSH_APP_ID";
 	private static final String PREF_TWINPUSH_SUBDOMAIN = "TWINPUSH_SUBDOMAIN";
+	private static final String PREF_TWINPUSH_CUSTOM_HOST = "TWINPUSH_CUSTOM_HOST";
 	private static final String DEFAULT_SUBDOMAIN = "app";
+	private static final String DEFAULT_HOST = "https://%s.twinpush.com";
 	// Location constants
 	private static final String PREF_LOCATION_LATITUDE = "LOCATION_LATITUDE";
 	private static final String PREF_LOCATION_LONGITUDE = "LOCATION_LONGITUDE";
@@ -259,15 +261,23 @@ public class DefaultTwinPushSDK extends TwinPushSDK implements LocationListener 
     }
     
     private void setProperty(final String name, final Object value, PropertyType type) {
-    	DefaultListener listener = getDefaultListener(String.format("Set property '%s' = '%s'", name, value == null? "null" : value.toString()));
-    	TwinPushRequest request = getRequestFactory().createSetCustomPropertyRequest(name, type, value, listener, getAppId(), getDeviceId());
-    	launchRequest(request);
+    	if (isDeviceRegistered()) {
+	    	DefaultListener listener = getDefaultListener(String.format("Set property '%s' = '%s'", name, value == null? "null" : value.toString()));
+	    	TwinPushRequest request = getRequestFactory().createSetCustomPropertyRequest(name, type, value, listener, getAppId(), getDeviceId());
+	    	launchRequest(request);
+    	} else {
+    		Ln.w("Not launching 'Set custom property': Device unregistered");
+    	}
     }
     
     public void clearProperties() {
-    	DefaultListener listener = getDefaultListener("Clear properties");
-    	TwinPushRequest request = getRequestFactory().createClearCustomPropertiesRequest(listener, getAppId(), getDeviceId());
-    	launchRequest(request);
+    	if (isDeviceRegistered()) {
+	    	DefaultListener listener = getDefaultListener("Clear properties");
+	    	TwinPushRequest request = getRequestFactory().createClearCustomPropertiesRequest(listener, getAppId(), getDeviceId());
+	    	launchRequest(request);
+    	} else {
+    		Ln.w("Not launching 'Clear custom properties': Device unregistered");
+    	}
     }
     
     /* Location */
@@ -313,6 +323,8 @@ public class DefaultTwinPushSDK extends TwinPushSDK implements LocationListener 
     	if (isDeviceRegistered()) {
 	    	TwinPushRequest request = getRequestFactory().createReportStatisticsRequest(latitude, longitude, listener, getDeviceId());
 	    	launchRequest(request);
+    	} else {
+    		Ln.w("Not launching 'Location update': Device unregistered");
     	}
     }
     
@@ -348,15 +360,23 @@ public class DefaultTwinPushSDK extends TwinPushSDK implements LocationListener 
     }
     
     private void onApplicationOpen() {
-    	DefaultListener listener = getDefaultListener("On Application Open");
-    	TwinPushRequest request = getRequestFactory().createOpenAppRequest(listener, getDeviceId());
-    	launchRequest(request);
+    	if (isDeviceRegistered()) {
+	    	DefaultListener listener = getDefaultListener("On Application Open");
+	    	TwinPushRequest request = getRequestFactory().createOpenAppRequest(listener, getDeviceId());
+	    	launchRequest(request);
+    	} else {
+    		Ln.w("Not launching 'On application open event': Device unregistered");
+    	}
     }
     
     private void onApplicationClose() {
-    	DefaultListener listener = getDefaultListener("On Application Close");
-    	TwinPushRequest request = getRequestFactory().createCloseAppRequest(listener, getDeviceId());
-    	launchRequest(request);
+    	if (isDeviceRegistered()) {
+	    	DefaultListener listener = getDefaultListener("On Application Close");
+	    	TwinPushRequest request = getRequestFactory().createCloseAppRequest(listener, getDeviceId());
+	    	launchRequest(request);
+	    } else {
+			Ln.w("Not launching 'On application close event': Device unregistered");
+		}
     }
     
     @Override
@@ -654,6 +674,14 @@ public class DefaultTwinPushSDK extends TwinPushSDK implements LocationListener 
 	
 	public String getSubdomain() {
 		return getSharedPreferences().getString(PREF_TWINPUSH_SUBDOMAIN, DEFAULT_SUBDOMAIN);
+	}
+	
+	public void setServerHost(String serverHost) {
+		getSharedPreferences().edit().putString(PREF_TWINPUSH_CUSTOM_HOST, serverHost).commit();
+	}
+	
+	public String getServerHost() {
+		return getSharedPreferences().getString(PREF_TWINPUSH_CUSTOM_HOST, String.format(DEFAULT_HOST, getSubdomain()));
 	}
 	
 }

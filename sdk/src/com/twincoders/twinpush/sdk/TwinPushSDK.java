@@ -313,4 +313,15 @@ public abstract class TwinPushSDK {
 	 * Obtains the current subdomain for the TwinPush server. Default subdomain is 'app'
 	 */
 	public abstract String getSubdomain();
+	
+	/**
+	 * Sets the custom host for the TwinPush server. Default is "https://{{subdomain}}.twinpush.com"
+	 * @param subdomain Custom host
+	 */
+	public abstract void setServerHost(String serverHost);
+	
+	/**
+	 * Obtains the host for the TwinPush server. Default is "https://{{subdomain}}.twinpush.com"
+	 */
+	public abstract String getServerHost();
 }
