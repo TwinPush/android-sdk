@@ -241,6 +241,12 @@ public abstract class TwinPushSDK {
 	public abstract void setAppId(String appId);
 	
 	/**
+	 * Obtains previously setup twinPushAppId
+	 * @return Application ID
+	 */
+	public abstract String getAppId();
+	
+	/**
 	 * Setup TwinPush SDK with the needed parameters
 	 * @param twinPushAppId Application ID obtained from TwinPush WebApp
 	 * @param twinPushToken Application Token obtained from TwinPush WebApp

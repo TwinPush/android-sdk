@@ -16,12 +16,13 @@ import android.content.SharedPreferences;
 import android.location.Location;
 import android.location.LocationListener;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.provider.Settings.Secure;
 
 import com.google.android.gcm.GCMRegistrar;
 import com.twincoders.twinpush.sdk.communications.TwinPushRequestFactory;
 import com.twincoders.twinpush.sdk.communications.TwinRequest.DefaultListener;
-import com.twincoders.twinpush.sdk.communications.TwinRequest.OnRequestFinishListener;
 import com.twincoders.twinpush.sdk.communications.requests.TwinPushRequest;
 import com.twincoders.twinpush.sdk.communications.requests.notifications.GetNotificationDetailsRequest;
 import com.twincoders.twinpush.sdk.communications.requests.notifications.GetNotificationsRequest;
@@ -30,11 +31,12 @@ import com.twincoders.twinpush.sdk.communications.requests.register.RegisterRequ
 import com.twincoders.twinpush.sdk.entities.LocationPrecision;
 import com.twincoders.twinpush.sdk.entities.PropertyType;
 import com.twincoders.twinpush.sdk.logging.Ln;
+import com.twincoders.twinpush.sdk.logging.Strings;
 import com.twincoders.twinpush.sdk.notifications.PushNotification;
 import com.twincoders.twinpush.sdk.notifications.TwinPushIntentService;
 import com.twincoders.twinpush.sdk.services.LocationService;
 import com.twincoders.twinpush.sdk.util.LastLocationFinder;
-import com.twincoders.twinpush.sdk.util.SimpleCrypto;
+import com.twincoders.twinpush.sdk.util.StringEncrypter;
 
 public class DefaultTwinPushSDK extends TwinPushSDK implements LocationListener {
 	
@@ -43,6 +45,7 @@ public class DefaultTwinPushSDK extends TwinPushSDK implements LocationListener 
 	private static final String PREF_NOTIFICATION_SMALL_ICON = "NOTIFICATION_SMALL_ICON";
 	private static final String PREF_DEVICE_ID = "DEVICE_ID";
 	private static final String PREF_DEVICE_ALIAS = "DEVICE_ALIAS";
+	private static final String PREF_DEVICE_PUSH_TOKEN = "DEVICE_PUSH_TOKEN";
 	private static final String PREF_GCM_SENDER_ID = "GCM_SENDER_ID";
 	private static final String PREF_TWINPUSH_TOKEN = "TWINPUSH_TOKEN";
 	private static final String PREF_TWINPUSH_APP_ID = "TWINPUSH_APP_ID";
@@ -69,8 +72,6 @@ public class DefaultTwinPushSDK extends TwinPushSDK implements LocationListener 
 	private Context _context = null;
 	private TwinPushRequest registerRequest = null;
 	private BroadcastReceiver registrationReceiver;
-	private List<TwinPushRequest> pendingRequests = new ArrayList<TwinPushRequest>();
-	private boolean stopRequests = false;
 	private List<Activity> openedActivities = new ArrayList<Activity>();
 	private LastLocationFinder locationFinder = null;
 	
@@ -81,6 +82,7 @@ public class DefaultTwinPushSDK extends TwinPushSDK implements LocationListener 
 	private String gcmSenderId = null;
 	private String token = null;
 	private String appId = null;
+	private String pushToken = null;
 	
 	/* Private constructor */
 	protected DefaultTwinPushSDK(Context context) {
@@ -121,7 +123,7 @@ public class DefaultTwinPushSDK extends TwinPushSDK implements LocationListener 
 					// Get GCM registration id
 					final String registrationId = GCMRegistrar.getRegistrationId(getContext());
 					boolean isRegistered = registrationId != null && registrationId.length() > 0;
-
+					
 					// Check if regid already presents
 					if (!isRegistered) {
 						registrationReceiver = new RegisterBroadcastReceiver(deviceAlias, listener);
@@ -130,12 +132,18 @@ public class DefaultTwinPushSDK extends TwinPushSDK implements LocationListener 
 						GCMRegistrar.register(getContext(), gcmSenderId);
 					} else {
 						// GCMRegistrar.unregister(getContext());
+						// Only register if registrationId or alias has changed since last register
+						boolean aliasUpdated = deviceAlias != null && !Strings.equals(deviceAlias, getDeviceAlias());
+						boolean pushTokenUpdated = Strings.equals(registrationId, getPushToken());
+						
+						if (aliasUpdated || pushTokenUpdated) { 
+						
 						// Device is already registered on GCM
 						if (registerRequest != null) {
 							registerRequest.cancel();
 						}
 						registerRequest = getRequestFactory().
-								createRegisterRequest(deviceAlias, registrationId, appId, getDeviceUDID(), 
+								register(deviceAlias, registrationId, getDeviceUDID(), 
 										new RegisterRequest.Listener() {
 
 									@Override
@@ -152,12 +160,26 @@ public class DefaultTwinPushSDK extends TwinPushSDK implements LocationListener 
 										GCMRegistrar.setRegisteredOnServer(getContext(), true);
 										setDeviceId(deviceId);
 										setDeviceAlias(deviceAlias);
+										setPushToken(registrationId);
 										if (listener != null) {
 											listener.onRegistrationSuccess(deviceAlias);
 										}
 									}
 								});
-						launchRequest(registerRequest);
+						} else {
+							Ln.i("Device already registered with given Push Token and Alias");
+							// Return response in different thread with delay
+							new Handler(Looper.getMainLooper()).post(new Runnable() {
+								
+								@Override
+								public void run() {
+									if (listener != null) {
+										listener.onRegistrationSuccess(deviceAlias);
+									}
+								}
+							});
+							
+						}
 					}
 				} else {
 					// Sender ID is not setup
@@ -222,9 +244,7 @@ public class DefaultTwinPushSDK extends TwinPushSDK implements LocationListener 
     
     @Override
     public void getNotifications(int page, int resultsPerPage, List<String> tags, List<String> noTags, boolean ignoreNonRichNotifications, Listener listener) {
-    	TwinPushRequest getNotifRequest = getRequestFactory().
-    			createGetNotificationsRequest(page, resultsPerPage, tags, noTags, ignoreNonRichNotifications, listener, getAppId(), getDeviceId());
-    	launchRequest(getNotifRequest);
+    	getRequestFactory().getNotificationInbox(page, resultsPerPage, tags, noTags, ignoreNonRichNotifications, listener);
     }
     
     @Override
@@ -234,9 +254,7 @@ public class DefaultTwinPushSDK extends TwinPushSDK implements LocationListener 
     
     @Override
     public void getNotification(String notificationId, GetNotificationDetailsRequest.Listener listener) {
-    	TwinPushRequest getNotifRequest = getRequestFactory().
-    			createGetNotificationRequest(notificationId, listener, getAppId());
-    	launchRequest(getNotifRequest);
+    	getRequestFactory().getNotification(notificationId, listener);
     }
     
     /* Properties */
@@ -263,8 +281,7 @@ public class DefaultTwinPushSDK extends TwinPushSDK implements LocationListener 
     private void setProperty(final String name, final Object value, PropertyType type) {
     	if (isDeviceRegistered()) {
 	    	DefaultListener listener = getDefaultListener(String.format("Set property '%s' = '%s'", name, value == null? "null" : value.toString()));
-	    	TwinPushRequest request = getRequestFactory().createSetCustomPropertyRequest(name, type, value, listener, getAppId(), getDeviceId());
-	    	launchRequest(request);
+	    	getRequestFactory().setCustomProperty(name, type, value, listener);
     	} else {
     		Ln.w("Not launching 'Set custom property': Device unregistered");
     	}
@@ -273,8 +290,7 @@ public class DefaultTwinPushSDK extends TwinPushSDK implements LocationListener 
     public void clearProperties() {
     	if (isDeviceRegistered()) {
 	    	DefaultListener listener = getDefaultListener("Clear properties");
-	    	TwinPushRequest request = getRequestFactory().createClearCustomPropertiesRequest(listener, getAppId(), getDeviceId());
-	    	launchRequest(request);
+	    	getRequestFactory().clearCustomProperties(listener);
     	} else {
     		Ln.w("Not launching 'Clear custom properties': Device unregistered");
     	}
@@ -321,8 +337,7 @@ public class DefaultTwinPushSDK extends TwinPushSDK implements LocationListener 
     	setLastKnownLocation(location);
     	DefaultListener listener = getDefaultListener("Update location");
     	if (isDeviceRegistered()) {
-	    	TwinPushRequest request = getRequestFactory().createReportStatisticsRequest(latitude, longitude, listener, getDeviceId());
-	    	launchRequest(request);
+	    	getRequestFactory().reportStatistics(latitude, longitude, listener);
     	} else {
     		Ln.w("Not launching 'Location update': Device unregistered");
     	}
@@ -362,8 +377,7 @@ public class DefaultTwinPushSDK extends TwinPushSDK implements LocationListener 
     private void onApplicationOpen() {
     	if (isDeviceRegistered()) {
 	    	DefaultListener listener = getDefaultListener("On Application Open");
-	    	TwinPushRequest request = getRequestFactory().createOpenAppRequest(listener, getDeviceId());
-	    	launchRequest(request);
+	    	getRequestFactory().openApp(listener);
     	} else {
     		Ln.w("Not launching 'On application open event': Device unregistered");
     	}
@@ -372,8 +386,7 @@ public class DefaultTwinPushSDK extends TwinPushSDK implements LocationListener 
     private void onApplicationClose() {
     	if (isDeviceRegistered()) {
 	    	DefaultListener listener = getDefaultListener("On Application Close");
-	    	TwinPushRequest request = getRequestFactory().createCloseAppRequest(listener, getDeviceId());
-	    	launchRequest(request);
+	    	getRequestFactory().closeApp(listener);
 	    } else {
 			Ln.w("Not launching 'On application close event': Device unregistered");
 		}
@@ -383,8 +396,7 @@ public class DefaultTwinPushSDK extends TwinPushSDK implements LocationListener 
     public void onNotificationOpen(PushNotification notification) {
     	if (notification != null) {
     		DefaultListener listener = getDefaultListener(String.format("On Notification Open: %s", notification.getId()));
-    		TwinPushRequest request = getRequestFactory().createOpenNotificationRequest(notification, listener, getDeviceId());
-    		launchRequest(request);
+    		getRequestFactory().openNotification(notification, listener);
     	}
     }
     
@@ -483,6 +495,18 @@ public class DefaultTwinPushSDK extends TwinPushSDK implements LocationListener 
 		return appId;
 	}
 	
+	public String getPushToken() {
+		if (pushToken == null) {
+			pushToken = getSharedPreferences().getString(PREF_DEVICE_PUSH_TOKEN, null);
+		}
+		return pushToken;
+	}
+	
+	private void setPushToken(String pushToken) {
+		getSharedPreferences().edit().putString(PREF_DEVICE_PUSH_TOKEN, pushToken).commit();
+		this.pushToken = pushToken;
+	}
+	
 	public long getLocationMinUpdateTime() {
 		return getSharedPreferences().getLong(PREF_LOCATION_MIN_UPDATE_TIME, 0);
 	}
@@ -506,35 +530,6 @@ public class DefaultTwinPushSDK extends TwinPushSDK implements LocationListener 
 	
 	private TwinPushRequestFactory getRequestFactory() {
 		return TwinPushRequestFactory.getSharedinstance(getContext());
-	}
-	
-	private void launchRequest(TwinPushRequest request) {
-		if (stopRequests) {
-			pendingRequests.add(request);
-		} else {
-			if (request.isSequential()) {
-				stopRequests = true;
-				request.addOnRequestFinishListener(new OnRequestFinishListener() {
-
-					@Override
-					public void onRequestFinish() {
-						stopRequests = false;
-						launchNextRequest();
-					}
-				});
-			} else {
-				launchNextRequest();
-			}
-			request.launch();
-		}
-	}
-	
-	private void launchNextRequest() {
-		if (!pendingRequests.isEmpty()) {
-			TwinPushRequest nextRequest = pendingRequests.get(0);
-			pendingRequests.remove(nextRequest);
-			launchRequest(nextRequest);
-		}
 	}
 	
 	DefaultListener getDefaultListener(final String requestName) {
@@ -649,7 +644,7 @@ public class DefaultTwinPushSDK extends TwinPushSDK implements LocationListener 
 	private String encrypt(String rawValue) {
 		if (rawValue != null) {
 			try {
-				return SimpleCrypto.encrypt(getDeviceId(), rawValue);
+				return new StringEncrypter(getDeviceUDID()).encryptString(rawValue);
 			} catch (Exception e) {
 				Ln.e(e, "Error trying to encrypt string");
 			}
@@ -660,7 +655,7 @@ public class DefaultTwinPushSDK extends TwinPushSDK implements LocationListener 
 	private String decrypt(String encryptedValue) {
 		if (encryptedValue != null) {
 			try {
-				return SimpleCrypto.decrypt(getDeviceId(), encryptedValue);
+				return new StringEncrypter(getDeviceUDID()).decryptString(encryptedValue);
 			} catch (Exception e) {
 				Ln.e(e, "Error trying to decrypt string");
 			}

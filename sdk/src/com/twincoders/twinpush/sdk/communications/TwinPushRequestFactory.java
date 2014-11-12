@@ -1,11 +1,14 @@
 package com.twincoders.twinpush.sdk.communications;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 import android.content.Context;
 
+import com.twincoders.twinpush.sdk.TwinPushSDK;
 import com.twincoders.twinpush.sdk.communications.TwinRequest.DefaultListener;
+import com.twincoders.twinpush.sdk.communications.TwinRequest.OnRequestFinishListener;
 import com.twincoders.twinpush.sdk.communications.requests.TwinPushRequest;
 import com.twincoders.twinpush.sdk.communications.requests.forms.ReportFormRequest;
 import com.twincoders.twinpush.sdk.communications.requests.notifications.GetNotificationDetailsRequest;
@@ -28,6 +31,19 @@ public class TwinPushRequestFactory {
 	/* Properties */
 	TwinRequestLauncher requestLauncher;
 	String token = null;
+	TwinPushSDK twinpush;
+	
+	private List<TwinPushRequest> pendingRequests = new ArrayList<TwinPushRequest>();
+	private boolean stopRequests = false;
+	
+	
+	private String getDeviceId() {
+		return twinpush.getDeviceId();
+	}
+	
+	private String getAppId() {
+		return twinpush.getAppId();
+	}
 	
 	public static TwinPushRequestFactory getSharedinstance(Context context) {
 		if (sharedInstance == null) {
@@ -38,76 +54,109 @@ public class TwinPushRequestFactory {
 	
 	private TwinPushRequestFactory(Context context) {
 		requestLauncher = new DefaultRequestLauncher(context);
+		twinpush = TwinPushSDK.getInstance(context);
 	}
 	
 	/* Register */
 	
-	public TwinPushRequest createRegisterRequest(String alias, String registrationId, String applicationId, String deviceUDID, RegisterRequest.Listener listener) {
-        TwinPushRequest request = new RegisterRequest(alias, registrationId, applicationId, deviceUDID, listener);
-        request.setRequestLauncher(requestLauncher);
+	public TwinPushRequest register(String alias, String registrationId, String deviceUDID, RegisterRequest.Listener listener) {
+        TwinPushRequest request = new RegisterRequest(alias, registrationId, getAppId(), deviceUDID, listener);
+        launch(request);
         return request;
     }
 	
 	/* Notifications */
 	
-	public TwinPushRequest createGetNotificationsRequest(int page, int resultsPerPage, List<String> tags, List<String> noTags, boolean ignoreNonRichNotifications, Listener listener, String applicationId, String deviceId) {
-		TwinPushRequest request = new GetNotificationsRequest(page, resultsPerPage, tags, noTags, ignoreNonRichNotifications, listener, applicationId, deviceId);
-		request.setRequestLauncher(requestLauncher);
+	public TwinPushRequest getNotificationInbox(int page, int resultsPerPage, List<String> tags, List<String> noTags, boolean ignoreNonRichNotifications, Listener listener) {
+		TwinPushRequest request = new GetNotificationsRequest(getAppId(), getDeviceId(), page, resultsPerPage, tags, noTags, ignoreNonRichNotifications, listener);
+		launch(request);
 		return request;
 	}
 	
-	public TwinPushRequest createGetNotificationRequest(String notificationId, GetNotificationDetailsRequest.Listener listener, String applicationId) {
-		TwinPushRequest request = new GetNotificationDetailsRequest(notificationId, listener, applicationId);
-		request.setRequestLauncher(requestLauncher);
+	public TwinPushRequest getNotification(String notificationId, GetNotificationDetailsRequest.Listener listener) {
+		TwinPushRequest request = new GetNotificationDetailsRequest(getAppId(), getDeviceId(), notificationId, listener);
+		launch(request);
 		return request;
 	}
 	
 	/* Properties */
 	
-	public TwinPushRequest createSetCustomPropertyRequest(String name, PropertyType valueType, Object value, DefaultListener listener, String applicationId, String deviceId) {
-		TwinPushRequest request = new SetCustomPropertyRequest(name, valueType, value, listener, applicationId, deviceId);
-		request.setRequestLauncher(requestLauncher);
+	public TwinPushRequest setCustomProperty(String name, PropertyType valueType, Object value, DefaultListener listener) {
+		TwinPushRequest request = new SetCustomPropertyRequest(getAppId(), getDeviceId(), name, valueType, value, listener);
+		launch(request);
 		return request;
 	}
 	
-	public TwinPushRequest createClearCustomPropertiesRequest(DefaultListener listener, String applicationId, String deviceId) {
-		TwinPushRequest request = new ClearCustomPropertiesRequest(listener, applicationId, deviceId);
-		request.setRequestLauncher(requestLauncher);
+	public TwinPushRequest clearCustomProperties(DefaultListener listener) {
+		TwinPushRequest request = new ClearCustomPropertiesRequest(getAppId(), getDeviceId(), listener);
+		launch(request);
 		return request;
 	}
 	
 	/* Statistics */
 	
-	public TwinPushRequest createOpenAppRequest(DefaultListener listener, String deviceId) {
-		TwinPushRequest request = new OpenAppRequest(listener, deviceId);
-		request.setRequestLauncher(requestLauncher);
+	public TwinPushRequest openApp(DefaultListener listener) {
+		TwinPushRequest request = new OpenAppRequest(getAppId(), getDeviceId(), listener);
+		launch(request);
 		return request;
 	}
 	
-	public TwinPushRequest createCloseAppRequest(DefaultListener listener, String deviceId) {
-		TwinPushRequest request = new CloseAppRequest(listener, deviceId);
-		request.setRequestLauncher(requestLauncher);
+	public TwinPushRequest closeApp(DefaultListener listener) {
+		TwinPushRequest request = new CloseAppRequest(getAppId(), getDeviceId(), listener);
+		launch(request);
 		return request;
 	}
 	
-	public TwinPushRequest createReportStatisticsRequest(double latitude, double longitude, DefaultListener listener, String deviceId) {
-		TwinPushRequest request = new ReportStatisticsRequest(latitude, longitude, listener, deviceId);
-		request.setRequestLauncher(requestLauncher);
+	public TwinPushRequest reportStatistics(double latitude, double longitude, DefaultListener listener) {
+		TwinPushRequest request = new ReportStatisticsRequest(getAppId(), getDeviceId(), latitude, longitude, listener);
+		launch(request);
 		return request;
 	}
 	
-	public TwinPushRequest createOpenNotificationRequest(PushNotification notification, DefaultListener listener, String deviceId) {
-		TwinPushRequest request = new OpenNotificationRequest(notification, listener, deviceId);
-		request.setRequestLauncher(requestLauncher);
+	public TwinPushRequest openNotification(PushNotification notification, DefaultListener listener) {
+		TwinPushRequest request = new OpenNotificationRequest(getAppId(), getDeviceId(), notification, listener);
+		launch(request);
 		return request;
 	}
 	
 	/* Forms */
 	
-	public TwinPushRequest createReportFormRequest(String deviceId, String alias, String appToken, String reporterToken, PushNotification notification, Map<String, Object> form, ReportFormRequest.Listener listener) {
+	public TwinPushRequest reportForm(String deviceId, String alias, String appToken, String reporterToken, PushNotification notification, Map<String, Object> form, ReportFormRequest.Listener listener) {
 		TwinPushRequest request = new ReportFormRequest(deviceId, alias, appToken, reporterToken, notification, form, listener);
-		request.setRequestLauncher(requestLauncher);
+		launch(request);
 		return request;
+	}
+	
+	/* Launch methods */
+	
+	private void launch(TwinPushRequest request) {
+		if (stopRequests) {
+			pendingRequests.add(request);
+		} else {
+			if (request.isSequential()) {
+				stopRequests = true;
+				request.addOnRequestFinishListener(new OnRequestFinishListener() {
+
+					@Override
+					public void onRequestFinish() {
+						stopRequests = false;
+						launchNextRequest();
+					}
+				});
+			} else {
+				launchNextRequest();
+			}
+			request.setRequestLauncher(requestLauncher);
+			request.launch();
+		}
+	}
+	
+	private void launchNextRequest() {
+		if (!pendingRequests.isEmpty()) {
+			TwinPushRequest nextRequest = pendingRequests.get(0);
+			pendingRequests.remove(nextRequest);
+			launch(nextRequest);
+		}
 	}
 	
 }

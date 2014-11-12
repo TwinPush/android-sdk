@@ -1,7 +1,5 @@
 package com.twincoders.twinpush.sdk.communications.requests.statistics;
 
-import java.util.Date;
-
 import org.json.JSONObject;
 
 import com.twincoders.twinpush.sdk.communications.requests.TwinPushRequest;
@@ -12,24 +10,16 @@ public class OpenNotificationRequest extends TwinPushRequest {
 	/* Constants */
 	/* Segments */
 	private final static String ACTION_SEGMENT = "open_notification";
-	/* Parameters */
-	private final static String DEVICE_ID_KEY = "device_id";
-	private final static String NOTIFICATION_ID_KEY = "notification_id";
-	private final static String OPEN_TIME_KEY = "open_at";
 	
 	/* Properties */
 	DefaultListener listener;
 	
-	public OpenNotificationRequest(PushNotification notification, DefaultListener listener, String deviceId) {
-		super();
+	public OpenNotificationRequest(String appId, String deviceId, PushNotification notification, DefaultListener listener) {
+		super(appId, deviceId, notification.getId());
 		this.listener = listener;
 		this.httpMethod = HttpMethod.POST;
 		// Segments
 		addSegmentParam(ACTION_SEGMENT);
-		// Parameters
-		addParam(DEVICE_ID_KEY, deviceId);
-		addParam(OPEN_TIME_KEY, new Date().getTime()/1000);
-		addParam(NOTIFICATION_ID_KEY, notification.getId());
 	}
 
 	@Override

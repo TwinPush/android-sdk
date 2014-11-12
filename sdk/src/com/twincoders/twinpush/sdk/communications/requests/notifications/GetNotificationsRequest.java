@@ -19,9 +19,6 @@ public class GetNotificationsRequest extends TwinPushRequest {
 	}
 	
 	/* Constants */
-	/* Segments */
-	private final static String APPLICATIONS_SEGMENT = "apps";
-	private final static String DEVICES_SEGMENT = "devices";
 	private final static String SEARCH_SEGMENT = "search_notifications";
 	/* Parameters */
 	private final static String PAGE_KEY = "page";
@@ -36,15 +33,11 @@ public class GetNotificationsRequest extends TwinPushRequest {
 	/* Properties */
 	Listener listener;
 	
-	public GetNotificationsRequest(int page, int resultsPerPage, List<String> tags, List<String> noTags, boolean ignoreNonRichNotifications, Listener listener, String applicationId, String deviceId) {
-		super();
+	public GetNotificationsRequest(String applicationId, String deviceId, int page, int resultsPerPage, List<String> tags, List<String> noTags, boolean ignoreNonRichNotifications, Listener listener) {
+		super(applicationId, deviceId);
 		this.listener = listener;
 		this.httpMethod = HttpMethod.POST;
 		// Segments
-		addSegmentParam(APPLICATIONS_SEGMENT);
-		addSegmentParam(applicationId);
-		addSegmentParam(DEVICES_SEGMENT);
-		addSegmentParam(deviceId);
 		addSegmentParam(SEARCH_SEGMENT);
 		// Parameters
 		// Increase page value so first page is 1 

@@ -9,8 +9,6 @@ public class SetCustomPropertyRequest extends TwinPushRequest {
 
 	/* Constants */
 	/* Segments */
-	private final static String APPLICATIONS_SEGMENT = "apps";
-	private final static String DEVICES_SEGMENT = "devices";
 	private final static String ACTION_SEGMENT = "set_custom_property";
 	/* Parameters */
 	private final static String NAME_KEY = "name";
@@ -25,15 +23,11 @@ public class SetCustomPropertyRequest extends TwinPushRequest {
 	/* Properties */
 	DefaultListener listener;
 	
-	public SetCustomPropertyRequest(String name, PropertyType valueType, Object value, DefaultListener listener, String applicationId, String deviceId) {
-		super();
+	public SetCustomPropertyRequest(String applicationId, String deviceId, String name, PropertyType valueType, Object value, DefaultListener listener) {
+		super(applicationId, deviceId);
 		this.listener = listener;
 		this.httpMethod = HttpMethod.POST;
 		// Segments
-		addSegmentParam(APPLICATIONS_SEGMENT);
-		addSegmentParam(applicationId);
-		addSegmentParam(DEVICES_SEGMENT);
-		addSegmentParam(deviceId);
 		addSegmentParam(ACTION_SEGMENT);
 		// Parameters
 		addParam(NAME_KEY, name);

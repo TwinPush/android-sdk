@@ -13,7 +13,6 @@ public class ReportStatisticsRequest extends TwinPushRequest {
 	/* Segments */
 	private final static String ACTION_SEGMENT = "report_statistics";
 	/* Parameters */
-	private final static String DEVICE_ID_KEY = "id";
 	private final static String STATISTICS_KEY = "device";
 	private final static String LATITUDE_KEY = "latitude";
 	private final static String LONGITUDE_KEY = "longitude";
@@ -21,23 +20,17 @@ public class ReportStatisticsRequest extends TwinPushRequest {
 	/* Properties */
 	DefaultListener listener;
 	
-	public ReportStatisticsRequest(double latitude, double longitude, DefaultListener listener, String deviceId) {
-		super();
+	public ReportStatisticsRequest(String appId, String deviceId, double latitude, double longitude, DefaultListener listener) {
+		super(appId, deviceId);
 		this.listener = listener;
 		this.httpMethod = HttpMethod.POST;
 		// Segments
 		addSegmentParam(ACTION_SEGMENT);
 		// Parameters
-		addParam(DEVICE_ID_KEY, deviceId);
 		Map<String, Object> statistics = new HashMap<String, Object>();
 		statistics.put(LATITUDE_KEY, latitude);
 		statistics.put(LONGITUDE_KEY, longitude);
 		addParam(STATISTICS_KEY, statistics);
-		
-//		List<TwinRequestParam> statistics = new ArrayList<TwinRequestParam>();
-//		statistics.add(DefaultRequestParam.simpleParam(LATITUDE_KEY, latitude));
-//		statistics.add(DefaultRequestParam.simpleParam(LONGITUDE_KEY, longitude));
-//		addParam(DefaultRequestParam.complexParam(STATISTICS_KEY, statistics));
 	}
 
 	@Override

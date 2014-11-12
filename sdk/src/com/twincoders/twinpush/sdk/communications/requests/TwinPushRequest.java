@@ -17,7 +17,6 @@ import org.json.JSONObject;
 
 import com.twincoders.twinpush.sdk.TwinPushSDK;
 import com.twincoders.twinpush.sdk.communications.RESTJSONRequest;
-import com.twincoders.twinpush.sdk.communications.asyhttp.AsyncHttpClient;
 import com.twincoders.twinpush.sdk.logging.Ln;
 import com.twincoders.twinpush.sdk.notifications.PushNotification;
 
@@ -25,7 +24,9 @@ public abstract class TwinPushRequest extends RESTJSONRequest {
 	
 	/* Constants */
 	private static final String TWINPUSH_URL = "%s/api/v2";
-	private static final String TOKEN_KEY = "X-TwinPush-REST-API-Token";
+	private final static String APPLICATIONS_SEGMENT = "apps";
+	private final static String DEVICES_SEGMENT = "devices";
+	private final static String NOTIFICATIONS_SEGMENT = "notifications";
 	/* Status code */
 	private static final int STATUS_CODE_INVALID_ELEMENT = 422;
 	private static final int STATUS_CODE_FORBIDDEN = 403;
@@ -38,20 +39,32 @@ public abstract class TwinPushRequest extends RESTJSONRequest {
 	/* Determines if other requests should wait until this is finished */
 	protected boolean sequential = false;
 	
+	public TwinPushRequest(String appId) {
+		this(appId, null, null);
+	}
+	public TwinPushRequest(String appId, String deviceId) {
+		this(appId, deviceId, null);
+	}
+	public TwinPushRequest(String appId, String deviceId, String notificationId) {
+		super();
+		if (appId != null) { 
+			addSegmentParam(APPLICATIONS_SEGMENT);
+			addSegmentParam(appId);
+		}
+		if (deviceId != null) {
+			addSegmentParam(DEVICES_SEGMENT);
+			addSegmentParam(deviceId);
+		}
+		if (notificationId != null) {
+			addSegmentParam(NOTIFICATIONS_SEGMENT);
+			addSegmentParam(notificationId);
+		}
+	}
+	
 	@Override
 	public String getBaseURL () {
 		String host = TwinPushSDK.getInstance(getRequestLauncher().getContext()).getServerHost();
 		return String.format(TWINPUSH_URL, host);
-	}
-	
-	@Override
-	public void onSetupClient(AsyncHttpClient client) {
-		super.onSetupClient(client);
-		client.addHeader(TOKEN_KEY, getToken());
-	}
-	
-	protected String getToken() {
-		return TwinPushSDK.getInstance(getRequestLauncher().getContext()).getToken();
 	}
 	
 	@Override

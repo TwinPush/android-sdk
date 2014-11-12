@@ -15,7 +15,7 @@ public class ReportFormRequest extends TwinPushRequest {
 	
 	/* Constants */
 	/* Segments */
-	private final static String BASE_URL = "https://forms.twinpush.com/apps";
+	private final static String BASE_URL = "https://forms.twinpush.com";
 	private final static String REPORT_SEGMENT = "report";
 	/* Parameters */
 	private final static String REPORTER_TOKEN = "reporter_token";
@@ -30,11 +30,10 @@ public class ReportFormRequest extends TwinPushRequest {
 	Listener listener;
 	
 	public ReportFormRequest(String deviceId, String alias, String appToken, String reporterToken, PushNotification notification, Map<String, Object> form, Listener listener) {
-		super();
+		super(appToken);
 		this.listener = listener;
 		this.httpMethod = HttpMethod.POST;
 		// Segments
-		addSegmentParam(appToken);
 		addSegmentParam(REPORT_SEGMENT);
 		// Parameters
 		addParam(REPORTER_TOKEN, reporterToken);

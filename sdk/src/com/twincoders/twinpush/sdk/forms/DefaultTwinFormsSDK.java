@@ -42,7 +42,7 @@ public class DefaultTwinFormsSDK extends TwinFormsSDK {
 	
 	public void report(final PushNotification notification, final Map<String, Object> form, final ReportListener listener) {
 		if (request != null) request.cancel();
-		request = getRequestFactory().createReportFormRequest(twinPush.getDeviceId(), twinPush.getDeviceAlias(), getAppToken(), getReporterToken(), notification, form, new ReportFormRequest.Listener() {
+		request = getRequestFactory().reportForm(twinPush.getDeviceId(), twinPush.getDeviceAlias(), getAppToken(), getReporterToken(), notification, form, new ReportFormRequest.Listener() {
 			
 			@Override
 			public void onError(Exception exception) {
@@ -56,7 +56,6 @@ public class DefaultTwinFormsSDK extends TwinFormsSDK {
 				request = null;
 			}
 		});
-		request.launch();
 	}
 
 	@Override

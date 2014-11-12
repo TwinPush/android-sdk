@@ -8,23 +8,17 @@ public class ClearCustomPropertiesRequest extends TwinPushRequest {
 
 	/* Constants */
 	/* Segments */
-	private final static String APPLICATIONS_SEGMENT = "apps";
-	private final static String DEVICES_SEGMENT = "devices";
 	private final static String ACTION_SEGMENT = "clear_custom_properties";
 	
 	/* Properties */
 	DefaultListener listener;
 	
-	public ClearCustomPropertiesRequest(DefaultListener listener, String applicationId, String deviceId) {
-		super();
+	public ClearCustomPropertiesRequest(String applicationId, String deviceId, DefaultListener listener) {
+		super(applicationId, deviceId);
 		this.sequential = true;
 		this.listener = listener;
 		this.httpMethod = HttpMethod.DELETE;
 		// Segments
-		addSegmentParam(APPLICATIONS_SEGMENT);
-		addSegmentParam(applicationId);
-		addSegmentParam(DEVICES_SEGMENT);
-		addSegmentParam(deviceId);
 		addSegmentParam(ACTION_SEGMENT);
 	}
 	

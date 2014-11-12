@@ -15,24 +15,16 @@ public class GetNotificationDetailsRequest extends TwinPushRequest {
 	}
 	
 	/* Constants */
-	/* Segments */
-	private final static String APPLICATIONS_SEGMENT = "apps";
-	private final static String NOTIFICATIONS_SEGMENT = "notifications";
 	/* Response fields */
 	private final static String RESPONSE_RESULTS_KEY = "objects";
 	
 	/* Properties */
 	Listener listener;
 	
-	public GetNotificationDetailsRequest(String notificationId, Listener listener, String applicationId) {
-		super();
+	public GetNotificationDetailsRequest(String appId, String deviceId, String notificationId, Listener listener) {
+		super(appId, deviceId, notificationId);
 		this.listener = listener;
 		this.httpMethod = HttpMethod.GET;
-		// Segments
-		addSegmentParam(APPLICATIONS_SEGMENT);
-		addSegmentParam(applicationId);
-		addSegmentParam(NOTIFICATIONS_SEGMENT);
-		addSegmentParam(notificationId);
 	}
 	
 	@Override

@@ -4,10 +4,10 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import com.twincoders.twinpush.sdk.communications.requests.TwinPushRequest;
+import com.twincoders.twinpush.sdk.communications.requests.TwinPushTokenRequest;
 import com.twincoders.twinpush.sdk.logging.Ln;
 
-public class RegisterRequest extends TwinPushRequest {
+public class RegisterRequest extends TwinPushTokenRequest {
 	
 	public interface Listener extends ErrorListener {
 		void onRegistrationSuccess(String deviceId, String deviceAlias);
@@ -15,12 +15,14 @@ public class RegisterRequest extends TwinPushRequest {
 	
 	/* Constants */
 	/* Segments */
-	private final static String APPLICATIONS_SEGMENT = "apps";
 	private final static String DEVICES_SEGMENT = "devices";
+	private final static String REGISTER_SEGMENT = "register";
 	/* Parameters */
 	private final static String ALIAS_KEY = "alias_device";
 	private final static String UDID_KEY = "udid";
-	private final static String REGISTRATION_ID_KEY = "regid";
+	private final static String PUSH_TOKEN_KEY = "push_token";
+	private final static String PLATFORM_KEY = "platform";
+	private final static String PLATFORM_VALUE = "android";
 	/* Response fields */
 	private final static String RESPONSE_OBJECTS_KEY = "objects";
 	private final static String RESPONSE_DEVICE_ALIAS_KEY = "alias_device";
@@ -30,18 +32,18 @@ public class RegisterRequest extends TwinPushRequest {
 	Listener listener;
 	
 	public RegisterRequest(String alias, String registrationId, String applicationId, String deviceUDID, Listener listener) {
-		super();
+		super(applicationId);
 		this.sequential = true;
 		this.listener = listener;
 		this.httpMethod = HttpMethod.POST;
 		// Segments
-		addSegmentParam(APPLICATIONS_SEGMENT);
-		addSegmentParam(applicationId);
 		addSegmentParam(DEVICES_SEGMENT);
+		addSegmentParam(REGISTER_SEGMENT);
 		// Parameters
 		addParam(UDID_KEY, deviceUDID);
 		addParam(ALIAS_KEY, alias);
-		addParam(REGISTRATION_ID_KEY, registrationId);
+		addParam(PUSH_TOKEN_KEY, registrationId);
+		addParam(PLATFORM_KEY, PLATFORM_VALUE);
 	}
 	
 	@Override
