@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">101 Ofertas</string>
+    <string name="menu_search">Buscar</string>
+    <string name="menu_offer_map">Ver en mapa</string>
+    <string name="menu_offer_share">Compartir</string>
+    <string name="menu_offer_fav">Añadir a favoritos</string>
+    <string name="title_activity_offer_detail">OfferDetailActivity</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
+
+</resources>

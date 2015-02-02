@@ -1,0 +1,10 @@
+<resources>
+
+    <!-- Base application theme. -->
+    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+    </style>
+
+    <style name="MyAnimation.Window" parent="@android:style/Animation.Dialog">
+    </style>
+
+</resources>
