@@ -1,9 +1,6 @@
-package com.yellowpineapple.offers101;
+package com.yellowpineapple.offers101.activities;
 
-import android.content.Intent;
-import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -12,35 +9,33 @@ import android.widget.AdapterView;
 import android.widget.Toast;
 
 import com.etsy.android.grid.StaggeredGridView;
+import com.yellowpineapple.offers101.R;
 import com.yellowpineapple.offers101.controllers.OffersAdapter;
+import com.yellowpineapple.offers101.utils.Ln;
+
+import org.androidannotations.annotations.AfterViews;
+import org.androidannotations.annotations.EActivity;
+import org.androidannotations.annotations.ViewById;
 
 import java.util.ArrayList;
 
+@EActivity(R.layout.activity_offers)
 public class OffersActivity extends ActionBarActivity implements AbsListView.OnScrollListener, AbsListView.OnItemClickListener, AdapterView.OnItemLongClickListener {
-
-    private static final String TAG = "StaggeredGridActivity";
-    public static final String SAVED_DATA_KEY = "SAVED_DATA";
 
     private boolean mHasRequestedMore;
     private OffersAdapter mAdapter;
 
     private ArrayList<String> mData;
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_offers);
+    @ViewById StaggeredGridView gridView;
 
+    @AfterViews
+    void afterViews() {
         setTitle("101 Offers");
-        StaggeredGridView mGridView = (StaggeredGridView) findViewById(R.id.grid_view);
 
         mAdapter = new OffersAdapter(this, R.id.txt_line1);
 
         // do we have saved data?
-        if (savedInstanceState != null) {
-            mData = savedInstanceState.getStringArrayList(SAVED_DATA_KEY);
-        }
-
         if (mData == null) {
             mData = generateSampleData();
         }
@@ -49,10 +44,10 @@ public class OffersActivity extends ActionBarActivity implements AbsListView.OnS
             mAdapter.add(data);
         }
 
-        mGridView.setAdapter(mAdapter);
-        mGridView.setOnScrollListener(this);
-        mGridView.setOnItemClickListener(this);
-        mGridView.setOnItemLongClickListener(this);
+        gridView.setAdapter(mAdapter);
+        gridView.setOnScrollListener(this);
+        gridView.setOnItemClickListener(this);
+        gridView.setOnItemLongClickListener(this);
     }
 
     @Override
@@ -72,26 +67,20 @@ public class OffersActivity extends ActionBarActivity implements AbsListView.OnS
     }
 
     @Override
-    protected void onSaveInstanceState(final Bundle outState) {
-        super.onSaveInstanceState(outState);
-        outState.putStringArrayList(SAVED_DATA_KEY, mData);
-    }
-
-    @Override
     public void onScrollStateChanged(final AbsListView view, final int scrollState) {
-        Log.d(TAG, "onScrollStateChanged:" + scrollState);
+        Ln.d("onScrollStateChanged:" + scrollState);
     }
 
     @Override
     public void onScroll(final AbsListView view, final int firstVisibleItem, final int visibleItemCount, final int totalItemCount) {
-        Log.d(TAG, "onScroll firstVisibleItem:" + firstVisibleItem +
+        Ln.d("onScroll firstVisibleItem:" + firstVisibleItem +
                 " visibleItemCount:" + visibleItemCount +
                 " totalItemCount:" + totalItemCount);
         // our handling
         if (!mHasRequestedMore) {
             int lastInScreen = firstVisibleItem + visibleItemCount;
             if (lastInScreen >= totalItemCount) {
-                Log.d(TAG, "onScroll lastInScreen - so load more");
+                Ln.d("onScroll lastInScreen - so load more");
                 mHasRequestedMore = true;
                 onLoadMoreItems();
             }
@@ -112,9 +101,7 @@ public class OffersActivity extends ActionBarActivity implements AbsListView.OnS
 
     @Override
     public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
-        Toast.makeText(this, "Item Clicked: " + position, Toast.LENGTH_SHORT).show();
-        Intent intent = new Intent(this, OfferDetailActivity.class);
-        startActivity(intent);
+        OfferDetailActivity_.intent(this).start();
         overridePendingTransition(R.anim.slide_in_right, R.anim.fade_back);
     }
 
