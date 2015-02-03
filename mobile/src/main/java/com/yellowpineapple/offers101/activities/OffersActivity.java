@@ -1,8 +1,6 @@
 package com.yellowpineapple.offers101.activities;
 
-import android.support.v7.app.ActionBarActivity;
-import android.view.Menu;
-import android.view.MenuItem;
+import android.location.Location;
 import android.view.View;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
@@ -10,17 +8,23 @@ import android.widget.Toast;
 
 import com.etsy.android.grid.StaggeredGridView;
 import com.yellowpineapple.offers101.R;
+import com.yellowpineapple.offers101.communications.requests.OfferListRequestListener;
 import com.yellowpineapple.offers101.controllers.OffersAdapter;
+import com.yellowpineapple.offers101.models.Offer;
 import com.yellowpineapple.offers101.utils.Ln;
 
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.EActivity;
+import org.androidannotations.annotations.OptionsItem;
+import org.androidannotations.annotations.OptionsMenu;
 import org.androidannotations.annotations.ViewById;
 
 import java.util.ArrayList;
+import java.util.List;
 
+@OptionsMenu(R.menu.menu_offers)
 @EActivity(R.layout.activity_offers)
-public class OffersActivity extends ActionBarActivity implements AbsListView.OnScrollListener, AbsListView.OnItemClickListener, AdapterView.OnItemLongClickListener {
+public class OffersActivity extends ParentActivity implements AbsListView.OnScrollListener, AbsListView.OnItemClickListener, AdapterView.OnItemLongClickListener {
 
     private boolean mHasRequestedMore;
     private OffersAdapter mAdapter;
@@ -48,35 +52,50 @@ public class OffersActivity extends ActionBarActivity implements AbsListView.OnS
         gridView.setOnScrollListener(this);
         gridView.setOnItemClickListener(this);
         gridView.setOnItemLongClickListener(this);
+
+        loadOffers(0);
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_offers, menu);
-        return true;
+    @OptionsItem
+    void actionSearch() {
+        Toast.makeText(this, "Search menu selected", Toast.LENGTH_SHORT).show();
+        loadOffers(0);
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.action_search:
-                Toast.makeText(this, "Search menu selected", Toast.LENGTH_SHORT).show();
-                break;
-        }
-        return true;
+    void loadOffers(int page) {
+        displayLoadingDialog();
+        getLastKnownLocation(new LocationListener() {
+            @Override
+            public void onLocationSuccess(Location location) {
+                getRequestClient().findOffers(location, new OfferListRequestListener() {
+                    @Override
+                    public void onSuccess(List<Offer> offers) {
+                        String message = String.format("Obtained %d offers", offers.size());
+                        Toast.makeText(OffersActivity.this, message, Toast.LENGTH_LONG).show();
+                        closeLoadingDialog();
+                    }
+
+                    @Override
+                    public void onError(Exception exception) {
+                        displayErrorDialog(exception);
+                    }
+                });
+            }
+
+            @Override
+            public void onLocationError(Exception exception) {
+                displayErrorDialog(exception);
+            }
+        });
     }
 
+    /* Scroll Events */
+
     @Override
-    public void onScrollStateChanged(final AbsListView view, final int scrollState) {
-        Ln.d("onScrollStateChanged:" + scrollState);
-    }
+    public void onScrollStateChanged(final AbsListView view, final int scrollState) {}
 
     @Override
     public void onScroll(final AbsListView view, final int firstVisibleItem, final int visibleItemCount, final int totalItemCount) {
-        Ln.d("onScroll firstVisibleItem:" + firstVisibleItem +
-                " visibleItemCount:" + visibleItemCount +
-                " totalItemCount:" + totalItemCount);
-        // our handling
         if (!mHasRequestedMore) {
             int lastInScreen = firstVisibleItem + visibleItemCount;
             if (lastInScreen >= totalItemCount) {

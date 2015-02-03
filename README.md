@@ -10,6 +10,8 @@ The following dependencies are used in the project:
 * [android-apt](https://bitbucket.org/hvisser/android-apt): Gradle plugin that allows including annotation processes
 * [Lombok](http://projectlombok.org/setup/android.html): Avoid *boiler-plate* in model entities
 * [AndroidAnnotations](http://androidannotations.org): Avoid *boiler-plate* mainly in activity flows and event listeners
+* [Async Http](http://loopj.com/android-async-http/): Library for asynchronous requests
+* [Gson](http://code.google.com/p/google-gson/): Parse and serialize JSON
 
 ### Android Studio Setup ###
 

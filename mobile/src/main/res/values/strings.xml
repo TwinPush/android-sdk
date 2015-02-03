@@ -2,12 +2,21 @@
 <resources>
 
     <string name="app_name">101 Ofertas</string>
+    <string name="error_message_title">Error</string>
+    <string name="error_message_button">Aceptar</string>
+
+    <!-- Connection error -->
+    <string name="connection_error_message">Se produjo un error de comunicación. Compruebe su conexión a internet e inténtelo de nuevo</string>
+
+    <!-- Loading dialogs -->
+    <string name="loading_default">Cargando…</string>
+
+    <!-- Offer Activity -->
     <string name="menu_search">Buscar</string>
+
+    <!-- Offer Detail Activity -->
     <string name="menu_offer_map">Ver en mapa</string>
     <string name="menu_offer_share">Compartir</string>
     <string name="menu_offer_fav">Añadir a favoritos</string>
-    <string name="title_activity_offer_detail">OfferDetailActivity</string>
-    <string name="hello_world">Hello world!</string>
-    <string name="action_settings">Settings</string>
 
 </resources>

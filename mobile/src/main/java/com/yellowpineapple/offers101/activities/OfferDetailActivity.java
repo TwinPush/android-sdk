@@ -3,7 +3,6 @@ package com.yellowpineapple.offers101.activities;
 import android.content.res.TypedArray;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.ActionBarActivity;
 import android.view.ViewTreeObserver;
 import android.view.Window;
 import android.widget.ScrollView;
@@ -18,7 +17,7 @@ import org.androidannotations.annotations.Extra;
 import org.androidannotations.annotations.ViewById;
 
 @EActivity(R.layout.activity_offer_detail)
-public class OfferDetailActivity extends ActionBarActivity {
+public class OfferDetailActivity extends ParentActivity {
 
     @Extra Offer offer;
     boolean actionBarVisible = true;
