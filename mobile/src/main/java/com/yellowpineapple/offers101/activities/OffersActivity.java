@@ -31,6 +31,7 @@ public class OffersActivity extends ParentActivity implements AbsListView.OnScro
 
     private List<Offer> offers;
     private static int FIRST_PAGE = 0;
+    private static int PER_PAGE = 30;
     private int offersPage = FIRST_PAGE;
 
     @ViewById StaggeredGridView gridView;
@@ -59,16 +60,17 @@ public class OffersActivity extends ParentActivity implements AbsListView.OnScro
         loadOffers(FIRST_PAGE);
     }
 
-    void loadOffers(int page) {
+    void loadOffers(final int page) {
         this.offersPage = page;
         this.mHasRequestedMore = true;
         displayLoadingDialog();
         getLastKnownLocation(new LocationListener() {
             @Override
             public void onLocationSuccess(Location location) {
-                getRequestClient().findOffers(location, new OfferListRequestListener() {
+                getRequestClient().findOffers(location, page, PER_PAGE, new OfferListRequestListener() {
                     @Override
                     public void onSuccess(List<Offer> offers) {
+                        mHasMoreResults = offers.size() >= PER_PAGE;
                         OffersActivity.this.offers.addAll(offers);
                         mAdapter.notifyDataSetChanged();
                         closeLoadingDialog();

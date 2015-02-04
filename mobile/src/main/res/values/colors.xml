@@ -7,4 +7,7 @@
     <color name="yellow">#fffffbae</color>
     <color name="red">#fff10800</color>
     <color name="list_item_pressed">#1A000000</color>
+
+    <color name="actionbar_bg">#3C1E3D</color>
+    <color name="actionbar_text">#A47BA6</color>
 </resources>

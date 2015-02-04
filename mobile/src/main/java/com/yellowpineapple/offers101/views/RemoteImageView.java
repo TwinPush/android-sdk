@@ -8,6 +8,8 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.koushikdutta.ion.Ion;
+import com.koushikdutta.ion.bitmap.BitmapInfo;
+import com.koushikdutta.ion.bitmap.IonBitmapCache;
 import com.yellowpineapple.offers101.models.RemoteImage;
 
 /**
@@ -41,15 +43,21 @@ public class RemoteImageView extends AspectKeepFrameLayout {
         this.image = image;
         if (image != null) {
             this.setVirtualSize(image.getHeight(), image.getWidth());
-            int color = Color.parseColor(String.format("#%s",image.getRgbColor()));
-            ColorDrawable drawable = new ColorDrawable(color);
-            setBackgroundColor(color);
-            Ion.with(imageView)
-                    .placeholder(drawable)
-                    .error(drawable)
-                    .animateIn(android.R.anim.fade_in)
-                    .fitXY()
-                    .load(image.getUrl());
+            IonBitmapCache cache = Ion.getDefault(getContext()).getBitmapCache();
+            BitmapInfo bitmapInfo = cache.get(image.getUrl());
+            if (bitmapInfo != null) {
+                imageView.setImageBitmap(bitmapInfo.bitmap);
+            } else {
+                int color = Color.parseColor(String.format("#%s", image.getRgbColor()));
+                ColorDrawable drawable = new ColorDrawable(color);
+                setBackgroundColor(color);
+                Ion.with(imageView)
+                        .placeholder(drawable)
+                        .error(drawable)
+                        .animateIn(android.R.anim.fade_in)
+                        .fitXY()
+                        .load(image.getUrl());
+            }
         }
     }
 }

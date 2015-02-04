@@ -38,8 +38,9 @@ public abstract class BaseRequest extends RESTJSONRequest {
         return httpResponseStatusCode >= 200 && httpResponseStatusCode < 400;
     }
 
-    protected void addPagination(int page) {
+    protected void addPagination(int page, int perPage) {
         addParam("page", page);
+        addParam("perPage", perPage);
     }
 
     protected Gson getParser() {

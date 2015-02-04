@@ -1,8 +1,8 @@
 package com.yellowpineapple.offers101.activities;
 
+import android.app.ActionBar;
 import android.content.res.TypedArray;
 import android.os.Bundle;
-import android.support.v7.app.ActionBar;
 import android.view.ViewTreeObserver;
 import android.view.Window;
 import android.widget.ScrollView;
@@ -35,7 +35,7 @@ public class OfferDetailActivity extends ParentActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        supportRequestWindowFeature(Window.FEATURE_ACTION_BAR_OVERLAY);
+        requestWindowFeature(Window.FEATURE_ACTION_BAR_OVERLAY);
         super.onCreate(savedInstanceState);
     }
 
@@ -45,7 +45,7 @@ public class OfferDetailActivity extends ParentActivity {
         mActionBarHeight = styledAttributes.getDimension(0, 0);
         styledAttributes.recycle();
 
-        mActionBar = getSupportActionBar();
+        mActionBar = getActionBar();
         scrollView.getViewTreeObserver().addOnScrollChangedListener(
            new ViewTreeObserver.OnScrollChangedListener() {
                @Override
@@ -84,7 +84,7 @@ public class OfferDetailActivity extends ParentActivity {
 
     @Click
     void toggleNavButton() {
-        ActionBar ab = getSupportActionBar();
+        ActionBar ab = getActionBar();
 //        if (scrollState == ScrollState.UP) {
 //            if (ab.isShowing()) {
 //                ab.hide();

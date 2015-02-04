@@ -1,12 +1,12 @@
 package com.yellowpineapple.offers101.activities;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.location.Location;
 import android.os.Bundle;
-import android.support.v7.app.ActionBarActivity;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 
@@ -20,7 +20,7 @@ import java.io.IOException;
 
 import lombok.Getter;
 
-public abstract class ParentActivity extends ActionBarActivity {
+public abstract class ParentActivity extends Activity {
 
     protected class LocationException extends Exception {
 
@@ -28,7 +28,7 @@ public abstract class ParentActivity extends ActionBarActivity {
             super(message);
         }
 
-    };
+    }
     protected interface LocationListener {
         void onLocationSuccess(Location location);
         void onLocationError(Exception exception);
@@ -109,7 +109,7 @@ public abstract class ParentActivity extends ActionBarActivity {
     }
 
     public void closeLoadingDialog() {
-        if (mDialog != null) {
+        if (mDialog != null && mDialog.isShowing()) {
             mDialog.dismiss();
         }
         mDialog = null;
@@ -117,7 +117,7 @@ public abstract class ParentActivity extends ActionBarActivity {
 
     public void closeDialog() {
         closeLoadingDialog();
-        if (alert != null) {
+        if (alert != null && alert.isShowing()) {
             alert.dismiss();
         }
         alert = null;

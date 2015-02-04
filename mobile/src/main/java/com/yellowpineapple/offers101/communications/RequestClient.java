@@ -49,8 +49,8 @@ public class RequestClient {
 
     // Offers
 
-    public Request findOffers(Location location, OfferListRequestListener listener) {
-        return launch(new FindOffersRequest(location, listener));
+    public Request findOffers(Location location, int page, int perPage, OfferListRequestListener listener) {
+        return launch(new FindOffersRequest(location, page, perPage, listener));
     }
 
 	/* Private methods */

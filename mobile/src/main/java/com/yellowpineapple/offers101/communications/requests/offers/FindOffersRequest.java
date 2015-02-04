@@ -21,10 +21,11 @@ public class FindOffersRequest extends BaseRequest {
     /* Properties */
     OfferListRequestListener listener;
 
-    public FindOffersRequest(Location location, OfferListRequestListener listener) {
+    public FindOffersRequest(Location location, int page, int perPage, OfferListRequestListener listener) {
         super();
         this.httpMethod = HttpMethod.GET;
         addSegmentParams(SEGMENTS);
+        addPagination(page, perPage);
         addParam("latitude", location.getLatitude());
         addParam("longitude", location.getLongitude());
         this.listener = listener;
