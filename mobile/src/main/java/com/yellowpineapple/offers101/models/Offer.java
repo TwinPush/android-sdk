@@ -9,10 +9,16 @@ import lombok.Getter;
  */
 public class Offer {
 
+    @Getter int id;
+    @Getter boolean online;
     @Getter Company company;
     @Getter String category;
     @Getter String description;
+    @Getter String shortDescription;
+    @Getter String shortOffer;
     @Getter Date expirationDate;
-    @Getter int id;
+    @Getter RemoteImage image;
+    @Getter RemoteImage thumbnail;
+    @Getter Store store;
 
 }

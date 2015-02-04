@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<resources>
+	
+	<declare-styleable name="AspectKeepFrameLayout">
+	    <attr name="virtualWidth" format="integer" />
+		<attr name="virtualHeight" format="integer" />
+    </declare-styleable>
+
+</resources>

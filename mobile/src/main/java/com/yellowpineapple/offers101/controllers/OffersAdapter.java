@@ -1,106 +1,109 @@
 package com.yellowpineapple.offers101.controllers;
 
 import android.content.Context;
-import android.util.Log;
 import android.util.SparseArray;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
-import android.widget.Button;
-import android.widget.Toast;
+import android.widget.BaseAdapter;
+import android.widget.TextView;
 
-import com.etsy.android.grid.util.DynamicHeightTextView;
-import com.yellowpineapple.offers101.R;
+import com.yellowpineapple.offers101.models.Offer;
+import com.yellowpineapple.offers101.views.OfferListView;
+import com.yellowpineapple.offers101.views.OfferListView_;
 
+import java.util.List;
 
-import java.util.ArrayList;
-import java.util.Random;
+import lombok.Getter;
+import lombok.Setter;
 
 /***
  * ADAPTER
  */
 
-public class OffersAdapter extends ArrayAdapter<String> {
-
-    private static final String TAG = "SampleAdapter";
-
-    static class ViewHolder {
-        DynamicHeightTextView txtLineOne;
-        Button btnGo;
-    }
-
-    private final LayoutInflater mLayoutInflater;
-    private final Random mRandom;
-    private final ArrayList<Integer> mBackgroundColors;
+public class OffersAdapter extends BaseAdapter {
 
     private static final SparseArray<Double> sPositionHeightRatios = new SparseArray<Double>();
 
-    public OffersAdapter(final Context context, final int textViewResourceId) {
-        super(context, textViewResourceId);
-        mLayoutInflater = LayoutInflater.from(context);
-        mRandom = new Random();
-        mBackgroundColors = new ArrayList<Integer>();
-        mBackgroundColors.add(R.color.orange);
-        mBackgroundColors.add(R.color.green);
-        mBackgroundColors.add(R.color.blue);
-        mBackgroundColors.add(R.color.yellow);
-        mBackgroundColors.add(R.color.grey);
+    @Getter @Setter List<Offer> offers;
+    @Getter @Setter boolean loading;
+    @Getter Context context;
+
+    public OffersAdapter(final Context context) {
+        super();
+        this.context = context;
+    }
+
+    @Override
+    public int getCount() {
+        int count = 0;
+        if (offers != null) {
+            count = offers.size();
+        }
+        if (loading) {
+            count++;
+        }
+        return count;
+    }
+
+    @Override
+    public Object getItem(int position) {
+        Offer offer = null;
+        if (offers != null && position < offers.size()) {
+            offer = offers.get(position);
+        }
+        return offer;
+    }
+
+    @Override
+    public long getItemId(int position) {
+        return 0;
     }
 
     @Override
     public View getView(final int position, View convertView, final ViewGroup parent) {
-
-        ViewHolder vh;
-        if (convertView == null) {
-            convertView = mLayoutInflater.inflate(R.layout.list_item_offer, parent, false);
-            vh = new ViewHolder();
-            vh.txtLineOne = (DynamicHeightTextView) convertView.findViewById(R.id.txt_line1);
-            vh.btnGo = (Button) convertView.findViewById(R.id.btn_go);
-
-            convertView.setTag(vh);
-        }
-        else {
-            vh = (ViewHolder) convertView.getTag();
-        }
-
-        double positionHeight = getPositionRatio(position);
-        int backgroundIndex = position >= mBackgroundColors.size() ?
-                position % mBackgroundColors.size() : position;
-
-        convertView.setBackgroundResource(mBackgroundColors.get(backgroundIndex));
-
-        Log.d(TAG, "getView position:" + position + " h:" + positionHeight);
-
-        vh.txtLineOne.setHeightRatio(positionHeight);
-        vh.txtLineOne.setText(getItem(position) + position);
-
-        vh.btnGo.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(final View v) {
-                Toast.makeText(getContext(), "Button Clicked Position " +
-                        position, Toast.LENGTH_SHORT).show();
+        View view;
+        if (!isLoadingView(position)) {
+            OfferListView offerView;
+            if (convertView == null) {
+                offerView = OfferListView_.build(getContext());
+            } else {
+                offerView = (OfferListView) convertView;
             }
-        });
-
-        return convertView;
-    }
-
-    private double getPositionRatio(final int position) {
-        double ratio = sPositionHeightRatios.get(position, 0.0);
-        // if not yet done generate and stash the columns height
-        // in our real world scenario this will be determined by
-        // some match based on the known height and width of the image
-        // and maybe a helpful way to get the column height!
-        if (ratio == 0) {
-            ratio = getRandomHeightRatio();
-            sPositionHeightRatios.append(position, ratio);
-            Log.d(TAG, "getPositionRatio:" + position + " ratio:" + ratio);
+            offerView.setOffer(offers.get(position));
+            view = offerView;
+        } else {
+            TextView loadingView = new TextView(getContext());
+            loadingView.setText("loading...");
+            view = loadingView;
         }
-        return ratio;
+
+//        double positionHeight = getPositionRatio(position);
+//        vh.txtLineOne.setHeightRatio(positionHeight);
+
+
+        return view;
     }
 
-    private double getRandomHeightRatio() {
-        return (mRandom.nextDouble() / 2.0) + 1.0; // height will be 1.0 - 1.5 the width
+//    private double getPositionRatio(final int position) {
+//        double ratio = sPositionHeightRatios.get(position, 0.0);
+//        // if not yet done generate and stash the columns height
+//        // in our real world scenario this will be determined by
+//        // some match based on the known height and width of the image
+//        // and maybe a helpful way to get the column height!
+//        if (ratio == 0) {
+//            ratio = getRandomHeightRatio();
+//            sPositionHeightRatios.append(position, ratio);
+//            Log.d(TAG, "getPositionRatio:" + position + " ratio:" + ratio);
+//        }
+//        return ratio;
+//    }
+//
+//    private double getRandomHeightRatio() {
+//        return (mRandom.nextDouble() / 2.0) + 1.0; // height will be 1.0 - 1.5 the width
+//    }
+
+    boolean isLoadingView(int position) {
+        int size = offers != null ? offers.size() : 0;
+        return position == size;
     }
 }

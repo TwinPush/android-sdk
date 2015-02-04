@@ -7,7 +7,6 @@ import lombok.Getter;
  */
 public class Company {
 
-    @Getter boolean online;
     @Getter RemoteImage logo;
     @Getter String name;
 

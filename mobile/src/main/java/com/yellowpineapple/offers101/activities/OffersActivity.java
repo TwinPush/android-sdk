@@ -11,7 +11,6 @@ import com.yellowpineapple.offers101.R;
 import com.yellowpineapple.offers101.communications.requests.OfferListRequestListener;
 import com.yellowpineapple.offers101.controllers.OffersAdapter;
 import com.yellowpineapple.offers101.models.Offer;
-import com.yellowpineapple.offers101.utils.Ln;
 
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.EActivity;
@@ -28,41 +27,41 @@ public class OffersActivity extends ParentActivity implements AbsListView.OnScro
 
     private boolean mHasRequestedMore;
     private OffersAdapter mAdapter;
+    private boolean mHasMoreResults = false;
 
-    private ArrayList<String> mData;
+    private List<Offer> offers;
+    private static int FIRST_PAGE = 0;
+    private int offersPage = FIRST_PAGE;
 
     @ViewById StaggeredGridView gridView;
 
     @AfterViews
     void afterViews() {
-        setTitle("101 Offers");
-
-        mAdapter = new OffersAdapter(this, R.id.txt_line1);
+        mAdapter = new OffersAdapter(this);
 
         // do we have saved data?
-        if (mData == null) {
-            mData = generateSampleData();
+        if (offers == null) {
+            offers = new ArrayList<>();
+            loadOffers(FIRST_PAGE);
         }
 
-        for (String data : mData) {
-            mAdapter.add(data);
-        }
+        mAdapter.setOffers(offers);
 
         gridView.setAdapter(mAdapter);
         gridView.setOnScrollListener(this);
         gridView.setOnItemClickListener(this);
         gridView.setOnItemLongClickListener(this);
-
-        loadOffers(0);
     }
 
     @OptionsItem
     void actionSearch() {
         Toast.makeText(this, "Search menu selected", Toast.LENGTH_SHORT).show();
-        loadOffers(0);
+        loadOffers(FIRST_PAGE);
     }
 
     void loadOffers(int page) {
+        this.offersPage = page;
+        this.mHasRequestedMore = true;
         displayLoadingDialog();
         getLastKnownLocation(new LocationListener() {
             @Override
@@ -70,8 +69,8 @@ public class OffersActivity extends ParentActivity implements AbsListView.OnScro
                 getRequestClient().findOffers(location, new OfferListRequestListener() {
                     @Override
                     public void onSuccess(List<Offer> offers) {
-                        String message = String.format("Obtained %d offers", offers.size());
-                        Toast.makeText(OffersActivity.this, message, Toast.LENGTH_LONG).show();
+                        OffersActivity.this.offers.addAll(offers);
+                        mAdapter.notifyDataSetChanged();
                         closeLoadingDialog();
                     }
 
@@ -96,26 +95,18 @@ public class OffersActivity extends ParentActivity implements AbsListView.OnScro
 
     @Override
     public void onScroll(final AbsListView view, final int firstVisibleItem, final int visibleItemCount, final int totalItemCount) {
-        if (!mHasRequestedMore) {
+        if (!mHasRequestedMore && mHasMoreResults) {
             int lastInScreen = firstVisibleItem + visibleItemCount;
             if (lastInScreen >= totalItemCount) {
-                Ln.d("onScroll lastInScreen - so load more");
-                mHasRequestedMore = true;
                 onLoadMoreItems();
             }
         }
     }
 
     private void onLoadMoreItems() {
-        final ArrayList<String> sampleData = generateSampleData();
-        for (String data : sampleData) {
-            mAdapter.add(data);
-        }
-        // stash all the data in our backing store
-        mData.addAll(sampleData);
         // notify the adapter that we can update now
-        mAdapter.notifyDataSetChanged();
         mHasRequestedMore = false;
+        loadOffers(offersPage + 1);
     }
 
     @Override
@@ -129,16 +120,5 @@ public class OffersActivity extends ParentActivity implements AbsListView.OnScro
     {
         Toast.makeText(this, "Item Long Clicked: " + position, Toast.LENGTH_SHORT).show();
         return true;
-    }
-
-    public static final int SAMPLE_DATA_ITEM_COUNT = 30;
-    public ArrayList<String> generateSampleData() {
-        final ArrayList<String> data = new ArrayList<>(SAMPLE_DATA_ITEM_COUNT);
-
-        for (int i = 0; i < SAMPLE_DATA_ITEM_COUNT; i++) {
-            data.add("SAMPLE #");
-        }
-
-        return data;
     }
 }
