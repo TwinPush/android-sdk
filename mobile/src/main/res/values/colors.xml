@@ -1,13 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="orange">#ffffdc7e</color>
-    <color name="grey">#ffd3d3d3</color>
-    <color name="green">#ff8dd304</color>
-    <color name="blue">#ff82e0ff</color>
-    <color name="yellow">#fffffbae</color>
-    <color name="red">#fff10800</color>
+    <color name="white">#FFF</color>
     <color name="list_item_pressed">#1A000000</color>
 
+    <color name="background">#D5D5D5</color>
     <color name="actionbar_bg">#3C1E3D</color>
     <color name="actionbar_text">#A47BA6</color>
+    <color name="main_text">#505050</color>
+    <color name="bold_text">#393939</color>
+    <color name="light_text">#8F8F8F</color>
+
+    <color name="offer_short_desc">#809718</color>
 </resources>

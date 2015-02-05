@@ -21,6 +21,8 @@ public class OfferListView extends FrameLayout {
     @ViewById TextView txtCompany;
     @ViewById TextView txtDescription;
     @ViewById TextView txtShortOffer;
+    @ViewById TextView txtDistance;
+    @ViewById TextView txtExpiration;
 
     public OfferListView(Context context) {
         super(context);
@@ -47,5 +49,7 @@ public class OfferListView extends FrameLayout {
         txtCompany.setText(offer.getCompany().getName());
         txtDescription.setText(offer.getShortDescription());
         txtShortOffer.setText(offer.getShortOffer());
+        txtDistance.setText("a 20 m");
+        txtExpiration.setText("quedan 5 días");
     }
 }
