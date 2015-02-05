@@ -19,4 +19,13 @@
     <string name="menu_offer_share">Compartir</string>
     <string name="menu_offer_fav">Añadir a favoritos</string>
 
+    <!-- Expiration -->
+    <string name="offer_expired">Caducado</string>
+    <string name="offer_expires_undefined">n/d</string>
+    <string name="offer_expires_today">Hoy</string>
+    <string name="offer_expires_tomorrow">Mañana</string>
+    <string name="offer_expires_in_x_days">En %d días</string>
+    <string name="offer_expires_in_1_month">En 1 mes</string>
+    <string name="offer_expires_in_x_months">En %d meses</string>
+
 </resources>

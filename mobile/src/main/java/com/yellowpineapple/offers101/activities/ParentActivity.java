@@ -19,6 +19,8 @@ import com.yellowpineapple.offers101.communications.RequestClient;
 import java.io.IOException;
 
 import lombok.Getter;
+import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
+import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 public abstract class ParentActivity extends Activity {
 
@@ -42,6 +44,16 @@ public abstract class ParentActivity extends Activity {
         buildGoogleApiClient();
         requestClient = RequestClient.getSharedInstance(this, RequestClient.Environment.PRODUCTION);
         super.onCreate(savedInstanceState);
+        CalligraphyConfig.initDefault(new CalligraphyConfig.Builder()
+                        .setDefaultFontPath("fonts/Aller_Lt.ttf")
+                        .setFontAttrId(R.attr.fontPath)
+                        .build()
+        );
+    }
+
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
     }
 
     /* Google API Service */
@@ -192,4 +204,11 @@ public abstract class ParentActivity extends Activity {
         imm.hideSoftInputFromWindow(getWindow().getDecorView().getWindowToken(), 0);
     }
 
+    @Override
+    protected void onDestroy() {
+        if (alert != null) {
+            alert.cancel();
+        }
+        super.onDestroy();
+    }
 }

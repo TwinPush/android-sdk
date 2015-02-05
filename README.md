@@ -13,6 +13,7 @@ The following dependencies are used in the project:
 * [Async Http](http://loopj.com/android-async-http/): Library for asynchronous requests
 * [Gson](http://code.google.com/p/google-gson/): Parse and serialize JSON
 * [ion](https://github.com/koush/ion): Async image load by url
+* [Calligraphy](https://github.com/chrisjenx/Calligraphy): Allows setting custom typeface to Text Views
 
 ### Android Studio Setup ###
 

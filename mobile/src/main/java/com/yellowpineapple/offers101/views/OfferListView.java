@@ -11,7 +11,9 @@ import com.yellowpineapple.offers101.models.Offer;
 import org.androidannotations.annotations.EViewGroup;
 import org.androidannotations.annotations.ViewById;
 
-@EViewGroup(R.layout.view_offer_list)
+import java.util.Random;
+
+@EViewGroup(R.layout.list_item_offer)
 public class OfferListView extends FrameLayout {
 
     Offer offer;
@@ -50,6 +52,7 @@ public class OfferListView extends FrameLayout {
         txtDescription.setText(offer.getShortDescription());
         txtShortOffer.setText(offer.getShortOffer());
         txtDistance.setText("a 20 m");
-        txtExpiration.setText("quedan 5 días");
+        int distance = new Random().nextInt(20);
+        txtExpiration.setText(String.format(getResources().getText(R.string.offer_expires_in_x_days).toString(), distance));
     }
 }
