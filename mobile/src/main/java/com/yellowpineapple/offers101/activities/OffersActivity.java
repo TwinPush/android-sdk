@@ -8,6 +8,7 @@ import android.widget.Toast;
 
 import com.etsy.android.grid.StaggeredGridView;
 import com.yellowpineapple.offers101.R;
+import com.yellowpineapple.offers101.communications.Request;
 import com.yellowpineapple.offers101.communications.requests.OfferListRequestListener;
 import com.yellowpineapple.offers101.controllers.OffersAdapter;
 import com.yellowpineapple.offers101.models.Offer;
@@ -28,6 +29,7 @@ public class OffersActivity extends ParentActivity implements AbsListView.OnScro
     private boolean mHasRequestedMore;
     private OffersAdapter mAdapter;
     private boolean mHasMoreResults = false;
+    Request offersRequest = null;
 
     private List<Offer> offers;
     private static int FIRST_PAGE = 0;
@@ -64,10 +66,13 @@ public class OffersActivity extends ParentActivity implements AbsListView.OnScro
         this.offersPage = page;
         this.mHasRequestedMore = true;
         displayLoadingDialog();
+        if (offersRequest != null) {
+            offersRequest.cancel();
+        }
         getLastKnownLocation(new LocationListener() {
             @Override
             public void onLocationSuccess(final Location location) {
-                getRequestClient().findOffers(location, page, PER_PAGE, new OfferListRequestListener() {
+                offersRequest = getRequestClient().findOffers(location, page, PER_PAGE, new OfferListRequestListener() {
                     @Override
                     public void onSuccess(List<Offer> offers) {
                         mHasMoreResults = offers.size() >= PER_PAGE;
@@ -76,12 +81,14 @@ public class OffersActivity extends ParentActivity implements AbsListView.OnScro
                         mAdapter.notifyDataSetChanged();
                         mHasRequestedMore = false;
                         closeLoadingDialog();
+                        offersRequest = null;
                     }
 
                     @Override
                     public void onError(Exception exception) {
                         mHasRequestedMore = false;
                         displayErrorDialog(exception);
+                        offersRequest = null;
                     }
                 });
             }
@@ -117,7 +124,7 @@ public class OffersActivity extends ParentActivity implements AbsListView.OnScro
 
     @Override
     public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
-        OfferDetailActivity_.intent(this).start();
+        OfferDetailActivity_.intent(this).offer(offers.get(position)).start();
         overridePendingTransition(R.anim.slide_in_right, R.anim.fade_back);
     }
 
