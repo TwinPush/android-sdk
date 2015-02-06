@@ -66,18 +66,21 @@ public class OffersActivity extends ParentActivity implements AbsListView.OnScro
         displayLoadingDialog();
         getLastKnownLocation(new LocationListener() {
             @Override
-            public void onLocationSuccess(Location location) {
+            public void onLocationSuccess(final Location location) {
                 getRequestClient().findOffers(location, page, PER_PAGE, new OfferListRequestListener() {
                     @Override
                     public void onSuccess(List<Offer> offers) {
                         mHasMoreResults = offers.size() >= PER_PAGE;
                         OffersActivity.this.offers.addAll(offers);
+                        mAdapter.setCurrentLocation(location);
                         mAdapter.notifyDataSetChanged();
+                        mHasRequestedMore = false;
                         closeLoadingDialog();
                     }
 
                     @Override
                     public void onError(Exception exception) {
+                        mHasRequestedMore = false;
                         displayErrorDialog(exception);
                     }
                 });
@@ -85,6 +88,7 @@ public class OffersActivity extends ParentActivity implements AbsListView.OnScro
 
             @Override
             public void onLocationError(Exception exception) {
+                mHasRequestedMore = false;
                 displayErrorDialog(exception);
             }
         });

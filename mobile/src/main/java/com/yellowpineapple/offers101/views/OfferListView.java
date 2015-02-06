@@ -1,6 +1,7 @@
 package com.yellowpineapple.offers101.views;
 
 import android.content.Context;
+import android.location.Location;
 import android.util.AttributeSet;
 import android.widget.FrameLayout;
 import android.widget.TextView;
@@ -10,8 +11,6 @@ import com.yellowpineapple.offers101.models.Offer;
 
 import org.androidannotations.annotations.EViewGroup;
 import org.androidannotations.annotations.ViewById;
-
-import java.util.Random;
 
 @EViewGroup(R.layout.list_item_offer)
 public class OfferListView extends FrameLayout {
@@ -45,14 +44,15 @@ public class OfferListView extends FrameLayout {
 
     }
 
-    public void setOffer(Offer offer) {
+    public void setOffer(Offer offer, Location currentLocation) {
         this.offer = offer;
         offerImageView.setImage(offer.getThumbnail());
         txtCompany.setText(offer.getCompany().getName());
         txtDescription.setText(offer.getShortDescription());
         txtShortOffer.setText(offer.getShortOffer());
-        txtDistance.setText("a 20 m");
-        int distance = new Random().nextInt(20);
-        txtExpiration.setText(String.format(getResources().getText(R.string.offer_expires_in_x_days).toString(), distance));
+        txtDistance.setText(offer.getHumanizedDistance(getContext(), currentLocation));
+        txtExpiration.setText(offer.getHumanizedExpiration(getContext()));
     }
+
+
 }

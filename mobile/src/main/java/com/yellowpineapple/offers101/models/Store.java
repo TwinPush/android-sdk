@@ -1,5 +1,7 @@
 package com.yellowpineapple.offers101.models;
 
+import android.location.Location;
+
 import lombok.Getter;
 
 /**
@@ -10,5 +12,25 @@ public class Store {
     @Getter String name;
     @Getter String address;
     @Getter double latitude;
-    @Getter double lontigude;
+    @Getter double longitude;
+
+    public Location getLocation() {
+        Location location = null;
+        if (latitude != 0 || longitude != 0) {
+            location = new Location(name);
+            location.setLatitude(latitude);
+            location.setLongitude(longitude);
+        }
+        return location;
+    }
+
+    public static int LOCATION_INVALID = -1;
+    public int getDistance(Location location) {
+        int distance = LOCATION_INVALID;
+        Location storeLocation = getLocation();
+        if (storeLocation != null && location != null) {
+            distance = Math.round(location.distanceTo(storeLocation));
+        }
+        return distance;
+    }
 }

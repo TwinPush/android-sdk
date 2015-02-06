@@ -1,6 +1,7 @@
 package com.yellowpineapple.offers101.controllers;
 
 import android.content.Context;
+import android.location.Location;
 import android.util.SparseArray;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,6 +28,7 @@ public class OffersAdapter extends BaseAdapter {
     @Getter @Setter List<Offer> offers;
     @Getter @Setter boolean loading;
     @Getter Context context;
+    @Setter Location currentLocation;
 
     public OffersAdapter(final Context context) {
         super();
@@ -69,7 +71,7 @@ public class OffersAdapter extends BaseAdapter {
             } else {
                 offerView = (OfferListView) convertView;
             }
-            offerView.setOffer(offers.get(position));
+            offerView.setOffer(offers.get(position), currentLocation);
             view = offerView;
         } else {
             TextView loadingView = new TextView(getContext());

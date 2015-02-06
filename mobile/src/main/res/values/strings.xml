@@ -20,12 +20,19 @@
     <string name="menu_offer_fav">Añadir a favoritos</string>
 
     <!-- Expiration -->
-    <string name="offer_expired">Caducado</string>
-    <string name="offer_expires_undefined">n/d</string>
-    <string name="offer_expires_today">Hoy</string>
-    <string name="offer_expires_tomorrow">Mañana</string>
-    <string name="offer_expires_in_x_days">En %d días</string>
-    <string name="offer_expires_in_1_month">En 1 mes</string>
-    <string name="offer_expires_in_x_months">En %d meses</string>
+    <string name="offer_expired">caducado</string>
+    <string name="offer_expires_undefined">-</string>
+    <string name="offer_expires_today">hoy</string>
+    <string name="offer_expires_tomorrow">mañana</string>
+    <string name="offer_expires_in_x_days">en %d días</string>
+    <string name="offer_expires_in_1_month">en 1 mes</string>
+    <string name="offer_expires_in_x_months">en %d meses</string>
+    <string name="offer_expiration_date_format">dd/MM/yyyy</string>
+
+    <!-- Distance -->
+    <string name="offer_online">online</string>
+    <string name="offer_distance_undefined">-</string>
+    <string name="offer_distance_x_meters">a %d m</string>
+    <string name="offer_distance_x_km">a %.1f km</string>
 
 </resources>
