@@ -209,6 +209,9 @@ public abstract class ParentActivity extends Activity {
         if (alert != null) {
             alert.cancel();
         }
+        if (mDialog != null) {
+            mDialog.cancel();
+        }
         super.onDestroy();
     }
 }
