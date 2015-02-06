@@ -67,7 +67,7 @@
                         android:layout_alignParentLeft="true"
                         android:layout_centerVertical="true"
                         app:imageColor="@color/light_text"
-                        android:src="@drawable/ic_expiration"/>
+                        android:src="@drawable/ic_location"/>
 
                     <TextView
                         android:layout_width="match_parent"
