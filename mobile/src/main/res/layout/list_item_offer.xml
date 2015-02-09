@@ -13,7 +13,7 @@
         android:background="@color/white"
         android:padding="2dp">
 
-        <com.yellowpineapple.offers101.views.RemoteImageView
+        <com.yellowpineapple.offers101.views.RemoteImageView_
             android:id="@+id/offerImageView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

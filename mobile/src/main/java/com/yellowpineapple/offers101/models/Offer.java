@@ -5,6 +5,7 @@ import android.location.Location;
 
 import com.yellowpineapple.offers101.R;
 
+import java.io.Serializable;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -15,7 +16,7 @@ import lombok.Getter;
 /**
  * Created by agutierrez on 02/02/15.
  */
-public class Offer {
+public class Offer implements Serializable {
 
     @Getter int id;
     @Getter boolean isOnline;
@@ -37,17 +38,18 @@ public class Offer {
             distanceText = context.getText(R.string.offer_online);
         } else {
             int distance = Store.LOCATION_INVALID;
-            if (store != null) {
-                distance = store.getDistance(currentLocation);
-            }
-            if (distance != Store.LOCATION_INVALID) {
-                if (distance < KM_LIMIT) {
-                    distanceText = String.format(context.getText(R.string.offer_distance_x_meters).toString(), distance);
-                } else {
-                    distanceText = String.format(context.getText(R.string.offer_distance_x_km).toString(), (distance / 1000f));
+            distanceText = context.getText(R.string.offer_distance_undefined);
+            if (currentLocation != null) {
+                if (store != null) {
+                    distance = store.getDistance(currentLocation);
                 }
-            } else {
-                distanceText = context.getText(R.string.offer_distance_undefined);
+                if (distance != Store.LOCATION_INVALID) {
+                    if (distance < KM_LIMIT) {
+                        distanceText = String.format(context.getText(R.string.offer_distance_x_meters).toString(), distance);
+                    } else {
+                        distanceText = String.format(context.getText(R.string.offer_distance_x_km).toString(), (distance / 1000f));
+                    }
+                }
             }
         }
         return distanceText;

@@ -2,12 +2,14 @@ package com.yellowpineapple.offers101.models;
 
 import android.location.Location;
 
+import java.io.Serializable;
+
 import lombok.Getter;
 
 /**
  * Created by agutierrez on 04/02/15.
  */
-public class Store {
+public class Store implements Serializable {
     @Getter int id;
     @Getter String name;
     @Getter String address;

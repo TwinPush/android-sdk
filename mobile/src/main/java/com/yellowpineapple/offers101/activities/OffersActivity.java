@@ -36,6 +36,8 @@ public class OffersActivity extends ParentActivity implements AbsListView.OnScro
     private static int PER_PAGE = 30;
     private int offersPage = FIRST_PAGE;
 
+    Location currentLocation = null;
+
     @ViewById StaggeredGridView gridView;
 
     @AfterViews
@@ -72,6 +74,7 @@ public class OffersActivity extends ParentActivity implements AbsListView.OnScro
         getLastKnownLocation(new LocationListener() {
             @Override
             public void onLocationSuccess(final Location location) {
+                currentLocation = location;
                 offersRequest = getRequestClient().findOffers(location, page, PER_PAGE, new OfferListRequestListener() {
                     @Override
                     public void onSuccess(List<Offer> offers) {
@@ -124,7 +127,7 @@ public class OffersActivity extends ParentActivity implements AbsListView.OnScro
 
     @Override
     public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
-        OfferDetailActivity_.intent(this).offer(offers.get(position)).start();
+        OfferDetailActivity_.intent(this).offer(offers.get(position)).location(currentLocation).start();
         overridePendingTransition(R.anim.slide_in_right, R.anim.fade_back);
     }
 

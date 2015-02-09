@@ -39,27 +39,31 @@ public class AspectKeepFrameLayout extends FrameLayout {
     // Overridden to retain aspect of this layout view
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        int currentWidth = MeasureSpec.getSize(widthMeasureSpec);
-        int currentHeight = MeasureSpec.getSize(heightMeasureSpec);
-        double aspect = currentWidth / (double) currentHeight;
-        // Those are from XML layout
-        double virtualAspect = virtualWidth / (double) virtualHeight;
-        int width, height;
+        if (!isInEditMode()) {
+            int currentWidth = MeasureSpec.getSize(widthMeasureSpec);
+            int currentHeight = MeasureSpec.getSize(heightMeasureSpec);
+            double aspect = currentWidth / (double) currentHeight;
+            // Those are from XML layout
+            double virtualAspect = virtualWidth / (double) virtualHeight;
+            int width, height;
 
-        if (currentHeight != 0 && aspect > virtualAspect) {
-            height = currentHeight;
-            width = (int) Math.round(height * virtualAspect);
+            if (currentHeight != 0 && aspect > virtualAspect) {
+                height = currentHeight;
+                width = (int) Math.round(height * virtualAspect);
+            } else {
+                width = currentWidth;
+                height = (int) Math.round(width / virtualAspect);
+            }
+
+            int newWidthMeasureSpec = MeasureSpec.makeMeasureSpec(width, MeasureSpec.EXACTLY);
+            int newHeightMeasureSpec = MeasureSpec.makeMeasureSpec(height, MeasureSpec.EXACTLY);
+
+            measureChildren(newWidthMeasureSpec, newHeightMeasureSpec);
+
+            setMeasuredDimension(width, height);
         } else {
-            width = currentWidth;
-            height = (int) Math.round(width / virtualAspect);
+            super.onMeasure(widthMeasureSpec, heightMeasureSpec);
         }
-
-        int newWidthMeasureSpec = MeasureSpec.makeMeasureSpec(width, MeasureSpec.EXACTLY);
-        int newHeightMeasureSpec = MeasureSpec.makeMeasureSpec(height, MeasureSpec.EXACTLY);
-
-        measureChildren(newWidthMeasureSpec, newHeightMeasureSpec);
-
-        setMeasuredDimension(width, height);
     }
 
     public void setVirtualSize(int height, int width) {
