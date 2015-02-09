@@ -13,6 +13,8 @@ import android.view.inputmethod.InputMethodManager;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationServices;
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.yellowpineapple.offers101.R;
 import com.yellowpineapple.offers101.communications.RequestClient;
 
@@ -49,6 +51,9 @@ public abstract class ParentActivity extends Activity {
                         .setFontAttrId(R.attr.fontPath)
                         .build()
         );
+        // Create global configuration and initialize ImageLoader with this config
+        ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(this).build();
+        ImageLoader.getInstance().init(config);
     }
 
     @Override

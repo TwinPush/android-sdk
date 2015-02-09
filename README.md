@@ -14,6 +14,7 @@ The following dependencies are used in the project:
 * [Gson](http://code.google.com/p/google-gson/): Parse and serialize JSON
 * [ion](https://github.com/koush/ion): Async image load by url
 * [Calligraphy](https://github.com/chrisjenx/Calligraphy): Allows setting custom typeface to Text Views
+* [Universal-Image-Loader](https://github.com/nostra13/Android-Universal-Image-Loader): Library to load and cache images by URL
 
 ### Android Studio Setup ###
 
