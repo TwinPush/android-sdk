@@ -25,7 +25,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="70dp">
 
-                    <com.yellowpineapple.offers101.views.RemoteImageView_
+                    <com.yellowpineapple.offers101.views.RemoteImageView
                         android:id="@+id/imgCompany"
                         android:layout_width="120dp"
                         android:layout_height="match_parent"
@@ -93,7 +93,7 @@
                     android:layout_height="1dp"
                     android:background="@color/background"/>
 
-                <com.yellowpineapple.offers101.views.RemoteImageView_
+                <com.yellowpineapple.offers101.views.RemoteImageView
                     android:id="@+id/imgOffer"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"/>

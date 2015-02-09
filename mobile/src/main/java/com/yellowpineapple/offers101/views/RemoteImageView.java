@@ -17,12 +17,9 @@ import com.nostra13.universalimageloader.core.display.FadeInBitmapDisplayer;
 import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListener;
 import com.yellowpineapple.offers101.models.RemoteImage;
 
-import org.androidannotations.annotations.EView;
-
 /**
  * Created by agutierrez on 04/02/15.
  */
-@EView
 public class RemoteImageView extends AspectKeepFrameLayout {
 
     RemoteImage image;
