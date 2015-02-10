@@ -6,6 +6,8 @@ import android.location.Location;
 import com.yellowpineapple.offers101.communications.requests.BaseRequest;
 import com.yellowpineapple.offers101.communications.requests.OfferListRequestListener;
 import com.yellowpineapple.offers101.communications.requests.offers.FindOffersRequest;
+import com.yellowpineapple.offers101.communications.requests.offers.RelatedOffersRequest;
+import com.yellowpineapple.offers101.models.Offer;
 
 import lombok.Getter;
 
@@ -51,6 +53,10 @@ public class RequestClient {
 
     public Request findOffers(Location location, int page, int perPage, OfferListRequestListener listener) {
         return launch(new FindOffersRequest(location, page, perPage, listener));
+    }
+
+    public Request relatedOffers(Offer offer, int page, int perPage, OfferListRequestListener listener) {
+        return launch(new RelatedOffersRequest(offer, page, perPage, listener));
     }
 
 	/* Private methods */
