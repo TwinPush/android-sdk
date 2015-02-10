@@ -12,7 +12,6 @@ The following dependencies are used in the project:
 * [AndroidAnnotations](http://androidannotations.org): Avoid *boiler-plate* mainly in activity flows and event listeners
 * [Async Http](http://loopj.com/android-async-http/): Library for asynchronous requests
 * [Gson](http://code.google.com/p/google-gson/): Parse and serialize JSON
-* [ion](https://github.com/koush/ion): Async image load by url
 * [Calligraphy](https://github.com/chrisjenx/Calligraphy): Allows setting custom typeface to Text Views
 * [Universal-Image-Loader](https://github.com/nostra13/Android-Universal-Image-Loader): Library to load and cache images by URL
 
