@@ -21,7 +21,7 @@ public class Offer implements Serializable {
     @Getter int id;
     @Getter boolean isOnline;
     @Getter Company company;
-    @Getter String category;
+    @Getter Category category;
     @Getter String description;
     @Getter String shortDescription;
     @Getter String shortOffer;

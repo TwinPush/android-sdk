@@ -7,6 +7,8 @@ import com.google.gson.JsonElement;
 import com.loopj.android.http.AsyncHttpClient;
 import com.yellowpineapple.offers101.communications.RESTJSONRequest;
 import com.yellowpineapple.offers101.communications.RequestClient;
+import com.yellowpineapple.offers101.communications.serializers.CategorySerializer;
+import com.yellowpineapple.offers101.models.Category;
 
 public abstract class BaseRequest extends RESTJSONRequest {
 
@@ -47,6 +49,7 @@ public abstract class BaseRequest extends RESTJSONRequest {
         return new GsonBuilder()
                 .setFieldNamingPolicy(FieldNamingPolicy.IDENTITY)
                 .setDateFormat("yyyy-MM-dd")
+                .registerTypeAdapter(Category.class, new CategorySerializer())
                 .create();
     }
 

@@ -35,4 +35,11 @@
     <string name="offer_distance_x_meters">a %d m</string>
     <string name="offer_distance_x_km">a %.1f km</string>
 
+    <!-- Categories -->
+    <string name="category_unknown">Otros</string>
+    <string name="category_leisure">Ocio</string>
+    <string name="category_restaurants">Restaurantes</string>
+    <string name="category_services">Servicios</string>
+    <string name="category_shopping">Compras</string>
+
 </resources>
