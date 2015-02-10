@@ -8,9 +8,11 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.yellowpineapple.offers101.R;
+import com.yellowpineapple.offers101.activities.ModalTextActivity_;
 import com.yellowpineapple.offers101.models.Offer;
 import com.yellowpineapple.offers101.utils.Strings;
 
+import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EViewGroup;
 import org.androidannotations.annotations.ViewById;
 
@@ -64,5 +66,10 @@ public class OfferDetailView extends LinearLayout {
             txtShortOffer.setText(offer.getShortOffer());
             txtExpiration.setText(offer.getHumanizedExpiration(getContext()));
         }
+    }
+
+    @Click(R.id.txtDescription)
+    void onDescriptionClicked() {
+        ModalTextActivity_.intent(getContext()).text(offer.getDescription()).start();
     }
 }

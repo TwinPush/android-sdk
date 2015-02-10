@@ -9,6 +9,7 @@
     <color name="main_text">#505050</color>
     <color name="bold_text">#393939</color>
     <color name="light_text">#8F8F8F</color>
+    <color name="light_gray">#DDD</color>
 
     <color name="offer_short_desc">#809718</color>
 </resources>
