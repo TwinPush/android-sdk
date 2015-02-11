@@ -43,8 +43,6 @@ public abstract class OfferListActivity extends ParentActivity implements AbsLis
 
     AtomicInteger scrollPosition = new AtomicInteger(0);
 
-    private float mActionBarHeight;
-
     private StaggeredGridView gridView;
     private boolean hideActionBarOnScroll;
     ActionBar mActionBar;
@@ -70,7 +68,7 @@ public abstract class OfferListActivity extends ParentActivity implements AbsLis
 
         if (hideActionBarOnScroll) {
             final TypedArray styledAttributes = getTheme().obtainStyledAttributes(new int[] { android.R.attr.actionBarSize });
-            mActionBarHeight = styledAttributes.getDimension(0, 0);
+            float mActionBarHeight = styledAttributes.getDimension(0, 0);
             styledAttributes.recycle();
 
             mActionBar = getActionBar();

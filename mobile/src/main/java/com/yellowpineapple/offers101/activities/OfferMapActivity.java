@@ -1,7 +1,9 @@
 package com.yellowpineapple.offers101.activities;
 
+import android.app.ActionBar;
 import android.location.Location;
 import android.os.Bundle;
+import android.view.View;
 
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -10,10 +12,13 @@ import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.yellowpineapple.offers101.R;
 import com.yellowpineapple.offers101.models.Offer;
 import com.yellowpineapple.offers101.models.Store;
+import com.yellowpineapple.offers101.views.OfferMapInfoView;
+import com.yellowpineapple.offers101.views.OfferMapInfoView_;
 
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.EActivity;
@@ -34,8 +39,11 @@ public class OfferMapActivity extends ParentActivity implements OnMapReadyCallba
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        getActionBar().setHomeButtonEnabled(true);
-        getActionBar().setDisplayHomeAsUpEnabled(true);
+        ActionBar actionBar = getActionBar();
+        if (actionBar != null) {
+            actionBar.setHomeButtonEnabled(true);
+            actionBar.setDisplayHomeAsUpEnabled(true);
+        }
         super.onCreate(savedInstanceState);
     }
 
@@ -63,32 +71,64 @@ public class OfferMapActivity extends ParentActivity implements OnMapReadyCallba
     public void onMapReady(final GoogleMap googleMap) {
         if (offer != null && offer.hasLocation()) {
             Store store = offer.getStore();
+            googleMap.setInfoWindowAdapter(new GoogleMap.InfoWindowAdapter() {
+                @Override
+                public View getInfoWindow(Marker marker) {
+                    return null;
+                }
+
+                @Override
+                public View getInfoContents(Marker marker) {
+                    OfferMapInfoView view = OfferMapInfoView_.build(OfferMapActivity.this);
+                    view.setOffer(offer, location);
+                    return view;
+                }
+            });
             googleMap.setMyLocationEnabled(true);
-            final MarkerOptions storeMarker = new MarkerOptions()
-                    .position(new LatLng(store.getLatitude(), store.getLongitude()))
-                    .title(store.getAddress());
-            googleMap.addMarker(storeMarker);
-            centerMap(googleMap, storeMarker.getPosition());
+            final Marker storeMarker = googleMap.addMarker(
+                    new MarkerOptions()
+                            .position(new LatLng(store.getLatitude(), store.getLongitude()))
+                            .title(offer.getCompany().getName())
+                            .snippet(store.getAddress()));
+            centerMap(googleMap, storeMarker);
         }
     }
 
-    private void centerMap(final GoogleMap googleMap, final LatLng marker) {
+    private void centerMap(final GoogleMap googleMap, final Marker marker) {
         googleMap.setOnMapLoadedCallback(new GoogleMap.OnMapLoadedCallback() {
             @Override
             public void onMapLoaded() {
+                final GoogleMap.CancelableCallback callback = new GoogleMap.CancelableCallback() {
+                    @Override
+                    public void onFinish() {
+                        marker.showInfoWindow();
+                    }
+
+                    @Override
+                    public void onCancel() {}
+                };
+
                 if (location != null) {
                     // Zoom and center to display both store marker and my location
                     LatLngBounds.Builder builder = new LatLngBounds.Builder();
-                    builder.include(marker);
+                    builder.include(marker.getPosition());
                     builder.include(new LatLng(location.getLatitude(), location.getLongitude()));
                     LatLngBounds bounds = builder.build();
                     // offset from edges of the map in pixels
                     int padding = Math.round(getResources().getDimension(R.dimen.map_padding));
                     CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(bounds, padding);
-                    googleMap.animateCamera(cu);
+                    googleMap.animateCamera(cu, new GoogleMap.CancelableCallback() {
+                        @Override
+                        public void onFinish() {
+                            googleMap.animateCamera(CameraUpdateFactory.newLatLng(marker.getPosition()), callback);
+                        }
+
+                        @Override
+                        public void onCancel() {}
+                    });
                 } else {
-                    googleMap.moveCamera(CameraUpdateFactory.newLatLng(marker));
-                    googleMap.animateCamera(CameraUpdateFactory.zoomTo(14));
+                    googleMap.moveCamera(CameraUpdateFactory.newLatLng(marker.getPosition()));
+                    googleMap.animateCamera(CameraUpdateFactory.zoomTo(14), callback);
                 }
             }
         });

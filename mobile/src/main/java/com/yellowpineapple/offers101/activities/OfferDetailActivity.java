@@ -1,5 +1,6 @@
 package com.yellowpineapple.offers101.activities;
 
+import android.app.ActionBar;
 import android.location.Location;
 import android.os.Bundle;
 
@@ -27,8 +28,11 @@ public class OfferDetailActivity extends OfferListActivity implements OfferDetai
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        getActionBar().setHomeButtonEnabled(true);
-        getActionBar().setDisplayHomeAsUpEnabled(true);
+        ActionBar actionBar = getActionBar();
+        if (actionBar != null) {
+            actionBar.setHomeButtonEnabled(true);
+            actionBar.setDisplayHomeAsUpEnabled(true);
+        }
         super.onCreate(savedInstanceState);
     }
 
