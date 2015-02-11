@@ -30,6 +30,10 @@ public class Offer implements Serializable {
     @Getter RemoteImage thumbnail;
     @Getter Store store;
 
+    public boolean hasLocation() {
+        return !isOnline() && store != null && store.getLocation() != null;
+    }
+
     private static int KM_LIMIT = 1000;
 
     public CharSequence getHumanizedDistance(Context context, Location currentLocation) {

@@ -4,6 +4,7 @@ import android.content.Context;
 import android.location.Location;
 import android.util.AttributeSet;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -43,6 +44,8 @@ public class OfferDetailView extends LinearLayout {
     @ViewById TextView txtShortOffer;
     @ViewById TextView txtExpiration;
     @ViewById View viewDescription;
+    @ViewById View storeView;
+    @ViewById ImageView imgDisclosureAddress;
 
     public OfferDetailView(Context context) {
         super(context);
@@ -65,15 +68,20 @@ public class OfferDetailView extends LinearLayout {
             txtDistance.setText(offer.getHumanizedDistance(getContext(), location));
             if (offer.getStore() != null) {
                 txtAddress.setText(offer.getStore().getAddress());
-                txtAddress.setVisibility(View.VISIBLE);
+                txtAddress.setVisibility(VISIBLE);
             } else {
-                txtAddress.setVisibility(View.GONE);
+                txtAddress.setVisibility(GONE);
             }
-            viewDescription.setVisibility(Strings.isEmpty(offer.getDescription()) ? View.GONE : View.VISIBLE);
+            viewDescription.setVisibility(Strings.isEmpty(offer.getDescription()) ? GONE : VISIBLE);
             txtDescription.setText(offer.getDescription());
             txtShortDescription.setText(offer.getShortDescription());
             txtShortOffer.setText(offer.getShortOffer());
             txtExpiration.setText(offer.getHumanizedExpiration(getContext()));
+
+            boolean hasLocation = offer.hasLocation();
+            imgDisclosureAddress.setVisibility(hasLocation ? VISIBLE : GONE);
+            storeView.setClickable(hasLocation);
+
         }
     }
 

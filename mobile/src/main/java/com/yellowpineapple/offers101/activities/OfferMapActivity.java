@@ -61,7 +61,7 @@ public class OfferMapActivity extends ParentActivity implements OnMapReadyCallba
     /* OnMapReadyCallback */
     @Override
     public void onMapReady(final GoogleMap googleMap) {
-        if (offer != null && offer.getStore() != null && offer.getStore().getLocation() != null) {
+        if (offer != null && offer.hasLocation()) {
             Store store = offer.getStore();
             googleMap.setMyLocationEnabled(true);
             final MarkerOptions storeMarker = new MarkerOptions()
