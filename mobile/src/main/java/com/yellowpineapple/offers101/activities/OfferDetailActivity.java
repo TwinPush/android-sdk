@@ -15,8 +15,8 @@ import org.androidannotations.annotations.Extra;
 import org.androidannotations.annotations.OptionsItem;
 import org.androidannotations.annotations.ViewById;
 
-@EActivity(R.layout.activity_offer_detail)
-public class OfferDetailActivity extends OfferListActivity {
+@EActivity(R.layout.activity_offers)
+public class OfferDetailActivity extends OfferListActivity implements OfferDetailView.Listener {
 
     @Extra Offer offer;
     @Extra Location location;
@@ -36,6 +36,7 @@ public class OfferDetailActivity extends OfferListActivity {
     void afterViews() {
         if (offerDetailView == null) {
             offerDetailView = OfferDetailView_.build(this);
+            offerDetailView.setListener(this);
             gridView.addHeaderView(offerDetailView);
         }
         offerDetailView.setOffer(offer, location);
@@ -50,11 +51,24 @@ public class OfferDetailActivity extends OfferListActivity {
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        overridePendingTransition(R.anim.fade_forward, R.anim.slide_out_right);
+        slideOutTransition();
     }
 
     @Override
     void onRequestOffers(final int page, final Location location) {
         offersRequest = getRequestClient().relatedOffers(offer, page, PER_PAGE, getOfferListRequestListener());
+    }
+
+    /* OfferDetailView.Listener */
+
+    @Override
+    public void onViewOnMapClicked(Offer offer) {
+        OfferMapActivity_.intent(this).offer(offer).location(location).start();
+        slideInTransition();
+    }
+
+    @Override
+    public void onDescriptionClicked(Offer offer) {
+        ModalTextActivity_.intent(this).text(offer.getDescription()).start();
     }
 }

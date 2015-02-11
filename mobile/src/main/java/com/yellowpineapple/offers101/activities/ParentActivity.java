@@ -106,7 +106,6 @@ public abstract class ParentActivity extends Activity {
         }
     }
 
-
     /* Dialogs */
 
     ProgressDialog mDialog = null;
@@ -218,5 +217,15 @@ public abstract class ParentActivity extends Activity {
             mDialog.cancel();
         }
         super.onDestroy();
+    }
+
+    /* Activity transitions */
+
+    protected void slideInTransition() {
+        overridePendingTransition(R.anim.slide_in_right, R.anim.fade_back);
+    }
+
+    protected void slideOutTransition() {
+        overridePendingTransition(R.anim.fade_forward, R.anim.slide_out_right);
     }
 }

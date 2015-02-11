@@ -9,7 +9,6 @@ import android.widget.AdapterView;
 import android.widget.Toast;
 
 import com.etsy.android.grid.StaggeredGridView;
-import com.yellowpineapple.offers101.R;
 import com.yellowpineapple.offers101.communications.Request;
 import com.yellowpineapple.offers101.communications.requests.OfferListRequestListener;
 import com.yellowpineapple.offers101.controllers.OffersAdapter;
@@ -171,7 +170,7 @@ public abstract class OfferListActivity extends ParentActivity implements AbsLis
         int offerPosition = position - gridView.getHeaderViewsCount();
         if (offerPosition >= 0) {
             OfferDetailActivity_.intent(this).offer(offers.get(offerPosition)).location(currentLocation).start();
-            overridePendingTransition(R.anim.slide_in_right, R.anim.fade_back);
+            slideInTransition();
         }
     }
 
