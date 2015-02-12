@@ -222,10 +222,10 @@ public abstract class ParentActivity extends Activity {
     /* Activity transitions */
 
     protected void slideInTransition() {
-        overridePendingTransition(R.anim.slide_in_right, R.anim.fade_back);
+        overridePendingTransition(R.anim.slide_in_right, R.anim.no_anim);
     }
 
     protected void slideOutTransition() {
-        overridePendingTransition(R.anim.fade_forward, R.anim.slide_out_right);
+        overridePendingTransition(R.anim.no_anim, R.anim.slide_out_right);
     }
 }

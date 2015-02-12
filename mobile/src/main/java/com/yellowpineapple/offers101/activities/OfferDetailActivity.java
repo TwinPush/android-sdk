@@ -16,7 +16,7 @@ import org.androidannotations.annotations.Extra;
 import org.androidannotations.annotations.OptionsItem;
 import org.androidannotations.annotations.ViewById;
 
-@EActivity(R.layout.activity_offers)
+@EActivity(R.layout.activity_offer_detail)
 public class OfferDetailActivity extends OfferListActivity implements OfferDetailView.Listener {
 
     @Extra Offer offer;

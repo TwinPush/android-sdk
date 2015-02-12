@@ -4,17 +4,21 @@ import android.app.ActionBar;
 import android.content.res.TypedArray;
 import android.location.Location;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.Toast;
 
 import com.etsy.android.grid.StaggeredGridView;
+import com.yellowpineapple.offers101.R;
 import com.yellowpineapple.offers101.communications.Request;
 import com.yellowpineapple.offers101.communications.requests.OfferListRequestListener;
 import com.yellowpineapple.offers101.controllers.OffersAdapter;
 import com.yellowpineapple.offers101.models.Offer;
 
 import org.androidannotations.annotations.EActivity;
+import org.androidannotations.annotations.UiThread;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -46,10 +50,21 @@ public abstract class OfferListActivity extends ParentActivity implements AbsLis
     private StaggeredGridView gridView;
     private boolean hideActionBarOnScroll;
     ActionBar mActionBar;
+    View navigationView;
+    float actionBarHeight;
+
+    interface AnimationListener {
+        void onAnimationCompleted();
+    }
 
     void setupOffersGrid(StaggeredGridView gridView, final boolean hideActionBarOnScroll) {
+        setupOffersGrid(gridView, null, hideActionBarOnScroll);
+    }
+
+    void setupOffersGrid(StaggeredGridView gridView, View navigationView, final boolean hideActionBarOnScroll) {
         this.gridView = gridView;
         this.hideActionBarOnScroll = hideActionBarOnScroll;
+        this.navigationView = navigationView;
 
         offersAdapter = new OffersAdapter(this);
 
@@ -69,6 +84,10 @@ public abstract class OfferListActivity extends ParentActivity implements AbsLis
         if (hideActionBarOnScroll) {
             final TypedArray styledAttributes = getTheme().obtainStyledAttributes(new int[] { android.R.attr.actionBarSize });
             float mActionBarHeight = styledAttributes.getDimension(0, 0);
+            this.actionBarHeight = mActionBarHeight;
+            if (navigationView != null) {
+                mActionBarHeight *= 2;
+            }
             styledAttributes.recycle();
 
             mActionBar = getActionBar();
@@ -143,12 +162,55 @@ public abstract class OfferListActivity extends ParentActivity implements AbsLis
             if (firstVisibleItem == 0 || (firstVisibleItem - gridView.getHeaderViewsCount()) % 2 == 0) {
                 int compare = new Integer(firstVisibleItem).compareTo(scrollPosition.getAndSet(firstVisibleItem));
                 if (compare > 0) {
-                    if (mActionBar.isShowing()) mActionBar.hide();
+                    if (mActionBar.isShowing()) {
+                        toggleNavigationBarVisibility(false, true, new AnimationListener() {
+                            @Override
+                            public void onAnimationCompleted() {
+                                mActionBar.hide();
+                            }
+                        });
+                    }
+
                 } else if (compare < 0) {
-                    if (!mActionBar.isShowing()) mActionBar.show();
+                    if (!mActionBar.isShowing()) {
+                        mActionBar.show();
+                        delayNavigationToggle(true, true, null);
+                    }
                 }
             }
         }
+    }
+
+    @UiThread(delay = 50)
+    void delayNavigationToggle(boolean visible, boolean animated, final AnimationListener listener) {
+        toggleNavigationBarVisibility(visible, animated, listener);
+    }
+
+    private void toggleNavigationBarVisibility(final boolean visible, boolean animated, final AnimationListener listener) {
+        if (navigationView != null) {
+            if (animated) {
+                Animation a = AnimationUtils.loadAnimation(this, visible ? R.anim.slide_in_down : R.anim.slide_out_up);
+                a.setAnimationListener(new Animation.AnimationListener() {
+                    @Override
+                    public void onAnimationStart(Animation animation) {
+                        navigationView.setVisibility(View.VISIBLE);
+                    }
+
+                    @Override
+                    public void onAnimationEnd(Animation animation) {
+                        if (!visible) navigationView.setVisibility(View.GONE);
+                        if (listener != null) listener.onAnimationCompleted();
+                    }
+
+                    @Override
+                    public void onAnimationRepeat(Animation animation) {}
+                });
+                navigationView.startAnimation(a);
+            } else {
+                navigationView.setVisibility(visible ? View.VISIBLE : View.GONE);
+            }
+        }
+        if (listener != null) listener.onAnimationCompleted();
     }
 
     private void onLoadMoreItems() {
@@ -160,6 +222,7 @@ public abstract class OfferListActivity extends ParentActivity implements AbsLis
     @Override
     protected void onResume() {
         getActionBar().show();
+        toggleNavigationBarVisibility(true, false, null);
         super.onResume();
     }
 
@@ -180,4 +243,8 @@ public abstract class OfferListActivity extends ParentActivity implements AbsLis
     }
 
     abstract void onRequestOffers(final int page, final Location location);
+
+    View getNavigationView() {
+        return null;
+    }
 }

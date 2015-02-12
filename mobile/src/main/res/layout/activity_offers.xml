@@ -12,4 +12,27 @@
         android:layout_height="match_parent"
         app:item_margin="8dp" />
 
+    <LinearLayout
+        android:id="@+id/navigationView"
+        android:layout_width="match_parent"
+        android:layout_height="?android:attr/actionBarSize"
+        android:layout_alignParentTop="true"
+        android:background="@color/actionbar_bg"
+        android:layout_marginTop="?android:attr/actionBarSize"
+        >
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="Action 1"/>
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="Action 2"/>
+
+    </LinearLayout>
+
 </RelativeLayout>

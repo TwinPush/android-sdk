@@ -1,6 +1,7 @@
 package com.yellowpineapple.offers101.activities;
 
 import android.location.Location;
+import android.view.View;
 import android.widget.Toast;
 
 import com.etsy.android.grid.StaggeredGridView;
@@ -17,10 +18,11 @@ import org.androidannotations.annotations.ViewById;
 public class OffersActivity extends OfferListActivity {
 
     @ViewById StaggeredGridView gridView;
+    @ViewById View navigationView;
 
     @AfterViews
     void afterViews() {
-        setupOffersGrid(gridView, true);
+        setupOffersGrid(gridView, navigationView, true);
     }
 
     @OptionsItem
