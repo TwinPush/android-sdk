@@ -1,6 +1,8 @@
 package com.yellowpineapple.offers101.activities;
 
+import android.app.ActionBar;
 import android.location.Location;
+import android.os.Bundle;
 import android.view.View;
 import android.widget.Toast;
 
@@ -13,12 +15,26 @@ import org.androidannotations.annotations.OptionsItem;
 import org.androidannotations.annotations.OptionsMenu;
 import org.androidannotations.annotations.ViewById;
 
+import java.util.Date;
+
 @OptionsMenu(R.menu.menu_offers)
 @EActivity(R.layout.activity_offers)
 public class OffersActivity extends OfferListActivity {
 
     @ViewById StaggeredGridView gridView;
     @ViewById View navigationView;
+
+    Date backPressedTime = null;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        ActionBar actionBar = getActionBar();
+        if (actionBar != null) {
+            actionBar.setHomeButtonEnabled(false);
+            actionBar.setDisplayHomeAsUpEnabled(false);
+        }
+    }
 
     @AfterViews
     void afterViews() {
@@ -34,5 +50,17 @@ public class OffersActivity extends OfferListActivity {
     @Override
     void onRequestOffers(final int page, final Location location) {
         offersRequest = getRequestClient().findOffers(location, page, PER_PAGE, getOfferListRequestListener());
+    }
+
+    @Override
+    public void onBackPressed() {
+        long diff = backPressedTime != null ? new Date().getTime() - backPressedTime.getTime(): Long.MAX_VALUE;
+        float secondsDiff = diff / 1000;
+        if (secondsDiff > 0.5 && secondsDiff < 3) {
+            finish();
+        } else {
+            backPressedTime = new Date();
+            Toast.makeText(this, R.string.back_button_once, Toast.LENGTH_SHORT).show();
+        }
     }
 }

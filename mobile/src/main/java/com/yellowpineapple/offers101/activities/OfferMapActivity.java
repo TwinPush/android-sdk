@@ -1,8 +1,6 @@
 package com.yellowpineapple.offers101.activities;
 
-import android.app.ActionBar;
 import android.location.Location;
-import android.os.Bundle;
 import android.view.View;
 
 import com.google.android.gms.maps.CameraUpdate;
@@ -24,7 +22,6 @@ import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.Extra;
 import org.androidannotations.annotations.FragmentById;
-import org.androidannotations.annotations.OptionsItem;
 
 /**
  * Created by agutierrez on 11/02/15.
@@ -36,27 +33,6 @@ public class OfferMapActivity extends ParentActivity implements OnMapReadyCallba
     @Extra Location location;
 
     @FragmentById MapFragment mapFragment;
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        ActionBar actionBar = getActionBar();
-        if (actionBar != null) {
-            actionBar.setHomeButtonEnabled(true);
-            actionBar.setDisplayHomeAsUpEnabled(true);
-        }
-        super.onCreate(savedInstanceState);
-    }
-
-    @OptionsItem(android.R.id.home)
-    void onHomePressed() {
-        onBackPressed();
-    }
-
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-        slideOutTransition();
-    }
 
     @AfterViews
     void afterViews() {

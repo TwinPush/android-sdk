@@ -1,5 +1,6 @@
 package com.yellowpineapple.offers101.activities;
 
+import android.app.ActionBar;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
@@ -18,12 +19,16 @@ import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.yellowpineapple.offers101.R;
 import com.yellowpineapple.offers101.communications.RequestClient;
 
+import org.androidannotations.annotations.EActivity;
+import org.androidannotations.annotations.OptionsItem;
+
 import java.io.IOException;
 
 import lombok.Getter;
 import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
+@EActivity
 public abstract class ParentActivity extends Activity {
 
     protected class LocationException extends Exception {
@@ -54,6 +59,23 @@ public abstract class ParentActivity extends Activity {
         // Create global configuration and initialize ImageLoader with this config
         ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(this).build();
         ImageLoader.getInstance().init(config);
+
+        ActionBar actionBar = getActionBar();
+        if (actionBar != null) {
+            actionBar.setHomeButtonEnabled(true);
+            actionBar.setDisplayHomeAsUpEnabled(true);
+        }
+    }
+
+    @OptionsItem(android.R.id.home)
+    void onHomePressed() {
+        onBackPressed();
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        slideOutTransition();
     }
 
     @Override

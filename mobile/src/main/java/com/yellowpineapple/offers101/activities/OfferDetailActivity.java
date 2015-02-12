@@ -1,8 +1,6 @@
 package com.yellowpineapple.offers101.activities;
 
-import android.app.ActionBar;
 import android.location.Location;
-import android.os.Bundle;
 
 import com.etsy.android.grid.StaggeredGridView;
 import com.yellowpineapple.offers101.R;
@@ -13,7 +11,6 @@ import com.yellowpineapple.offers101.views.OfferDetailView_;
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.Extra;
-import org.androidannotations.annotations.OptionsItem;
 import org.androidannotations.annotations.ViewById;
 
 @EActivity(R.layout.activity_offer_detail)
@@ -26,16 +23,6 @@ public class OfferDetailActivity extends OfferListActivity implements OfferDetai
     @ViewById StaggeredGridView gridView;
     OfferDetailView offerDetailView = null;
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        ActionBar actionBar = getActionBar();
-        if (actionBar != null) {
-            actionBar.setHomeButtonEnabled(true);
-            actionBar.setDisplayHomeAsUpEnabled(true);
-        }
-        super.onCreate(savedInstanceState);
-    }
-
     @AfterViews
     void afterViews() {
         if (offerDetailView == null) {
@@ -45,17 +32,6 @@ public class OfferDetailActivity extends OfferListActivity implements OfferDetai
         }
         offerDetailView.setOffer(offer, location);
         setupOffersGrid(gridView, true);
-    }
-
-    @OptionsItem(android.R.id.home)
-    void onHomePressed() {
-        onBackPressed();
-    }
-
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-        slideOutTransition();
     }
 
     @Override
