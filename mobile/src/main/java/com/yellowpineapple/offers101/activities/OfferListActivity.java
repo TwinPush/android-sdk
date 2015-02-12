@@ -1,8 +1,11 @@
 package com.yellowpineapple.offers101.activities;
 
 import android.app.ActionBar;
+import android.app.Notification;
 import android.content.res.TypedArray;
 import android.location.Location;
+import android.support.v4.app.NotificationCompat;
+import android.support.v4.app.NotificationManagerCompat;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -97,6 +100,7 @@ public abstract class OfferListActivity extends ParentActivity implements AbsLis
     }
 
     protected void reloadOffers() {
+        offers.clear();
         requestLoadPage(FIRST_PAGE);
     }
 
@@ -133,6 +137,7 @@ public abstract class OfferListActivity extends ParentActivity implements AbsLis
                 mHasRequestedMore = false;
                 closeLoadingDialog();
                 offersRequest = null;
+                showWearableOffers(offers);
             }
 
             @Override
@@ -142,6 +147,43 @@ public abstract class OfferListActivity extends ParentActivity implements AbsLis
                 offersRequest = null;
             }
         };
+    }
+
+    protected void showWearableOffers(List<Offer> offers) {
+        if (offers.size() > 0) {
+            Offer firstOffer = offers.get(0);
+            // Create builder for the main notification
+            NotificationCompat.Builder notificationBuilder =
+                    new NotificationCompat.Builder(this)
+                            .setSmallIcon(R.drawable.ic_action_logo)
+                            .setContentTitle(firstOffer.getCompany().getName())
+                            .setContentText(firstOffer.getShortDescription());
+//                            .setContentIntent(viewPendingIntent);
+
+
+            NotificationCompat.WearableExtender wearableExtender = new NotificationCompat.WearableExtender();
+            for (int i=1; i < Math.min(offers.size(), 5); i++) {
+                Offer offer = offers.get(i);
+                NotificationCompat.BigTextStyle secondPageStyle = new NotificationCompat.BigTextStyle();
+                secondPageStyle.setBigContentTitle(offer.getCompany().getName())
+                        .bigText(String.format("%s: %s", offer.getShortOffer(), offer.getShortDescription()));
+                // Create second page notification
+                Notification secondPageNotification = new NotificationCompat.Builder(this)
+                                .setStyle(secondPageStyle)
+                                .build();
+                wearableExtender.addPage(secondPageNotification);
+            }
+            notificationBuilder.extend(wearableExtender);
+
+
+
+            // Extend the notification builder with the second page
+            Notification notification = notificationBuilder.build();
+
+            // Issue the notification
+            NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
+            notificationManager.notify(0, notification);
+        }
     }
 
     /* Scroll Events */
