@@ -1,11 +1,8 @@
 package com.yellowpineapple.offers101.activities;
 
 import android.app.ActionBar;
-import android.app.Notification;
 import android.content.res.TypedArray;
 import android.location.Location;
-import android.support.v4.app.NotificationCompat;
-import android.support.v4.app.NotificationManagerCompat;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -19,6 +16,7 @@ import com.yellowpineapple.offers101.communications.Request;
 import com.yellowpineapple.offers101.communications.requests.OfferListRequestListener;
 import com.yellowpineapple.offers101.controllers.OffersAdapter;
 import com.yellowpineapple.offers101.models.Offer;
+import com.yellowpineapple.offers101.utils.NotificationFactory;
 
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.UiThread;
@@ -137,7 +135,7 @@ public abstract class OfferListActivity extends ParentActivity implements AbsLis
                 mHasRequestedMore = false;
                 closeLoadingDialog();
                 offersRequest = null;
-                showWearableOffers(offers);
+                NotificationFactory.getInstance(OfferListActivity.this).showWearableOffers(offers, currentLocation);
             }
 
             @Override
@@ -147,43 +145,6 @@ public abstract class OfferListActivity extends ParentActivity implements AbsLis
                 offersRequest = null;
             }
         };
-    }
-
-    protected void showWearableOffers(List<Offer> offers) {
-        if (offers.size() > 0) {
-            Offer firstOffer = offers.get(0);
-            // Create builder for the main notification
-            NotificationCompat.Builder notificationBuilder =
-                    new NotificationCompat.Builder(this)
-                            .setSmallIcon(R.drawable.ic_action_logo)
-                            .setContentTitle(firstOffer.getCompany().getName())
-                            .setContentText(firstOffer.getShortDescription());
-//                            .setContentIntent(viewPendingIntent);
-
-
-            NotificationCompat.WearableExtender wearableExtender = new NotificationCompat.WearableExtender();
-            for (int i=1; i < Math.min(offers.size(), 5); i++) {
-                Offer offer = offers.get(i);
-                NotificationCompat.BigTextStyle secondPageStyle = new NotificationCompat.BigTextStyle();
-                secondPageStyle.setBigContentTitle(offer.getCompany().getName())
-                        .bigText(String.format("%s: %s", offer.getShortOffer(), offer.getShortDescription()));
-                // Create second page notification
-                Notification secondPageNotification = new NotificationCompat.Builder(this)
-                                .setStyle(secondPageStyle)
-                                .build();
-                wearableExtender.addPage(secondPageNotification);
-            }
-            notificationBuilder.extend(wearableExtender);
-
-
-
-            // Extend the notification builder with the second page
-            Notification notification = notificationBuilder.build();
-
-            // Issue the notification
-            NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
-            notificationManager.notify(0, notification);
-        }
     }
 
     /* Scroll Events */

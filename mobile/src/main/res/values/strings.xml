@@ -4,7 +4,7 @@
     <string name="app_name">101 Ofertas</string>
     <string name="error_message_title">Error</string>
     <string name="error_message_button">Aceptar</string>
-    <string name="back_button_once">Pulse de nuevo 'volver' para salir</string>
+    <string name="back_button_once">Pulse de nuevo \'volver\' para salir</string>
 
     <!-- Connection error -->
     <string name="connection_error_message">Se produjo un error de comunicación. Compruebe su conexión a internet e inténtelo de nuevo</string>
