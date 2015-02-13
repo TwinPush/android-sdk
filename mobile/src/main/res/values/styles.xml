@@ -13,6 +13,11 @@
         <item name="android:windowActionBarOverlay">true</item>
     </style>
 
+    <!-- Theme without ActionBar shadow (inherits main theme) -->
+    <style name="AppTheme.ActionBarOverlay.NoShadow">
+        <item name="android:windowContentOverlay">@null</item>
+    </style>
+
     <style name="AppTheme.NoActionBar">
         <item name="android:windowNoTitle">true</item>
         <item name="android:windowActionBar">false</item>

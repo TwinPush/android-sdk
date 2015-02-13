@@ -12,7 +12,11 @@
     <!-- Loading dialogs -->
     <string name="loading_default">Cargando…</string>
 
-    <!-- Offer Activity -->
+    <!-- Offers Activity -->
+    <string name="big_offer">Ofertón</string>
+    <string name="my_offers">Mis ofertas</string>
+
+    <!-- Offer Detail Activity -->
     <string name="menu_search">Buscar</string>
 
     <!-- Offer Detail Activity -->

@@ -15,23 +15,38 @@
     <LinearLayout
         android:id="@+id/navigationView"
         android:layout_width="match_parent"
-        android:layout_height="?android:attr/actionBarSize"
+        android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:background="@color/actionbar_bg"
-        android:layout_marginTop="?android:attr/actionBarSize"
+        android:paddingTop="?android:attr/actionBarSize"
+        android:elevation="6dp"
+        android:clipChildren="false"
+        android:clipToPadding="false"
         >
 
         <Button
+            android:id="@+id/btnBigOffer"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="?android:attr/actionBarSize"
             android:layout_weight="1"
-            android:text="Action 1"/>
+            android:textColor="@color/actionbar_text"
+            android:background="@drawable/clickable_translucent_view"
+            android:text="@string/big_offer"/>
+
+        <View
+            android:layout_width="1dp"
+            android:layout_marginTop="2dp"
+            android:layout_marginBottom="2dp"
+            android:layout_height="match_parent"
+            android:background="@color/actionbar_text"/>
 
         <Button
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="?android:attr/actionBarSize"
             android:layout_weight="1"
-            android:text="Action 2"/>
+            android:textColor="@color/actionbar_text"
+            android:background="@drawable/clickable_translucent_view"
+            android:text="@string/my_offers"/>
 
     </LinearLayout>
 

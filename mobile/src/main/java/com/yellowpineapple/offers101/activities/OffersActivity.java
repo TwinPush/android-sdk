@@ -10,6 +10,7 @@ import com.etsy.android.grid.StaggeredGridView;
 import com.yellowpineapple.offers101.R;
 
 import org.androidannotations.annotations.AfterViews;
+import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.OptionsItem;
 import org.androidannotations.annotations.OptionsMenu;
@@ -62,5 +63,12 @@ public class OffersActivity extends OfferListActivity {
             backPressedTime = new Date();
             Toast.makeText(this, R.string.back_button_once, Toast.LENGTH_SHORT).show();
         }
+    }
+
+    @Click(R.id.btnBigOffer)
+    void bigOfferPressed() {
+        String url = "http://www.renault.es/gama-renault/renault-vehiculos-turismos/gama-kadjar/kadjar/";
+        WebViewActivity_.intent(this).url(url).titleId(R.string.big_offer).start();
+        slideInTransition();
     }
 }

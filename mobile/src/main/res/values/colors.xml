@@ -2,6 +2,7 @@
 <resources>
     <color name="white">#FFF</color>
     <color name="list_item_pressed">#1A000000</color>
+    <color name="translucent_white">#33FFFFFF</color>
 
     <color name="background">#D5D5D5</color>
     <color name="actionbar_bg">#3C1E3D</color>
