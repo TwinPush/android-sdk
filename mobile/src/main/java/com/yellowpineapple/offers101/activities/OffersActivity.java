@@ -71,4 +71,10 @@ public class OffersActivity extends OfferListActivity {
         WebViewActivity_.intent(this).url(url).titleId(R.string.big_offer).start();
         slideInTransition();
     }
+
+    @Click(R.id.btnMap)
+    void mapButtonPressed() {
+        OfferMapActivity_.intent(this).offers(offers).location(currentLocation).start();
+        slideInTransition();
+    }
 }

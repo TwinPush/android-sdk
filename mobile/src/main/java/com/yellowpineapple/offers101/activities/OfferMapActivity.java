@@ -23,61 +23,79 @@ import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.Extra;
 import org.androidannotations.annotations.FragmentById;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 /**
  * Created by agutierrez on 11/02/15.
  */
 @EActivity(R.layout.activity_offers_map)
 public class OfferMapActivity extends ParentActivity implements OnMapReadyCallback {
 
-    @Extra Offer offer;
+    @Extra List<Offer> offers;
     @Extra Location location;
+
+    Offer offer = null;
 
     @FragmentById MapFragment mapFragment;
 
+    Map<Marker, Offer> markersHash;
+
     @AfterViews
     void afterViews() {
-        if (offer != null) {
+        if (offers != null && offers.size() == 1) {
+            offer = offers.get(0);
             setTitle(offer.getCompany().getName());
-            mapFragment.getMapAsync(this);
         }
+        mapFragment.getMapAsync(this);
     }
 
     /* OnMapReadyCallback */
     @Override
     public void onMapReady(final GoogleMap googleMap) {
-        if (offer != null && offer.hasLocation()) {
-            Store store = offer.getStore();
-            googleMap.setInfoWindowAdapter(new GoogleMap.InfoWindowAdapter() {
-                @Override
-                public View getInfoWindow(Marker marker) {
-                    return null;
-                }
+        if (offers != null) {
+            markersHash = new HashMap<>();
+            for (Offer offer : offers) {
+                if (offer.hasLocation()) {
+                    Store store = offer.getStore();
+                    googleMap.setInfoWindowAdapter(new GoogleMap.InfoWindowAdapter() {
+                        @Override
+                        public View getInfoWindow(Marker marker) {
+                            return null;
+                        }
 
-                @Override
-                public View getInfoContents(Marker marker) {
-                    OfferMapInfoView view = OfferMapInfoView_.build(OfferMapActivity.this);
-                    view.setOffer(offer, location);
-                    return view;
+                        @Override
+                        public View getInfoContents(Marker marker) {
+                            OfferMapInfoView view = OfferMapInfoView_.build(OfferMapActivity.this);
+                            view.setOffer(markersHash.get(marker), location);
+                            return view;
+                        }
+                    });
+                    googleMap.setMyLocationEnabled(true);
+                    final Marker storeMarker = googleMap.addMarker(
+                            new MarkerOptions()
+                                    .position(new LatLng(store.getLatitude(), store.getLongitude()))
+                                    .title(offer.getCompany().getName())
+                                    .snippet(store.getAddress()));
+                    markersHash.put(storeMarker, offer);
                 }
-            });
-            googleMap.setMyLocationEnabled(true);
-            final Marker storeMarker = googleMap.addMarker(
-                    new MarkerOptions()
-                            .position(new LatLng(store.getLatitude(), store.getLongitude()))
-                            .title(offer.getCompany().getName())
-                            .snippet(store.getAddress()));
-            centerMap(googleMap, storeMarker);
+            }
+            centerMap(googleMap, new ArrayList<>(markersHash.keySet()));
         }
     }
 
-    private void centerMap(final GoogleMap googleMap, final Marker marker) {
+    private void centerMap(final GoogleMap googleMap, final List<Marker> markers) {
         googleMap.setOnMapLoadedCallback(new GoogleMap.OnMapLoadedCallback() {
             @Override
             public void onMapLoaded() {
                 final GoogleMap.CancelableCallback callback = new GoogleMap.CancelableCallback() {
                     @Override
                     public void onFinish() {
-                        marker.showInfoWindow();
+                        if (markers.size() == 1) {
+                            markers.get(0).showInfoWindow();
+                        }
                     }
 
                     @Override
@@ -87,24 +105,30 @@ public class OfferMapActivity extends ParentActivity implements OnMapReadyCallba
                 if (location != null) {
                     // Zoom and center to display both store marker and my location
                     LatLngBounds.Builder builder = new LatLngBounds.Builder();
-                    builder.include(marker.getPosition());
+                    for (Marker marker : markers) {
+                        builder.include(marker.getPosition());
+                    }
                     builder.include(new LatLng(location.getLatitude(), location.getLongitude()));
                     LatLngBounds bounds = builder.build();
                     // offset from edges of the map in pixels
-                    int padding = Math.round(getResources().getDimension(R.dimen.map_padding));
+                    int padding = Math.round(getResources().getDimension(markers.size() > 1 ? R.dimen.map_padding_multiple : R.dimen.map_padding));
                     CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(bounds, padding);
                     googleMap.animateCamera(cu, new GoogleMap.CancelableCallback() {
                         @Override
                         public void onFinish() {
-                            googleMap.animateCamera(CameraUpdateFactory.newLatLng(marker.getPosition()), callback);
+                            if (markers.size() == 1) {
+                                googleMap.animateCamera(CameraUpdateFactory.newLatLng(markers.get(0).getPosition()), callback);
+                            }
                         }
 
                         @Override
                         public void onCancel() {}
                     });
                 } else {
-                    googleMap.moveCamera(CameraUpdateFactory.newLatLng(marker.getPosition()));
-                    googleMap.animateCamera(CameraUpdateFactory.zoomTo(14), callback);
+                    if (markers.size() == 1) {
+                        googleMap.moveCamera(CameraUpdateFactory.newLatLng(markers.get(0).getPosition()));
+                        googleMap.animateCamera(CameraUpdateFactory.zoomTo(14), callback);
+                    }
                 }
             }
         });

@@ -52,7 +52,11 @@ public class RequestClient {
     // Offers
 
     public Request findOffers(Location location, int page, int perPage, OfferListRequestListener listener) {
-        return launch(new FindOffersRequest(location, page, perPage, listener));
+        return launch(new FindOffersRequest(location, true, page, perPage, listener));
+    }
+
+    public Request findLocatedOffers(Location location, int page, int perPage, OfferListRequestListener listener) {
+        return launch(new FindOffersRequest(location, false, page, perPage, listener));
     }
 
     public Request relatedOffers(Offer offer, int page, int perPage, OfferListRequestListener listener) {

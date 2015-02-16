@@ -4,6 +4,7 @@
     <dimen name="activity_vertical_margin">16dp</dimen>
 
     <dimen name="map_padding">100dp</dimen>
+    <dimen name="map_padding_multiple">20dp</dimen>
 
     <dimen name="title_text">18sp</dimen>
     <dimen name="medium_text">15sp</dimen>

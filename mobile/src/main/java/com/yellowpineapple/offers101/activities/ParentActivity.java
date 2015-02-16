@@ -8,12 +8,12 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.IntentSender;
 import android.location.Location;
-import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentActivity;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
@@ -28,7 +28,6 @@ import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.OptionsItem;
 
 import java.io.IOException;
-import java.util.List;
 
 import lombok.Getter;
 import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
@@ -125,12 +124,8 @@ public abstract class ParentActivity extends FragmentActivity {
                 public void onConnectionFailed(ConnectionResult connectionResult) {
                     if (mResolvingError) {
                         // If connection to Google Services failed, try to obtain location directly from provider
-                        Location location = getLastBestLocation();
-                        if (location == null) {
-                            listener.onLocationError(new LocationException("Could not obtain location: Connection failed"));
-                        } else {
-                            listener.onLocationSuccess(location);
-                        }
+                        Toast.makeText(getApplicationContext(), "Could not obtain location: Connection to Google API Services failed", Toast.LENGTH_SHORT).show();
+                        finish();
                     } else if (connectionResult.hasResolution()) {
                         try {
                             mResolvingError = true;
@@ -198,41 +193,6 @@ public abstract class ParentActivity extends FragmentActivity {
         public void onDismiss(DialogInterface dialog) {
             ((ParentActivity)getActivity()).onDialogDismissed();
         }
-    }
-
-    /**
-     * Returns the most accurate and timely previously detected location.
-     * @return The most accurate and / or timely previously detected location.
-     */
-    public Location getLastBestLocation() {
-        LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-
-        Location bestResult = null;
-        float bestAccuracy = Float.MAX_VALUE;
-        long bestTime = Long.MIN_VALUE;
-
-        // Iterate through all the providers on the system, keeping
-        // note of the most accurate result within the acceptable time limit.
-        // If no result is found within maxTime, return the newest Location.
-        List<String> matchingProviders = locationManager.getAllProviders();
-        for (String provider: matchingProviders) {
-            Location location = locationManager.getLastKnownLocation(provider);
-            if (location != null) {
-                float accuracy = location.getAccuracy();
-                long time = location.getTime();
-
-                if (accuracy < bestAccuracy) {
-                    bestResult = location;
-                    bestAccuracy = accuracy;
-                    bestTime = time;
-                }
-                else if (bestAccuracy == Float.MAX_VALUE && time > bestTime) {
-                    bestResult = location;
-                    bestTime = time;
-                }
-            }
-        }
-        return bestResult;
     }
 
     /* Dialogs */

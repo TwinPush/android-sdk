@@ -13,6 +13,8 @@ import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.Extra;
 import org.androidannotations.annotations.ViewById;
 
+import java.util.Arrays;
+
 @EActivity(R.layout.activity_offer_detail)
 public class OfferDetailActivity extends OfferListActivity implements OfferDetailView.Listener {
 
@@ -43,7 +45,7 @@ public class OfferDetailActivity extends OfferListActivity implements OfferDetai
 
     @Override
     public void onViewOnMapClicked(Offer offer) {
-        OfferMapActivity_.intent(this).offer(offer).location(location).start();
+        OfferMapActivity_.intent(this).offers(Arrays.asList(new Offer[]{offer})).location(location).start();
         slideInTransition();
     }
 
