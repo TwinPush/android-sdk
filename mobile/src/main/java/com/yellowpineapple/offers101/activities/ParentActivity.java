@@ -1,17 +1,22 @@
 package com.yellowpineapple.offers101.activities;
 
 import android.app.ActionBar;
-import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.IntentSender;
 import android.location.Location;
+import android.location.LocationManager;
 import android.os.Bundle;
+import android.support.v4.app.DialogFragment;
+import android.support.v4.app.FragmentActivity;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 
 import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationServices;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -23,13 +28,14 @@ import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.OptionsItem;
 
 import java.io.IOException;
+import java.util.List;
 
 import lombok.Getter;
 import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 @EActivity
-public abstract class ParentActivity extends Activity {
+public abstract class ParentActivity extends FragmentActivity {
 
     protected class LocationException extends Exception {
 
@@ -45,6 +51,13 @@ public abstract class ParentActivity extends Activity {
 
     @Getter RequestClient requestClient = null;
     @Getter GoogleApiClient googleApiClient = null;
+
+    // Request code to use when launching the resolution activity
+    private static final int REQUEST_RESOLVE_ERROR = 1001;
+    // Unique tag for the error dialog fragment
+    private static final String DIALOG_ERROR = "dialog_error";
+    // Bool to track whether the app is already resolving an error
+    private boolean mResolvingError = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -104,13 +117,33 @@ public abstract class ParentActivity extends Activity {
 
                 @Override
                 public void onConnectionSuspended(int i) {
-                    listener.onLocationError(new LocationException("Connection suspended"));
+                    listener.onLocationError(new LocationException("Could not obtain location: Connection suspended"));
                 }
             });
             googleApiClient.registerConnectionFailedListener(new GoogleApiClient.OnConnectionFailedListener() {
                 @Override
                 public void onConnectionFailed(ConnectionResult connectionResult) {
-                    listener.onLocationError(new LocationException("Connection failed"));
+                    if (mResolvingError) {
+                        // If connection to Google Services failed, try to obtain location directly from provider
+                        Location location = getLastBestLocation();
+                        if (location == null) {
+                            listener.onLocationError(new LocationException("Could not obtain location: Connection failed"));
+                        } else {
+                            listener.onLocationSuccess(location);
+                        }
+                    } else if (connectionResult.hasResolution()) {
+                        try {
+                            mResolvingError = true;
+                            connectionResult.startResolutionForResult(ParentActivity.this, REQUEST_RESOLVE_ERROR);
+                        } catch (IntentSender.SendIntentException e) {
+                            // There was an error with the resolution intent. Try again.
+                            googleApiClient.connect();
+                        }
+                    } else {
+                        // Show dialog using GooglePlayServicesUtil.getErrorDialog()
+                        showErrorDialog(connectionResult.getErrorCode());
+                        mResolvingError = true;
+                    }
                 }
             });
             if (!googleApiClient.isConnecting()) {
@@ -126,6 +159,80 @@ public abstract class ParentActivity extends Activity {
         } else {
             listener.onLocationError(new LocationException("Location is empty"));
         }
+    }
+
+    // The rest of this code is all about building the error dialog
+
+    /* Creates a dialog for an error message */
+    private void showErrorDialog(int errorCode) {
+        // Create a fragment for the error dialog
+        ErrorDialogFragment dialogFragment = new ErrorDialogFragment();
+        // Pass the error that should be displayed
+        Bundle args = new Bundle();
+        args.putInt(DIALOG_ERROR, errorCode);
+        dialogFragment.setArguments(args);
+        dialogFragment.show(getSupportFragmentManager(), "errordialog");
+    }
+
+    /* Called from ErrorDialogFragment when the dialog is dismissed. */
+    public void onDialogDismissed() {
+        if (!isFinishing()) {
+            mResolvingError = false;
+            googleApiClient.connect();
+        }
+    }
+
+    /* A fragment to display an error dialog */
+    public static class ErrorDialogFragment extends DialogFragment {
+        public ErrorDialogFragment() { }
+
+        @Override
+        public Dialog onCreateDialog(Bundle savedInstanceState) {
+            // Get the error code and retrieve the appropriate dialog
+            int errorCode = this.getArguments().getInt(DIALOG_ERROR);
+            return GooglePlayServicesUtil.getErrorDialog(errorCode,
+                    this.getActivity(), REQUEST_RESOLVE_ERROR);
+        }
+
+        @Override
+        public void onDismiss(DialogInterface dialog) {
+            ((ParentActivity)getActivity()).onDialogDismissed();
+        }
+    }
+
+    /**
+     * Returns the most accurate and timely previously detected location.
+     * @return The most accurate and / or timely previously detected location.
+     */
+    public Location getLastBestLocation() {
+        LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+
+        Location bestResult = null;
+        float bestAccuracy = Float.MAX_VALUE;
+        long bestTime = Long.MIN_VALUE;
+
+        // Iterate through all the providers on the system, keeping
+        // note of the most accurate result within the acceptable time limit.
+        // If no result is found within maxTime, return the newest Location.
+        List<String> matchingProviders = locationManager.getAllProviders();
+        for (String provider: matchingProviders) {
+            Location location = locationManager.getLastKnownLocation(provider);
+            if (location != null) {
+                float accuracy = location.getAccuracy();
+                long time = location.getTime();
+
+                if (accuracy < bestAccuracy) {
+                    bestResult = location;
+                    bestAccuracy = accuracy;
+                    bestTime = time;
+                }
+                else if (bestAccuracy == Float.MAX_VALUE && time > bestTime) {
+                    bestResult = location;
+                    bestTime = time;
+                }
+            }
+        }
+        return bestResult;
     }
 
     /* Dialogs */
