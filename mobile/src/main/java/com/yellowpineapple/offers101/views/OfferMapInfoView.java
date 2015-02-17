@@ -42,7 +42,9 @@ public class OfferMapInfoView extends LinearLayout {
         this.offer = offer;
         if (offer != null) {
             txtCompany.setText(offer.getCompany().getName());
-            imgCompany.setImage(offer.getCompany().getLogo());
+            // Load company logo synchronously to ensure that
+            // it's loaded when info window is displayed
+            imgCompany.setImageSync(offer.getCompany().getLogo());
             if (offer.getStore() != null) {
                 txtAddress.setText(offer.getStore().getAddress());
                 txtAddress.setVisibility(VISIBLE);

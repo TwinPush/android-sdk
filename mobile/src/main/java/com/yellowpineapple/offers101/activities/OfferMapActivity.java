@@ -12,6 +12,9 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListener;
 import com.yellowpineapple.offers101.R;
 import com.yellowpineapple.offers101.models.Offer;
 import com.yellowpineapple.offers101.models.Store;
@@ -49,7 +52,19 @@ public class OfferMapActivity extends ParentActivity implements OnMapReadyCallba
             offer = offers.get(0);
             setTitle(offer.getCompany().getName());
         }
+        preloadCompanyLogos();
         mapFragment.getMapAsync(this);
+    }
+
+    void preloadCompanyLogos() {
+        ImageLoader imageLoader = ImageLoader.getInstance();
+        DisplayImageOptions displayImageOptions = new DisplayImageOptions.Builder()
+                .cacheInMemory(true)
+                .cacheOnDisk(true)
+                .considerExifParams(true).build();
+        for (Offer offer : offers) {
+            imageLoader.loadImage(offer.getCompany().getLogo().getUrl(), displayImageOptions, new SimpleImageLoadingListener());
+        }
     }
 
     /* OnMapReadyCallback */
@@ -68,8 +83,9 @@ public class OfferMapActivity extends ParentActivity implements OnMapReadyCallba
 
                         @Override
                         public View getInfoContents(Marker marker) {
+                            Offer offer = markersHash.get(marker);
                             OfferMapInfoView view = OfferMapInfoView_.build(OfferMapActivity.this);
-                            view.setOffer(markersHash.get(marker), location);
+                            view.setOffer(offer, location);
                             return view;
                         }
                     });

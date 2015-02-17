@@ -55,6 +55,25 @@ public class RemoteImageView extends AspectKeepFrameLayout {
         imageLoader = ImageLoader.getInstance();
     }
 
+    public void setImageSync(RemoteImage image) {
+        if (!isInEditMode()) {
+            if (image != null) {
+                this.setVirtualSize(image.getHeight(), image.getWidth());
+                int color = Color.parseColor(String.format("#%s", image.getRgbColor()));
+                Drawable placeholder = new ColorDrawable(color);
+                Bitmap bitmap = ImageLoader.getInstance().loadImageSync(image.getUrl(), new DisplayImageOptions.Builder()
+                        .cacheInMemory(true)
+                        .cacheOnDisk(true)
+                        .considerExifParams(true).build());
+                if (bitmap != null) {
+                    imageView.setImageBitmap(bitmap);
+                } else {
+                    imageView.setImageDrawable(placeholder);
+                }
+            }
+        }
+    }
+
     public void setImage(RemoteImage image) {
         setImage(image, null);
     }
