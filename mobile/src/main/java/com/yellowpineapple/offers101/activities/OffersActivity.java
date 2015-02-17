@@ -67,7 +67,7 @@ public class OffersActivity extends OfferListActivity {
 
     @Click(R.id.btnBigOffer)
     void bigOfferPressed() {
-        String url = "http://www.renault.es/gama-renault/renault-vehiculos-turismos/gama-kadjar/kadjar/";
+        String url = "http://goo.gl/Jhe9re";
         WebViewActivity_.intent(this).url(url).titleId(R.string.big_offer).start();
         slideInTransition();
     }
