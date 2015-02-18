@@ -8,6 +8,7 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
@@ -92,6 +93,7 @@ public class OfferMapActivity extends ParentActivity implements OnMapReadyCallba
                     googleMap.setMyLocationEnabled(true);
                     final Marker storeMarker = googleMap.addMarker(
                             new MarkerOptions()
+                                    .icon(BitmapDescriptorFactory.fromResource(offer.getCategory().getIconResId()))
                                     .position(new LatLng(store.getLatitude(), store.getLongitude()))
                                     .title(offer.getCompany().getName())
                                     .snippet(store.getAddress()));
