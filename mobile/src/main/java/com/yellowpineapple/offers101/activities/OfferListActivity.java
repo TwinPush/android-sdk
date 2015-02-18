@@ -13,6 +13,7 @@ import android.widget.Toast;
 import com.etsy.android.grid.StaggeredGridView;
 import com.yellowpineapple.offers101.R;
 import com.yellowpineapple.offers101.communications.Request;
+import com.yellowpineapple.offers101.communications.requests.BaseRequest;
 import com.yellowpineapple.offers101.communications.requests.OfferListRequestListener;
 import com.yellowpineapple.offers101.controllers.OffersAdapter;
 import com.yellowpineapple.offers101.models.Offer;
@@ -42,8 +43,8 @@ public abstract class OfferListActivity extends ParentActivity implements AbsLis
 
     @Getter List<Offer> offers;
 
-    static int FIRST_PAGE = 0;
-    static int PER_PAGE = 30;
+    static int FIRST_PAGE = BaseRequest.FIRST_PAGE;
+    static int PER_PAGE = BaseRequest.RESULTS_PER_PAGE;
 
     AtomicInteger scrollPosition = new AtomicInteger(0);
 
@@ -232,8 +233,7 @@ public abstract class OfferListActivity extends ParentActivity implements AbsLis
     public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
         int offerPosition = position - gridView.getHeaderViewsCount();
         if (offerPosition >= 0) {
-            OfferDetailActivity_.intent(this).offer(offers.get(offerPosition)).location(currentLocation).start();
-            slideInTransition();
+            showOfferDetailActivity(offers.get(offerPosition), currentLocation);
         }
     }
 

@@ -50,7 +50,7 @@ public class OffersActivity extends OfferListActivity {
 
     @Override
     void onRequestOffers(final int page, final Location location) {
-        offersRequest = getRequestClient().findOffers(location, page, PER_PAGE, getOfferListRequestListener());
+        offersRequest = getRequestClient().findOffers(location, page, getOfferListRequestListener());
     }
 
     @Override

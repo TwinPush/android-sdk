@@ -23,6 +23,7 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.yellowpineapple.offers101.R;
 import com.yellowpineapple.offers101.communications.RequestClient;
+import com.yellowpineapple.offers101.models.Offer;
 
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.OptionsItem;
@@ -306,6 +307,11 @@ public abstract class ParentActivity extends FragmentActivity {
             mDialog.cancel();
         }
         super.onDestroy();
+    }
+
+    protected void showOfferDetailActivity(Offer offer, Location currentLocation) {
+        OfferDetailActivity_.intent(this).offer(offer).location(currentLocation).start();
+        slideInTransition();
     }
 
     /* Activity transitions */

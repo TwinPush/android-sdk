@@ -45,7 +45,7 @@ public class OfferDetailActivity extends OfferListActivity implements OfferDetai
 
     @Override
     public void onViewOnMapClicked(Offer offer) {
-        OfferMapActivity_.intent(this).offers(Arrays.asList(new Offer[]{offer})).location(location).start();
+        OfferMapActivity_.intent(this).offer(offer).location(location).start();
         slideInTransition();
     }
 

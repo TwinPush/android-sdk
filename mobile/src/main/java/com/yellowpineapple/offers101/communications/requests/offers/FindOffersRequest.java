@@ -21,7 +21,15 @@ public class FindOffersRequest extends BaseRequest {
     /* Properties */
     OfferListRequestListener listener;
 
-    public FindOffersRequest(Location location, boolean includeOnline, int page, int perPage, OfferListRequestListener listener) {
+    public FindOffersRequest(Location location, Double radiusInKm, OfferListRequestListener listener) {
+        this(location, true, FIRST_PAGE, LOCATED_RESULTS_PER_PAGE, radiusInKm, listener);
+    }
+
+    public FindOffersRequest(Location location, int page, OfferListRequestListener listener) {
+        this(location, false, page, RESULTS_PER_PAGE, null, listener);
+    }
+
+    public FindOffersRequest(Location location, boolean includeOnline, int page, int perPage, Double radiusInKm, OfferListRequestListener listener) {
         super();
         this.httpMethod = HttpMethod.GET;
         addSegmentParams(SEGMENTS);
@@ -29,6 +37,7 @@ public class FindOffersRequest extends BaseRequest {
         addParam("includeOnline", includeOnline);
         addParam("latitude", location.getLatitude());
         addParam("longitude", location.getLongitude());
+        if (radiusInKm != null) addParam("radiusInKm", radiusInKm);
         this.listener = listener;
     }
 

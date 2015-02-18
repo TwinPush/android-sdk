@@ -12,6 +12,10 @@ import com.yellowpineapple.offers101.models.Category;
 
 public abstract class BaseRequest extends RESTJSONRequest {
 
+    public static int FIRST_PAGE = 0;
+    public static int LOCATED_RESULTS_PER_PAGE = 50;
+    public static int RESULTS_PER_PAGE = 30;
+
     RequestClient.Environment environment;
 
     @Override
