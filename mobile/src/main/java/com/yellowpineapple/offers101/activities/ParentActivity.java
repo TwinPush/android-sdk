@@ -24,6 +24,7 @@ import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.yellowpineapple.offers101.R;
 import com.yellowpineapple.offers101.communications.RequestClient;
 import com.yellowpineapple.offers101.models.Offer;
+import com.yellowpineapple.offers101.utils.PersistenceHandler;
 
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.OptionsItem;
@@ -59,10 +60,13 @@ public abstract class ParentActivity extends FragmentActivity {
     // Bool to track whether the app is already resolving an error
     private boolean mResolvingError = false;
 
+    @Getter private PersistenceHandler persistence;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         buildGoogleApiClient();
         requestClient = RequestClient.getSharedInstance(this, RequestClient.Environment.PRODUCTION);
+        persistence = PersistenceHandler.getSharedInstance(this);
         super.onCreate(savedInstanceState);
         CalligraphyConfig.initDefault(new CalligraphyConfig.Builder()
                         .setDefaultFontPath("fonts/Aller_Lt.ttf")

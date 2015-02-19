@@ -24,6 +24,12 @@
         </activity>
 
         <activity
+            android:name=".activities.SavedOffersActivity_"
+            android:label="@string/my_offers"
+            android:theme="@style/AppTheme.ActionBarOverlay">
+        </activity>
+
+        <activity
             android:name=".activities.ModalTextActivity_"
             android:theme="@style/AppTheme.Dialog"
             android:noHistory="true"

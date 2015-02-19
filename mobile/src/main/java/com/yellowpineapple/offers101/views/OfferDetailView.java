@@ -4,12 +4,14 @@ import android.content.Context;
 import android.location.Location;
 import android.util.AttributeSet;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.yellowpineapple.offers101.R;
 import com.yellowpineapple.offers101.models.Offer;
+import com.yellowpineapple.offers101.utils.PersistenceHandler;
 import com.yellowpineapple.offers101.utils.Strings;
 
 import org.androidannotations.annotations.Click;
@@ -27,6 +29,9 @@ public class OfferDetailView extends LinearLayout {
 
     public interface Listener {
         void onViewOnMapClicked(Offer offer);
+        void onSaveClicked(Offer offer);
+        void onOpenLinkClicked(Offer offer);
+        void onShareClicked(Offer offer);
         void onDescriptionClicked(Offer offer);
     }
 
@@ -46,6 +51,11 @@ public class OfferDetailView extends LinearLayout {
     @ViewById View viewDescription;
     @ViewById View storeView;
     @ViewById ImageView imgDisclosureAddress;
+
+    @ViewById Button btnWebsite;
+    @ViewById Button btnMap;
+    @ViewById Button btnSave;
+    @ViewById Button btnShare;
 
     public OfferDetailView(Context context) {
         super(context);
@@ -81,8 +91,17 @@ public class OfferDetailView extends LinearLayout {
             boolean hasLocation = offer.hasLocation();
             imgDisclosureAddress.setVisibility(hasLocation ? VISIBLE : GONE);
             storeView.setClickable(hasLocation);
-
+            btnMap.setEnabled(hasLocation);
+            btnMap.setVisibility(offer.isOnline() ? GONE : VISIBLE);
+            btnWebsite.setVisibility(offer.isOnline() ? VISIBLE : GONE);
+            refreshSavedState();
         }
+    }
+
+    void refreshSavedState() {
+        boolean saved = PersistenceHandler.getSharedInstance(getContext()).isSavedOffer(offer);
+        btnSave.setText(saved ? R.string.action_offer_saved : R.string.action_offer_save);
+        btnSave.setPressed(saved);
     }
 
     @Click(R.id.viewDescription)
@@ -94,4 +113,19 @@ public class OfferDetailView extends LinearLayout {
     void onAddressClicked() {
         if (listener != null) listener.onViewOnMapClicked(offer);
     }
+
+    @Click
+    void btnMap() { if (listener != null) listener.onViewOnMapClicked(offer); }
+
+    @Click
+    void btnWebsite() { if (listener != null) listener.onOpenLinkClicked(offer); }
+
+    @Click
+    void btnSave() {
+        if (listener != null) listener.onSaveClicked(offer);
+        refreshSavedState();
+    }
+
+    @Click
+    void btnShare() { if (listener != null) listener.onShareClicked(offer); }
 }

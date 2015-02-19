@@ -219,6 +219,7 @@ public class OfferMapActivity
         getRequestClient().findLocatedOffers(location, null, new OfferListRequestListener() {
             @Override
             public void onSuccess(List<Offer> offers) {
+                preloadCompanyLogos(offers);
                 displayInMap(offers);
                 setProgressBarIndeterminateVisibility(Boolean.FALSE);
             }

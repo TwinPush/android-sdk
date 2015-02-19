@@ -67,7 +67,7 @@ public class OffersActivity extends OfferListActivity {
 
     @Click(R.id.btnBigOffer)
     void bigOfferPressed() {
-        String url = "http://goo.gl/Jhe9re";
+        String url = "http://m1.es.f6m.fr/media/---gamme-fspp/vehicules-particuliers/HFE/att6728d8b46af04339afde6d5b05521f9b/renault-kadjar-reveal-rotarybloc-01-video-uk.mp4";
         WebViewActivity_.intent(this).url(url).titleId(R.string.big_offer).start();
         slideInTransition();
     }
@@ -75,6 +75,12 @@ public class OffersActivity extends OfferListActivity {
     @Click(R.id.btnMap)
     void mapButtonPressed() {
         OfferMapActivity_.intent(this).offers(offers).location(currentLocation).start();
+        slideInTransition();
+    }
+
+    @Click(R.id.btnMyOffers)
+    void myOffersPressed() {
+        SavedOffersActivity_.intent(this).start();
         slideInTransition();
     }
 }

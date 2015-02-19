@@ -62,6 +62,10 @@ public abstract class OfferListActivity extends ParentActivity implements AbsLis
         setupOffersGrid(gridView, null, hideActionBarOnScroll);
     }
 
+    protected boolean shouldReloadOffers() {
+        return offers == null;
+    }
+
     void setupOffersGrid(StaggeredGridView gridView, View navigationView, final boolean hideActionBarOnScroll) {
         this.gridView = gridView;
         this.hideActionBarOnScroll = hideActionBarOnScroll;
@@ -70,10 +74,7 @@ public abstract class OfferListActivity extends ParentActivity implements AbsLis
         offersAdapter = new OffersAdapter(this);
 
         // do we have saved data?
-        if (offers == null) {
-            offers = new ArrayList<>();
-            reloadOffers();
-        }
+        if (shouldReloadOffers()) reloadOffers();
 
         offersAdapter.setOffers(offers);
 
@@ -98,7 +99,11 @@ public abstract class OfferListActivity extends ParentActivity implements AbsLis
     }
 
     protected void reloadOffers() {
-        offers.clear();
+        if (offers == null) {
+            offers = new ArrayList<>();
+        } else {
+            offers.clear();
+        }
         requestLoadPage(FIRST_PAGE);
     }
 
@@ -245,8 +250,4 @@ public abstract class OfferListActivity extends ParentActivity implements AbsLis
     }
 
     abstract void onRequestOffers(final int page, final Location location);
-
-    View getNavigationView() {
-        return null;
-    }
 }
