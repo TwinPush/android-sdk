@@ -27,6 +27,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import lombok.Getter;
 import uk.co.senab.actionbarpulltorefresh.library.ActionBarPullToRefresh;
+import uk.co.senab.actionbarpulltorefresh.library.Options;
 import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout;
 import uk.co.senab.actionbarpulltorefresh.library.listeners.OnRefreshListener;
 
@@ -120,7 +121,7 @@ public abstract class OfferListActivity extends ParentActivity implements AbsLis
                     public void onRefreshStarted(View view) {
                         reloadOffers();
                     }
-                })
+                }).options(Options.create().minimize(1000).build())
                 // Finally commit the setup to our PullToRefreshLayout
                 .setup(pullToRefreshLayout);
     }
