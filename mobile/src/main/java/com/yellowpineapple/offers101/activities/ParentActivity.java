@@ -321,10 +321,10 @@ public abstract class ParentActivity extends FragmentActivity {
     /* Activity transitions */
 
     protected void slideInTransition() {
-        overridePendingTransition(R.anim.slide_in_right, R.anim.no_anim);
+        overridePendingTransition(R.anim.slide_in_right, R.anim.fade_back);
     }
 
     protected void slideOutTransition() {
-        overridePendingTransition(R.anim.no_anim, R.anim.slide_out_right);
+        overridePendingTransition(R.anim.fade_forward, R.anim.slide_out_right);
     }
 }

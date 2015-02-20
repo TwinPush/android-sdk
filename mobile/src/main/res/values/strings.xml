@@ -13,8 +13,9 @@
     <string name="loading_default">Cargando…</string>
 
     <!-- Offers Activity -->
-    <string name="big_offer">Ofertón</string>
-    <string name="my_offers">Mis ofertas</string>
+    <string name="big_offer">ofertón</string>
+    <string name="my_offers">mis ofertas</string>
+    <string name="offers_map">ver mapa</string>
 
     <!-- Offer Detail Activity -->
     <string name="menu_search">Buscar</string>
