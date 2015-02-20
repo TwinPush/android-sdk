@@ -26,6 +26,9 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import lombok.Getter;
+import uk.co.senab.actionbarpulltorefresh.library.ActionBarPullToRefresh;
+import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout;
+import uk.co.senab.actionbarpulltorefresh.library.listeners.OnRefreshListener;
 
 /**
  * Created by agutierrez on 09/02/15.
@@ -58,18 +61,22 @@ public abstract class OfferListActivity extends ParentActivity implements AbsLis
         void onAnimationCompleted();
     }
 
-    void setupOffersGrid(StaggeredGridView gridView, final boolean hideActionBarOnScroll) {
-        setupOffersGrid(gridView, null, hideActionBarOnScroll);
-    }
-
     protected boolean shouldReloadOffers() {
         return offers == null;
+    }
+
+    void setupOffersGrid(StaggeredGridView gridView, final boolean hideActionBarOnScroll) {
+        setupOffersGrid(gridView, null, hideActionBarOnScroll);
     }
 
     void setupOffersGrid(StaggeredGridView gridView, View navigationView, final boolean hideActionBarOnScroll) {
         this.gridView = gridView;
         this.hideActionBarOnScroll = hideActionBarOnScroll;
         this.navigationView = navigationView;
+
+        if (getPullToRefreshLayout() != null) {
+            setupPullToRefresh(getPullToRefreshLayout());
+        }
 
         offersAdapter = new OffersAdapter(this);
 
@@ -98,6 +105,26 @@ public abstract class OfferListActivity extends ParentActivity implements AbsLis
         }
     }
 
+    public PullToRefreshLayout getPullToRefreshLayout() {
+        return null;
+    }
+
+    void setupPullToRefresh(PullToRefreshLayout pullToRefreshLayout) {
+        // Now setup the PullToRefreshLayout
+        ActionBarPullToRefresh.from(this)
+                // Mark All Children as pullable
+                .allChildrenArePullable()
+                // Set a OnRefreshListener
+                .listener(new OnRefreshListener() {
+                    @Override
+                    public void onRefreshStarted(View view) {
+                        reloadOffers();
+                    }
+                })
+                // Finally commit the setup to our PullToRefreshLayout
+                .setup(pullToRefreshLayout);
+    }
+
     protected void reloadOffers() {
         if (offers == null) {
             offers = new ArrayList<>();
@@ -110,7 +137,7 @@ public abstract class OfferListActivity extends ParentActivity implements AbsLis
     protected void requestLoadPage(final int page) {
         this.offersPage = page;
         this.mHasRequestedMore = true;
-        displayLoadingDialog();
+        setLoading(true);
         if (offersRequest != null) {
             offersRequest.cancel();
         }
@@ -124,9 +151,22 @@ public abstract class OfferListActivity extends ParentActivity implements AbsLis
             @Override
             public void onLocationError(Exception exception) {
                 mHasRequestedMore = false;
+                setLoading(false);
                 displayErrorDialog(exception);
             }
         });
+    }
+
+    void setLoading(boolean loading) {
+        if (getPullToRefreshLayout() != null) {
+            getPullToRefreshLayout().setRefreshing(loading);
+        } else {
+            if (loading) {
+                displayLoadingDialog();
+            } else {
+                closeLoadingDialog();
+            }
+        }
     }
 
     protected OfferListRequestListener getOfferListRequestListener() {
@@ -138,7 +178,7 @@ public abstract class OfferListActivity extends ParentActivity implements AbsLis
                 getOffersAdapter().setCurrentLocation(currentLocation);
                 getOffersAdapter().notifyDataSetChanged();
                 mHasRequestedMore = false;
-                closeLoadingDialog();
+                setLoading(false);
                 offersRequest = null;
                 //NotificationFactory.getInstance(OfferListActivity.this).showWearableOffers(offers, currentLocation);
             }
@@ -146,6 +186,7 @@ public abstract class OfferListActivity extends ParentActivity implements AbsLis
             @Override
             public void onError(Exception exception) {
                 mHasRequestedMore = false;
+                setLoading(false);
                 displayErrorDialog(exception);
                 offersRequest = null;
             }

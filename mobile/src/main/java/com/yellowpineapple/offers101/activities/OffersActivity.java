@@ -18,12 +18,15 @@ import org.androidannotations.annotations.ViewById;
 
 import java.util.Date;
 
+import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout;
+
 @OptionsMenu(R.menu.menu_offers)
 @EActivity(R.layout.activity_offers)
 public class OffersActivity extends OfferListActivity {
 
     @ViewById StaggeredGridView gridView;
     @ViewById View navigationView;
+    @ViewById PullToRefreshLayout ptrLayout;
 
     Date backPressedTime = null;
 
@@ -82,5 +85,10 @@ public class OffersActivity extends OfferListActivity {
     void myOffersPressed() {
         SavedOffersActivity_.intent(this).start();
         slideInTransition();
+    }
+
+    @Override
+    public PullToRefreshLayout getPullToRefreshLayout() {
+        return ptrLayout;
     }
 }
