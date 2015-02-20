@@ -15,6 +15,7 @@ The following dependencies are used in the project:
 * [Calligraphy](https://github.com/chrisjenx/Calligraphy): Allows setting custom typeface to Text Views
 * [Universal-Image-Loader](https://github.com/nostra13/Android-Universal-Image-Loader): Library to load and cache images by URL
 * [ActionBar PullToRefresh](https://github.com/chrisbanes/ActionBar-PullToRefresh): Adds the _pull-to-refresh_ functionality to Grid Views
+* [SmoothProgressBar](https://github.com/castorflex/SmoothProgressBar): Used internally by ActionBar-PullToRefresh to customize progress bar
 
 ### Android Studio Setup ###
 
