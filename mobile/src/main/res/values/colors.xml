@@ -13,4 +13,10 @@
     <color name="light_gray">#DDD</color>
 
     <color name="offer_short_desc">#809718</color>
+
+    <!-- Action buttons -->
+    <color name="action_active">#7B4C7D</color>
+    <color name="action_pressed">@color/white</color>
+    <color name="action_inactive">@color/light_text</color>
+
 </resources>

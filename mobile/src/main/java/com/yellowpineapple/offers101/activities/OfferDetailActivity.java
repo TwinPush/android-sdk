@@ -9,6 +9,7 @@ import com.yellowpineapple.offers101.utils.Ln;
 import com.yellowpineapple.offers101.utils.PersistenceHandler;
 import com.yellowpineapple.offers101.views.OfferDetailView;
 import com.yellowpineapple.offers101.views.OfferDetailView_;
+import com.yellowpineapple.offers101.views.RelatedOffersHeader_;
 
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.EActivity;
@@ -31,6 +32,7 @@ public class OfferDetailActivity extends OfferListActivity implements OfferDetai
             offerDetailView = OfferDetailView_.build(this);
             offerDetailView.setListener(this);
             gridView.addHeaderView(offerDetailView);
+            gridView.addHeaderView(RelatedOffersHeader_.build(this));
         }
         setTitle(offer.getCompany().getName());
         offerDetailView.setOffer(offer, location);

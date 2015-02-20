@@ -20,11 +20,12 @@
     <string name="menu_search">Buscar</string>
 
     <!-- Offer Detail Activity -->
-    <string name="action_offer_website">Abrir enlace</string>
-    <string name="action_offer_map">Ver en mapa</string>
+    <string name="action_offer_website">Abrir</string>
+    <string name="action_offer_map">Ver mapa</string>
     <string name="action_offer_share">Compartir</string>
     <string name="action_offer_save">Guardar</string>
     <string name="action_offer_saved">Guardado</string>
+    <string name="related_offers">Ofertas relacionadas:</string>
 
     <!-- Expiration -->
     <string name="offer_expired">caducado</string>

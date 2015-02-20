@@ -202,99 +202,57 @@
             app:imageColor="@color/light_text"
             android:src="@drawable/ic_disclosure"/>
 
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_alignParentBottom="true"
+            android:background="@color/background"/>
+
     </RelativeLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:visibility="gone"
-        android:padding="10dp">
+        android:layout_height="120dp"
+        android:orientation="horizontal"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp">
 
-        <FrameLayout
-            android:layout_weight="1"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <com.yellowpineapple.offers101.views.AspectKeepFrameLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:virtualHeight="1"
-                app:virtualWidth="1">
-
-                <Button
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:text="Ver en mapa"
-                    android:textColor="@color/actionbar_bg"
-                    android:background="@drawable/offer_button_bg"
-                    android:layout_gravity="center"/>
-
-            </com.yellowpineapple.offers101.views.AspectKeepFrameLayout>
-
-        </FrameLayout>
-
-        <FrameLayout
-            android:layout_weight="1"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-            <Button
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:text="Guardar"
-                android:layout_gravity="center"/>
-
-        </FrameLayout>
-
-        <FrameLayout
-            android:layout_weight="1"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-            <Button
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:text="Compartir"
-                android:drawableTop="@drawable/ic_location"
-                android:layout_gravity="center"/>
-
-        </FrameLayout>
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
-
-        <Button
+        <com.yellowpineapple.offers101.views.OfferActionButton_
             android:id="@+id/btnWebsite"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:visibility="gone"
-            android:text="@string/action_offer_website"/>
+            android:layout_margin="5dp"
+            app:buttonText="@string/action_offer_website"
+            app:buttonIcon="@drawable/ic_btn_website"/>
 
-        <Button
+        <com.yellowpineapple.offers101.views.OfferActionButton_
             android:id="@+id/btnMap"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:text="@string/action_offer_map"/>
+            android:layout_margin="5dp"
+            app:buttonText="@string/action_offer_map"
+            app:buttonIcon="@drawable/ic_btn_location"/>
 
-        <Button
+        <com.yellowpineapple.offers101.views.OfferActionButton_
             android:id="@+id/btnSave"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:text="@string/action_offer_save"/>
+            android:layout_margin="5dp"
+            app:buttonText="@string/action_offer_save"
+            app:buttonIcon="@drawable/ic_btn_save"/>
 
-        <Button
+        <com.yellowpineapple.offers101.views.OfferActionButton_
             android:id="@+id/btnShare"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:text="@string/action_offer_share"/>
+            android:layout_margin="5dp"
+            app:buttonText="@string/action_offer_share"
+            app:buttonIcon="@drawable/ic_btn_share"/>
 
     </LinearLayout>
 

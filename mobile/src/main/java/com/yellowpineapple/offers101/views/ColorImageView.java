@@ -15,6 +15,7 @@ import com.yellowpineapple.offers101.R;
 
 public class ColorImageView extends ImageView {
 
+
     /* Constructors */
     public ColorImageView(Context context) {
         this(context, null);
@@ -31,7 +32,11 @@ public class ColorImageView extends ImageView {
             TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.ColorImageView);
             if (a.hasValue(R.styleable.ColorImageView_imageColor)) {
                 int color = a.getColor(R.styleable.ColorImageView_imageColor, getResources().getColor(R.color.white));
-                setColorFilter(color, PorterDuff.Mode.MULTIPLY);
+                if (!isInEditMode()) {
+                    setColorFilter(color, PorterDuff.Mode.MULTIPLY);
+                } else {
+                    setColorFilter(color);
+                }
             }
             a.recycle();
         }

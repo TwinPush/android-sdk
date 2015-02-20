@@ -4,7 +4,6 @@ import android.content.Context;
 import android.location.Location;
 import android.util.AttributeSet;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -52,10 +51,10 @@ public class OfferDetailView extends LinearLayout {
     @ViewById View storeView;
     @ViewById ImageView imgDisclosureAddress;
 
-    @ViewById Button btnWebsite;
-    @ViewById Button btnMap;
-    @ViewById Button btnSave;
-    @ViewById Button btnShare;
+    @ViewById OfferActionButton btnWebsite;
+    @ViewById OfferActionButton btnMap;
+    @ViewById OfferActionButton btnSave;
+    @ViewById OfferActionButton btnShare;
 
     public OfferDetailView(Context context) {
         super(context);
@@ -101,7 +100,7 @@ public class OfferDetailView extends LinearLayout {
     void refreshSavedState() {
         boolean saved = PersistenceHandler.getSharedInstance(getContext()).isSavedOffer(offer);
         btnSave.setText(saved ? R.string.action_offer_saved : R.string.action_offer_save);
-        btnSave.setPressed(saved);
+        btnSave.setSelected(saved);
     }
 
     @Click(R.id.viewDescription)

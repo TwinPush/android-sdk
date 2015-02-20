@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="OfferActionButton">
+        <attr name="buttonText" format="integer"/>
+        <attr name="buttonIcon" format="integer"/>
+    </declare-styleable>
+</resources>

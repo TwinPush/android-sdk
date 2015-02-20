@@ -3,6 +3,6 @@
     android:shape="oval"
     android:thickness="2dp">
     <padding android:left="3dp" android:top="3dp" android:right="3dp" android:bottom="3dp" />
-    <stroke android:color="@color/action_active" android:width="2dp"/>
+    <stroke android:color="@color/action_inactive" android:width="2dp"/>
     <solid android:color="@android:color/transparent" />
 </shape>
