@@ -21,11 +21,14 @@
 
 
     <!-- Progress bar colors -->
-    <color name="pull_to_refresh">#A47BA6</color>
+    <color name="pull_to_refresh">#E2AAE7</color>
+    <color name="pb_dark">#A47BA6</color>
+    <color name="pb_medium">#E2AAE7</color>
+    <color name="pb_light">#FFF</color>
     <integer-array name="pb_colors">
-        <item>#A47BA6</item>
-        <item>#E2AAE7</item>
-        <item>#FFF</item>
+        <item>@color/pb_dark</item>
+        <item>@color/pb_medium</item>
+        <item>@color/pb_light</item>
     </integer-array>
 
 </resources>
