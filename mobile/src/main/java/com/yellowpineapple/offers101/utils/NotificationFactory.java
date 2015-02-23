@@ -59,7 +59,7 @@ public class NotificationFactory {
                                         new NotificationCompat.Builder(context)
                                                 .setSmallIcon(R.drawable.ic_action_logo)
                                                 .setContentTitle(offer.getCompany().getName())
-                                                .setContentIntent(getContentIntent(offer));
+                                                .setContentIntent(getContentIntent(offer)).setGroup("101Offers");
 
                                 NotificationCompat.BigTextStyle bigStyle = new NotificationCompat.BigTextStyle();
                                 bigStyle.bigText(String.format("(%s)\n%s: %s",

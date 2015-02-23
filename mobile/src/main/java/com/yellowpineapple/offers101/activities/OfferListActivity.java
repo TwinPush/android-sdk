@@ -17,6 +17,7 @@ import com.yellowpineapple.offers101.communications.requests.BaseRequest;
 import com.yellowpineapple.offers101.communications.requests.OfferListRequestListener;
 import com.yellowpineapple.offers101.controllers.OffersAdapter;
 import com.yellowpineapple.offers101.models.Offer;
+import com.yellowpineapple.offers101.utils.NotificationFactory;
 
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.UiThread;
@@ -161,6 +162,9 @@ public abstract class OfferListActivity extends ParentActivity implements AbsLis
     void setLoading(boolean loading) {
         if (getPullToRefreshLayout() != null) {
             getPullToRefreshLayout().setRefreshing(loading);
+            if (!loading) {
+                getPullToRefreshLayout().setRefreshComplete();
+            }
         } else {
             if (loading) {
                 displayLoadingDialog();
@@ -181,7 +185,9 @@ public abstract class OfferListActivity extends ParentActivity implements AbsLis
                 mHasRequestedMore = false;
                 setLoading(false);
                 offersRequest = null;
-                //NotificationFactory.getInstance(OfferListActivity.this).showWearableOffers(offers, currentLocation);
+                if (offersPage == 0) {
+                    NotificationFactory.getInstance(OfferListActivity.this).showWearableOffers(offers, currentLocation);
+                }
             }
 
             @Override
