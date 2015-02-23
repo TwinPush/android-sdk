@@ -4,12 +4,19 @@
     android:layout_height="match_parent"
     tools:context=".OffersActivity">
 
-    <com.etsy.android.grid.StaggeredGridView
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        android:id="@+id/grid_view"
+    <uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout
+        android:id="@+id/ptr_layout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:item_margin="8dp" />
+        android:layout_height="match_parent">
+
+        <com.etsy.android.grid.StaggeredGridView
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/grid_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:item_margin="8dp" />
+
+    </uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout>
 
 </RelativeLayout>

@@ -16,6 +16,8 @@ import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.Extra;
 import org.androidannotations.annotations.ViewById;
 
+import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout;
+
 @EActivity(R.layout.activity_offer_detail)
 public class OfferDetailActivity extends OfferListActivity implements OfferDetailView.Listener {
 
@@ -24,6 +26,7 @@ public class OfferDetailActivity extends OfferListActivity implements OfferDetai
 
     /* Views */
     @ViewById StaggeredGridView gridView;
+    @ViewById PullToRefreshLayout ptrLayout;
     OfferDetailView offerDetailView = null;
 
     @AfterViews
@@ -75,5 +78,10 @@ public class OfferDetailActivity extends OfferListActivity implements OfferDetai
     @Override
     public void onShareClicked(Offer offer) {
         Ln.i("Share button clicked");
+    }
+
+    @Override
+    public PullToRefreshLayout getPullToRefreshLayout() {
+        return ptrLayout;
     }
 }
