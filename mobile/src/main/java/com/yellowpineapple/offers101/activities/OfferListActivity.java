@@ -19,6 +19,7 @@ import com.yellowpineapple.offers101.controllers.OffersAdapter;
 import com.yellowpineapple.offers101.models.Offer;
 import com.yellowpineapple.offers101.utils.NotificationFactory;
 
+import org.androidannotations.annotations.Background;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.UiThread;
 
@@ -186,7 +187,7 @@ public abstract class OfferListActivity extends ParentActivity implements AbsLis
                 setLoading(false);
                 offersRequest = null;
                 if (offersPage == 0) {
-                    NotificationFactory.getInstance(OfferListActivity.this).showWearableOffers(offers, currentLocation);
+                    showWearableOffers(offers);
                 }
             }
 
@@ -198,6 +199,11 @@ public abstract class OfferListActivity extends ParentActivity implements AbsLis
                 offersRequest = null;
             }
         };
+    }
+
+    @Background
+    void showWearableOffers(List<Offer> offers) {
+        NotificationFactory.getInstance(OfferListActivity.this).showWearableOffers(offers, currentLocation);
     }
 
     /* Scroll Events */
