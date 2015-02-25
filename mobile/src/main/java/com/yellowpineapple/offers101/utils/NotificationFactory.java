@@ -46,81 +46,76 @@ public class NotificationFactory {
         final Context context = getContext();
         if (offers.size() > 0) {
             for (final Offer offer : offers.subList(0, Math.min(NOTIFICATION_COUNT, offers.size() - 1))) {
-                imageLoader.loadImage(offer.getCompany().getLogo().getUrl(), new SimpleImageLoadingListener() {
-                    @Override
-                    public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
-                        final Bitmap companyLogo = loadedImage;
-                        imageLoader.loadImage(offer.getThumbnail().getUrl(), new SimpleImageLoadingListener() {
-                            @Override
-                            public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
-                                final Bitmap offerImage = loadedImage;
-                                // Create builder for the main notification
-                                NotificationCompat.Builder notificationBuilder =
-                                        new NotificationCompat.Builder(context)
-                                                .setSmallIcon(R.drawable.ic_action_logo)
-                                                .setContentTitle(offer.getCompany().getName())
-                                                .setContentIntent(getContentIntent(offer)).setGroup("101Offers");
+                if (offer.hasLocation()) {
+                    imageLoader.loadImage(offer.getThumbnail().getUrl(), new SimpleImageLoadingListener() {
+                        @Override
+                        public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
+                            // Create builder for the main notification
+                            NotificationCompat.Builder notificationBuilder =
+                                    new NotificationCompat.Builder(context)
+                                            .setSmallIcon(R.drawable.ic_action_logo)
+                                            .setContentTitle(offer.getCompany().getName())
+                                            .setContentIntent(getContentIntent(offer)).setGroup("101Offers");
 
-                                NotificationCompat.BigTextStyle bigStyle = new NotificationCompat.BigTextStyle();
-                                bigStyle.bigText(String.format("(%s)\n%s: %s",
-                                        offer.getHumanizedDistance(context, location),
-                                        offer.getShortOffer(),
-                                        offer.getShortDescription()));
-                                notificationBuilder.setStyle(bigStyle);
+                            NotificationCompat.BigTextStyle bigStyle = new NotificationCompat.BigTextStyle();
+                            bigStyle.bigText(String.format("(%s)\n%s: %s",
+                                    offer.getHumanizedDistance(context, location),
+                                    offer.getShortOffer(),
+                                    offer.getShortDescription()));
+                            notificationBuilder.setStyle(bigStyle);
 
 
-                                NotificationCompat.WearableExtender wearableExtender = new NotificationCompat.WearableExtender();
-                                // Hide 101 icon
-                                //wearableExtender.setHintHideIcon(true);
+                            NotificationCompat.WearableExtender wearableExtender = new NotificationCompat.WearableExtender();
+                            // Hide 101 icon
+                            //wearableExtender.setHintHideIcon(true);
 
-                                // Set background color
+                            // Set background color
 //                                int color = Color.parseColor(String.format("#%s", offer.getThumbnail().getRgbColor()));
 //                                Drawable colorDrawable = new ColorDrawable(color);
 //                                Bitmap colorBitmap = Bitmap.createBitmap(1, 1, Bitmap.Config.ARGB_8888);
 //                                colorBitmap.eraseColor(color);
 //                                wearableExtender.setBackground(colorBitmap);
 
-                                // Add second page
-                                NotificationCompat.BigPictureStyle pictureStyle = new NotificationCompat.BigPictureStyle()
-                                        .bigPicture(offerImage)
-                                        .setBigContentTitle(offer.getShortDescription());
-                                Notification pictureNotification =
-                                        new NotificationCompat.Builder(context)
-                                                .setStyle(pictureStyle)
+                            // Add second page
+                            NotificationCompat.BigPictureStyle pictureStyle = new NotificationCompat.BigPictureStyle()
+                                    .bigPicture(loadedImage)
+                                    .setBigContentTitle(offer.getShortDescription());
+                            Notification pictureNotification =
+                                    new NotificationCompat.Builder(context)
+                                            .setStyle(pictureStyle)
+                                            .build();
+                            wearableExtender.addPage(pictureNotification);
+
+
+                            // Add actions
+                            {
+                                NotificationCompat.Action action =
+                                        new NotificationCompat.Action.Builder(android.R.drawable.ic_dialog_map,
+                                                "Ver en mapa", showMapIntent(offer))
                                                 .build();
-                                wearableExtender.addPage(pictureNotification);
-
-
-                                // Add actions
-                                {
-                                    NotificationCompat.Action action =
-                                            new NotificationCompat.Action.Builder(android.R.drawable.ic_dialog_map,
-                                                    "Ver en mapa", showMapIntent(offer))
-                                                    .build();
-                                    wearableExtender.addAction(action);
-                                }
-
-                                {
-                                    NotificationCompat.Action action =
-                                            new NotificationCompat.Action.Builder(android.R.drawable.ic_menu_save,
-                                                    "Guardar oferta", showMapIntent(offer))
-                                                    .build();
-                                    wearableExtender.addAction(action);
-
-                                    // Extend the notification builder with the wearable features
-                                    notificationBuilder.extend(wearableExtender);
-                                }
-
-
-                                Notification notification = notificationBuilder.build();
-
-                                // Issue the notification
-                                NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
-                                notificationManager.notify(offer.getId(), notification);
+                                wearableExtender.addAction(action);
                             }
-                        });
-                    }
-                });
+
+                            {
+                                NotificationCompat.Action action =
+                                        new NotificationCompat.Action.Builder(android.R.drawable.ic_menu_save,
+                                                "Guardar oferta", showMapIntent(offer))
+                                                .build();
+                                wearableExtender.addAction(action);
+
+                                // Extend the notification builder with the wearable features
+                                notificationBuilder.extend(wearableExtender);
+                            }
+
+
+                            Notification notification = notificationBuilder.build();
+
+                            // Issue the notification
+                            NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
+                            notificationManager.notify(offer.getId(), notification);
+                        }
+                    });
+                }
             }
         }
     }
