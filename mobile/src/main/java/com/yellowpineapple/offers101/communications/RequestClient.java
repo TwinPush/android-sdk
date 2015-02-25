@@ -5,13 +5,15 @@ import android.location.Location;
 
 import com.yellowpineapple.offers101.communications.requests.BaseRequest;
 import com.yellowpineapple.offers101.communications.requests.OfferListRequestListener;
+import com.yellowpineapple.offers101.communications.requests.offers.CompanyOffersRequest;
 import com.yellowpineapple.offers101.communications.requests.offers.FindOffersRequest;
 import com.yellowpineapple.offers101.communications.requests.offers.GetOffersByIdRequest;
 import com.yellowpineapple.offers101.communications.requests.offers.RelatedOffersRequest;
+import com.yellowpineapple.offers101.models.Company;
 import com.yellowpineapple.offers101.models.Offer;
+import com.yellowpineapple.offers101.models.Store;
 
 import java.util.List;
-import java.util.Set;
 
 import lombok.Getter;
 
@@ -69,6 +71,10 @@ public class RequestClient {
 
     public Request findOffersById(List<String> offerIds, Location location, int page, OfferListRequestListener listener) {
         return launch(new GetOffersByIdRequest(offerIds, location, page, listener));
+    }
+
+    public Request getCompanyOffers(Company company, Store store, int page, OfferListRequestListener listener) {
+        return launch(new CompanyOffersRequest(company, store, page, BaseRequest.RESULTS_PER_PAGE, listener));
     }
 
 	/* Private methods */

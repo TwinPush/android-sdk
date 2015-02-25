@@ -12,6 +12,7 @@ import java.util.Calendar;
 import java.util.Date;
 
 import lombok.Getter;
+import lombok.Setter;
 
 /**
  * Created by agutierrez on 02/02/15.
@@ -20,7 +21,7 @@ public class Offer implements Serializable {
 
     @Getter int id;
     @Getter boolean isOnline;
-    @Getter Company company;
+    @Getter @Setter Company company;
     @Getter Category category;
     @Getter String description;
     @Getter String shortDescription;
@@ -28,7 +29,7 @@ public class Offer implements Serializable {
     @Getter Date expirationDate;
     @Getter RemoteImage image;
     @Getter RemoteImage thumbnail;
-    @Getter Store store;
+    @Getter @Setter Store store;
 
     public boolean hasLocation() {
         return !isOnline() && store != null && store.getLocation() != null;

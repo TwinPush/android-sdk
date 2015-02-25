@@ -9,6 +9,7 @@ import lombok.Getter;
  */
 public class Company implements Serializable {
 
+    @Getter int id;
     @Getter RemoteImage logo;
     @Getter String name;
 
