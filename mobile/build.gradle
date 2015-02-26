@@ -43,6 +43,7 @@ dependencies {
     compile 'com.github.chrisbanes.actionbarpulltorefresh:library:+'
     compile 'com.github.castorflex.smoothprogressbar:library:+'
     compile 'com.nostra13.universalimageloader:universal-image-loader:1.9.3'
+    compile 'me.grantland:autofittextview:0.2.+'
 
     provided "org.projectlombok:lombok:1.12.6"
     apt "org.projectlombok:lombok:1.12.6"

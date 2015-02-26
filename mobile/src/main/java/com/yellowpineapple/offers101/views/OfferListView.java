@@ -1,9 +1,13 @@
 package com.yellowpineapple.offers101.views;
 
+import android.app.Activity;
 import android.content.Context;
 import android.location.Location;
 import android.util.AttributeSet;
+import android.util.TypedValue;
+import android.view.ViewGroup;
 import android.widget.FrameLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.yellowpineapple.offers101.R;
@@ -11,6 +15,8 @@ import com.yellowpineapple.offers101.models.Offer;
 
 import org.androidannotations.annotations.EViewGroup;
 import org.androidannotations.annotations.ViewById;
+
+import me.grantland.widget.AutofitTextView;
 
 @EViewGroup(R.layout.list_item_offer)
 public class OfferListView extends FrameLayout {
@@ -21,9 +27,11 @@ public class OfferListView extends FrameLayout {
     @ViewById RemoteImageView offerImageView;
     @ViewById TextView txtCompany;
     @ViewById TextView txtDescription;
-    @ViewById TextView txtShortOffer;
+    @ViewById RelativeLayout viewShortOffer;
     @ViewById TextView txtDistance;
     @ViewById TextView txtExpiration;
+
+    float shortOfferSize = 0;
 
     public OfferListView(Context context) {
         super(context);
@@ -49,9 +57,26 @@ public class OfferListView extends FrameLayout {
         offerImageView.setImage(offer.getThumbnail());
         txtCompany.setText(offer.getCompany().getName());
         txtDescription.setText(offer.getShortDescription());
-        txtShortOffer.setText(offer.getShortOffer());
         txtDistance.setText(offer.getHumanizedDistance(getContext(), currentLocation));
         txtExpiration.setText(offer.getHumanizedExpiration(getContext()));
+        createShortOfferLabel(offer);
+    }
+
+    private void createShortOfferLabel(Offer offer) {
+        viewShortOffer.removeAllViews();
+
+        float maxSize = getContext().getResources().getDimension(R.dimen.title_text);
+        float minSize = getContext().getResources().getDimension(R.dimen.small_text);
+
+        AutofitTextView txtShortOffer = (AutofitTextView) ((Activity) getContext()).getLayoutInflater().inflate(R.layout.textview_shortoffer, null);
+        txtShortOffer.setMaxTextSize(TypedValue.COMPLEX_UNIT_PX, maxSize);
+        txtShortOffer.setMinTextSize(TypedValue.COMPLEX_UNIT_PX, minSize);
+        txtShortOffer.setText(offer.getShortOffer());
+        RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+        layoutParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
+        layoutParams.addRule(RelativeLayout.ALIGN_PARENT_END);
+        layoutParams.addRule(RelativeLayout.CENTER_VERTICAL);
+        viewShortOffer.addView(txtShortOffer, layoutParams);
     }
 
 

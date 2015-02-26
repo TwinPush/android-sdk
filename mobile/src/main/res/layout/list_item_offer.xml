@@ -49,15 +49,15 @@
             android:layout_marginTop="5dp">
 
             <LinearLayout
-                android:layout_width="match_parent"
+                android:id="@+id/infoView"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 android:layout_alignParentLeft="true"
-                android:layout_toLeftOf="@+id/txtShortOffer"
                 android:layout_centerVertical="true">
 
                 <RelativeLayout
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content">
 
                     <com.yellowpineapple.offers101.views.ColorImageView
@@ -70,9 +70,8 @@
                         android:src="@drawable/ic_location"/>
 
                     <TextView
-                        android:layout_width="match_parent"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_alignParentRight="true"
                         android:layout_toRightOf="@id/imgDistance"
                         android:layout_centerVertical="true"
                         android:layout_marginLeft="5dp"
@@ -85,7 +84,7 @@
                 </RelativeLayout>
 
                 <RelativeLayout
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="5dp">
 
@@ -99,9 +98,8 @@
                         android:src="@drawable/ic_expiration"/>
 
                     <TextView
-                        android:layout_width="match_parent"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_alignParentRight="true"
                         android:layout_toRightOf="@id/imgExpiration"
                         android:layout_centerVertical="true"
                         android:layout_marginLeft="5dp"
@@ -115,15 +113,22 @@
 
             </LinearLayout>
 
-            <TextView
-                android:layout_width="wrap_content"
+            <RelativeLayout
+                android:id="@+id/viewShortOffer"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="New Text"
-                android:layout_alignParentRight="true"
-                android:layout_centerVertical="true"
-                android:layout_marginLeft="5dp"
-                style="@style/AppTheme.Text.OfferShortDesc"
-                android:id="@+id/txtShortOffer" />
+                android:layout_marginLeft="10dp"
+                android:layout_toRightOf="@id/infoView">
+
+                <include
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    layout="@layout/textview_shortoffer"
+                    android:layout_centerVertical="true"
+                    android:layout_alignParentRight="true"
+                    android:layout_alignParentEnd="true" />
+
+            </RelativeLayout>
 
         </RelativeLayout>
     </LinearLayout>
