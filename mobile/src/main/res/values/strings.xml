@@ -27,6 +27,9 @@
     <string name="action_offer_save">Guardar</string>
     <string name="action_offer_saved">Guardado</string>
     <string name="related_offers">Ofertas relacionadas:</string>
+    <string name="share_offer_title">Compartir oferta</string>
+    <string name="share_offer_error">Ocurrió un error al tratar de compartir la oferta</string>
+    <string name="share_offer_subject" formatted="false">101 Ofertas - %s: %s</string>
 
     <!-- Expiration -->
     <string name="offer_expired">caducado</string>

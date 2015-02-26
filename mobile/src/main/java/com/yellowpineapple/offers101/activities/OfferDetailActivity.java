@@ -77,7 +77,7 @@ public class OfferDetailActivity extends OfferListActivity implements OfferDetai
 
     @Override
     public void onShareClicked(Offer offer) {
-        Ln.i("Share button clicked");
+        shareOffer(offer);
     }
 
     @Override

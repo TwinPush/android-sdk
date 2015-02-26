@@ -93,6 +93,8 @@ public class OfferDetailView extends LinearLayout {
             btnMap.setEnabled(hasLocation);
             btnMap.setVisibility(offer.isOnline() ? GONE : VISIBLE);
             btnWebsite.setVisibility(offer.isOnline() ? VISIBLE : GONE);
+            // Disable Website Button until online offers have URL
+            btnWebsite.setEnabled(false);
             refreshSavedState();
         }
     }

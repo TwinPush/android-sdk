@@ -7,6 +7,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.IntentSender;
+import android.graphics.Bitmap;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
@@ -19,12 +20,16 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationServices;
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
+import com.nostra13.universalimageloader.core.assist.FailReason;
+import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListener;
 import com.yellowpineapple.offers101.R;
 import com.yellowpineapple.offers101.communications.RequestClient;
 import com.yellowpineapple.offers101.models.Offer;
 import com.yellowpineapple.offers101.utils.PersistenceHandler;
+import com.yellowpineapple.offers101.utils.ShareManager;
 
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.OptionsItem;
@@ -326,5 +331,31 @@ public abstract class ParentActivity extends FragmentActivity {
 
     protected void slideOutTransition() {
         overridePendingTransition(R.anim.fade_forward, R.anim.slide_out_right);
+    }
+
+    /* Offer sharing */
+
+    void shareOffer(final Offer offer) {
+        setProgressBarIndeterminateVisibility(true);
+        ImageLoader.getInstance().loadImage(offer.getImage().getUrl(), new DisplayImageOptions.Builder()
+                .cacheInMemory(true)
+                .cacheOnDisk(true)
+                .considerExifParams(true).build(),
+                new SimpleImageLoadingListener() {
+                    @Override
+                    public void onLoadingFailed(String imageUri, View view, FailReason failReason) {
+                        setProgressBarIndeterminateVisibility(false);
+                        displayErrorDialog(getString(R.string.share_offer_error));
+                    }
+
+                    @Override
+                    public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
+                        setProgressBarIndeterminateVisibility(false);
+                        String shareTitle = getString(R.string.share_offer_title);
+                        String text = String.format(getString(R.string.share_offer_subject), offer.getCompany().getName(), offer.getShortDescription());
+                        String fileName = String.format("101_offer_%d.png", offer.getId());
+                        ShareManager.shareImage(ParentActivity.this, loadedImage, fileName, shareTitle, text);
+                    }
+                });
     }
 }
