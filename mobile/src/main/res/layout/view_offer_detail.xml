@@ -122,6 +122,8 @@
             <TextView
                 android:id="@+id/txtShortDescription"
                 android:text="New Text"
+                android:textSize="@dimen/medium_text"
+                style="@style/AppTheme.Text.Bold"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
 
