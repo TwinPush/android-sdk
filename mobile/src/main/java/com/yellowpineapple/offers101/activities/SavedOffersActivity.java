@@ -14,12 +14,15 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout;
+
 @EActivity(R.layout.activity_offer_detail)
 public class SavedOffersActivity extends OfferListActivity {
 
     Date lastUpdate;
 
     @ViewById StaggeredGridView gridView;
+    @ViewById PullToRefreshLayout ptrLayout;
 
     @AfterViews
     void afterViews() {
@@ -49,5 +52,10 @@ public class SavedOffersActivity extends OfferListActivity {
         if (lastUpdate != null && shouldReloadOffers()) {
             reloadOffers();
         }
+    }
+
+    @Override
+    public PullToRefreshLayout getPullToRefreshLayout() {
+        return ptrLayout;
     }
 }
