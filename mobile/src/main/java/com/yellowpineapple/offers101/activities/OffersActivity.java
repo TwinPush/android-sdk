@@ -12,15 +12,12 @@ import com.yellowpineapple.offers101.R;
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EActivity;
-import org.androidannotations.annotations.OptionsItem;
-import org.androidannotations.annotations.OptionsMenu;
 import org.androidannotations.annotations.ViewById;
 
 import java.util.Date;
 
 import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout;
 
-@OptionsMenu(R.menu.menu_offers)
 @EActivity(R.layout.activity_offers)
 public class OffersActivity extends OfferListActivity {
 
@@ -43,12 +40,6 @@ public class OffersActivity extends OfferListActivity {
     @AfterViews
     void afterViews() {
         setupOffersGrid(gridView, navigationView, true);
-    }
-
-    @OptionsItem
-    void actionSearch() {
-        Toast.makeText(this, "Search menu selected", Toast.LENGTH_SHORT).show();
-        reloadOffers();
     }
 
     @Override
