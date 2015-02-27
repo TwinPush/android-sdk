@@ -61,7 +61,7 @@ public class OffersActivity extends OfferListActivity {
 
     @Click(R.id.btnBigOffer)
     void bigOfferPressed() {
-        String url = "http://www.renault.es/gama-renault/renault-vehiculos-turismos/gama-kadjar/kadjar/?utm_campaign=ES-r-t-Kadjar-prelanzamiento_kadjar-Jan-2015";
+        String url = "http://ow.ly/JIB5v";
         WebViewActivity_.intent(this).url(url).titleId(R.string.big_offer).start();
         slideInTransition();
     }

@@ -1,6 +1,8 @@
 package com.yellowpineapple.offers101.activities;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
@@ -26,10 +28,25 @@ public class WebViewActivity extends ParentActivity {
         webView.getSettings().setJavaScriptEnabled(true);
         webView.getSettings().setJavaScriptCanOpenWindowsAutomatically(true);
         webView.setWebViewClient(new WebViewClient() {
+
+            boolean firstLoad = true;
+
             @Override
             public void onPageFinished(WebView view, String url) {
                 setLoading(false);
+                firstLoad = false;
             }
+
+            @Override
+            public boolean shouldOverrideUrlLoading(WebView view, String url) {
+                if (!firstLoad) {
+                    startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(url)));
+                    return true;
+                } else {
+                    return false;
+                }
+            }
+            
         });
         // Get notification
         setLoading(true);
