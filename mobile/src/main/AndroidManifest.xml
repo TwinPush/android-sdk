@@ -16,6 +16,9 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+            <intent-filter>
+                <action android:name="con.twincoders.twinpush.sdk.PUSH_NOTIFICATION_RECEIVED" />
+            </intent-filter>
         </activity>
         <activity
             android:name=".activities.OfferDetailActivity_"
@@ -46,11 +49,25 @@
             android:label="@string/app_name">
         </activity>
 
+        <activity
+            android:name="com.twincoders.twinpush.sdk.activities.RichNotificationActivity">
+        </activity>
+
         <meta-data android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
         <meta-data
             android:name="com.google.android.maps.v2.API_KEY"
             android:value="AIzaSyBdF9IVhdSI71514EAsMLmTjHNsixO9vvM"/>
+
+        <receiver  android:name="com.twincoders.twinpush.sdk.notifications.TwinPushReceiver"  android:permission="com.google.android.c2dm.permission.SEND" >
+            <intent-filter>
+                <action android:name="com.google.android.c2dm.intent.RECEIVE" />
+                <action android:name="com.google.android.c2dm.intent.REGISTRATION" />
+                <!-- Category node is not required for applications targeted to minSdkVersion 16 and higher -->
+                <category android:name="com.yellowpineapple.offers101" />
+            </intent-filter>
+        </receiver>
+        <service android:name="com.twincoders.twinpush.sdk.notifications.TwinPushIntentService"/>
     </application>
 
     <uses-permission android:name="android.permission.INTERNET" />
@@ -59,5 +76,17 @@
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+
+    <!-- App receives GCM messages. -->
+    <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
+    <!-- GCM requires a Google account (for Android version lower than 4.0.4) -->
+    <uses-permission android:name="android.permission.GET_ACCOUNTS" />
+    <!-- Keeps the processor from sleeping when a message is received. -->
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <!-- Permission to vibrate -->
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <!-- Custom permission so only this application can receive GCM messages (not required for applications targeted to minSdkVersion 16 and higher) -->
+    <permission android:name="com.yellowpineapple.offers101.permission.C2D_MESSAGE" android:protectionLevel="signature" />
+    <uses-permission android:name="com.yellowpineapple.offers101.permission.C2D_MESSAGE" />
 
 </manifest>

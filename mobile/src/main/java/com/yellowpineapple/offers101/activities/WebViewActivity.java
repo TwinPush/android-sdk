@@ -46,7 +46,7 @@ public class WebViewActivity extends ParentActivity {
                     return false;
                 }
             }
-            
+
         });
         // Get notification
         setLoading(true);
