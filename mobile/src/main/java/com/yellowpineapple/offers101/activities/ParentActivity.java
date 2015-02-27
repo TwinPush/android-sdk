@@ -13,6 +13,7 @@ import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentActivity;
 import android.view.View;
+import android.view.Window;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
 
@@ -69,6 +70,7 @@ public abstract class ParentActivity extends FragmentActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
         buildGoogleApiClient();
         requestClient = RequestClient.getSharedInstance(this, RequestClient.Environment.PRODUCTION);
         persistence = PersistenceHandler.getSharedInstance(this);
@@ -357,5 +359,9 @@ public abstract class ParentActivity extends FragmentActivity {
                         ShareManager.shareImage(ParentActivity.this, loadedImage, fileName, shareTitle, text);
                     }
                 });
+    }
+
+    public void setLoading(boolean loading) {
+        setProgressBarIndeterminateVisibility(loading);
     }
 }

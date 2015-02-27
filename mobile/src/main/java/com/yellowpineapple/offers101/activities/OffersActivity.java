@@ -61,7 +61,7 @@ public class OffersActivity extends OfferListActivity {
 
     @Click(R.id.btnBigOffer)
     void bigOfferPressed() {
-        String url = "http://m1.es.f6m.fr/media/---gamme-fspp/vehicules-particuliers/HFE/att6728d8b46af04339afde6d5b05521f9b/renault-kadjar-reveal-rotarybloc-01-video-uk.mp4";
+        String url = "http://www.renault.es/gama-renault/renault-vehiculos-turismos/gama-kadjar/kadjar/?utm_campaign=ES-r-t-Kadjar-prelanzamiento_kadjar-Jan-2015";
         WebViewActivity_.intent(this).url(url).titleId(R.string.big_offer).start();
         slideInTransition();
     }

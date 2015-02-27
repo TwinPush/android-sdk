@@ -74,7 +74,6 @@ public class OfferListView extends FrameLayout {
         txtShortOffer.setText(offer.getShortOffer());
         RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
         layoutParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
-        layoutParams.addRule(RelativeLayout.ALIGN_PARENT_END);
         layoutParams.addRule(RelativeLayout.CENTER_VERTICAL);
         viewShortOffer.addView(txtShortOffer, layoutParams);
     }

@@ -160,18 +160,15 @@ public abstract class OfferListActivity extends ParentActivity implements AbsLis
         });
     }
 
-    void setLoading(boolean loading) {
+    @Override
+    public void setLoading(boolean loading) {
         if (getPullToRefreshLayout() != null) {
             getPullToRefreshLayout().setRefreshing(loading);
             if (!loading) {
                 getPullToRefreshLayout().setRefreshComplete();
             }
         } else {
-            if (loading) {
-                displayLoadingDialog();
-            } else {
-                closeLoadingDialog();
-            }
+            super.setLoading(loading);
         }
     }
 

@@ -1,9 +1,7 @@
 package com.yellowpineapple.offers101.activities;
 
 import android.location.Location;
-import android.os.Bundle;
 import android.view.View;
-import android.view.Window;
 
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -67,12 +65,6 @@ public class OfferMapActivity
 
     GoogleMap googleMap;
     Timer timer = new Timer();
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
-        super.onCreate(savedInstanceState);
-    }
 
     @AfterViews
     void afterViews() {
@@ -215,18 +207,18 @@ public class OfferMapActivity
     @UiThread
     void loadOffersByLocation(Location location) {
         this.lastRequestLocation = location;
-        setProgressBarIndeterminateVisibility(Boolean.TRUE);
+        setLoading(true);
         getRequestClient().findLocatedOffers(location, null, new OfferListRequestListener() {
             @Override
             public void onSuccess(List<Offer> offers) {
                 preloadCompanyLogos(offers);
                 displayInMap(offers);
-                setProgressBarIndeterminateVisibility(Boolean.FALSE);
+                setLoading(false);
             }
 
             @Override
             public void onError(Exception exception) {
-                setProgressBarIndeterminateVisibility(Boolean.FALSE);
+                setLoading(false);
                 displayErrorDialog(exception);
             }
         });
