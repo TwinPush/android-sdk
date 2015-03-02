@@ -29,6 +29,7 @@ public class OffersActivity extends OfferListActivity {
     @ViewById StaggeredGridView gridView;
     @ViewById View navigationView;
     @ViewById PullToRefreshLayout ptrLayout;
+    @ViewById View emptyView;
 
     Date backPressedTime = null;
 
@@ -60,7 +61,7 @@ public class OffersActivity extends OfferListActivity {
 
     @AfterViews
     void afterViews() {
-        setupOffersGrid(gridView, navigationView, true);
+        setupOffersGrid(gridView, navigationView, emptyView, true);
     }
 
     @Override

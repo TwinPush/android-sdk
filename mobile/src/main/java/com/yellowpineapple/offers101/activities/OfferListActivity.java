@@ -58,6 +58,7 @@ public abstract class OfferListActivity extends ParentActivity implements AbsLis
     private boolean hideActionBarOnScroll;
     ActionBar mActionBar;
     View navigationView;
+    View emptyView;
     float actionBarHeight;
 
     interface AnimationListener {
@@ -68,12 +69,13 @@ public abstract class OfferListActivity extends ParentActivity implements AbsLis
         return offers == null;
     }
 
-    void setupOffersGrid(StaggeredGridView gridView, final boolean hideActionBarOnScroll) {
-        setupOffersGrid(gridView, null, hideActionBarOnScroll);
+    void setupOffersGrid(StaggeredGridView gridView, View emptyView, final boolean hideActionBarOnScroll) {
+        setupOffersGrid(gridView, null, emptyView, hideActionBarOnScroll);
     }
 
-    void setupOffersGrid(StaggeredGridView gridView, View navigationView, final boolean hideActionBarOnScroll) {
+    void setupOffersGrid(StaggeredGridView gridView, View navigationView, View emptyView, final boolean hideActionBarOnScroll) {
         this.gridView = gridView;
+        this.emptyView = emptyView;
         this.hideActionBarOnScroll = hideActionBarOnScroll;
         this.navigationView = navigationView;
 
@@ -92,6 +94,8 @@ public abstract class OfferListActivity extends ParentActivity implements AbsLis
         gridView.setOnScrollListener(this);
         gridView.setOnItemClickListener(this);
         gridView.setOnItemLongClickListener(this);
+
+        if (emptyView != null) emptyView.setVisibility(View.GONE);
 
         if (hideActionBarOnScroll) {
             final TypedArray styledAttributes = getTheme().obtainStyledAttributes(new int[] { android.R.attr.actionBarSize });
@@ -117,7 +121,7 @@ public abstract class OfferListActivity extends ParentActivity implements AbsLis
         ActionBarPullToRefresh.from(this)
                 // Mark All Children as pullable
                 .allChildrenArePullable()
-                // Set a OnRefreshListener
+                        // Set a OnRefreshListener
                 .listener(new OnRefreshListener() {
                     @Override
                     public void onRefreshStarted(View view) {
@@ -186,6 +190,8 @@ public abstract class OfferListActivity extends ParentActivity implements AbsLis
                 if (offersPage == 0) {
                     showWearableOffers(offers);
                 }
+                setEmptyViewVisible(OfferListActivity.this.offers.size() == 0);
+
             }
 
             @Override
@@ -201,6 +207,15 @@ public abstract class OfferListActivity extends ParentActivity implements AbsLis
     @Background
     void showWearableOffers(List<Offer> offers) {
         NotificationFactory.getInstance(OfferListActivity.this).showWearableOffers(offers, currentLocation);
+    }
+
+    /* Empty view */
+
+    void setEmptyViewVisible(boolean visible) {
+        if (emptyView != null) {
+            emptyView.setVisibility(visible ? View.VISIBLE : View.GONE);
+            gridView.setVisibility(visible ? View.GONE : View.VISIBLE);
+        }
     }
 
     /* Scroll Events */

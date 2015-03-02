@@ -1,6 +1,7 @@
 package com.yellowpineapple.offers101.activities;
 
 import android.location.Location;
+import android.view.View;
 
 import com.etsy.android.grid.StaggeredGridView;
 import com.yellowpineapple.offers101.R;
@@ -16,17 +17,18 @@ import java.util.List;
 
 import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout;
 
-@EActivity(R.layout.activity_offer_detail)
+@EActivity(R.layout.activity_my_offers)
 public class SavedOffersActivity extends OfferListActivity {
 
     Date lastUpdate;
 
     @ViewById StaggeredGridView gridView;
     @ViewById PullToRefreshLayout ptrLayout;
+    @ViewById View emptyView;
 
     @AfterViews
     void afterViews() {
-        setupOffersGrid(gridView, true);
+        setupOffersGrid(gridView, null, emptyView, true);
     }
 
     @Override
@@ -36,6 +38,7 @@ public class SavedOffersActivity extends OfferListActivity {
         if (userOffers.size() > 0) {
             offersRequest = getRequestClient().findOffersById(userOffers, location, page, getOfferListRequestListener());
         } else {
+            setEmptyViewVisible(true);
             getOfferListRequestListener().onSuccess(new ArrayList<Offer>());
         }
     }

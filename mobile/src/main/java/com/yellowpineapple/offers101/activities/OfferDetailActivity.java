@@ -39,7 +39,7 @@ public class OfferDetailActivity extends OfferListActivity implements OfferDetai
         }
         setTitle(offer.getCompany().getName());
         offerDetailView.setOffer(offer, location);
-        setupOffersGrid(gridView, true);
+        setupOffersGrid(gridView, null, true);
     }
 
     @Override

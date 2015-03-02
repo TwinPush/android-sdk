@@ -16,6 +16,8 @@
     <string name="big_offer">ofertón</string>
     <string name="my_offers">mis ofertas</string>
     <string name="offers_map">ver mapa</string>
+    <string name="no_results">No se han encontrado resultados</string>
+    <string name="no_saved_offers">No tienes ninguna oferta guardada.\n\nAñade a tus favoritos aquellas ofertas que quieras tener siempre a mano.</string>
 
     <!-- Offer Detail Activity -->
     <string name="menu_search">Buscar</string>
