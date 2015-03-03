@@ -2,7 +2,7 @@
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="260dp"
+    android:layout_width="280dp"
     android:layout_height="wrap_content">
 
     <com.yellowpineapple.offers101.views.RemoteImageView
@@ -17,7 +17,7 @@
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
         android:layout_toRightOf="@id/imgCompany"
-        android:layout_alignParentRight="true"
+        android:layout_toLeftOf="@+id/imgDisclosure"
         android:paddingLeft="10dp"
         android:orientation="vertical">
 
@@ -64,5 +64,14 @@
         </RelativeLayout>
 
     </LinearLayout>
+
+    <com.yellowpineapple.offers101.views.ColorImageView
+        android:id="@+id/imgDisclosure"
+        android:layout_centerVertical="true"
+        android:layout_alignParentRight="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:imageColor="@color/light_text"
+        android:src="@drawable/ic_disclosure"/>
 
 </RelativeLayout>

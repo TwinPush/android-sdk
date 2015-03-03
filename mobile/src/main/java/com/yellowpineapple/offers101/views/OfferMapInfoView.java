@@ -3,6 +3,7 @@ package com.yellowpineapple.offers101.views;
 import android.content.Context;
 import android.location.Location;
 import android.util.AttributeSet;
+import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -19,12 +20,12 @@ import org.androidannotations.annotations.ViewById;
 public class OfferMapInfoView extends LinearLayout {
 
     Offer offer;
-
     /* Views */
     @ViewById RemoteImageView imgCompany;
     @ViewById TextView txtCompany;
     @ViewById TextView txtAddress;
     @ViewById TextView txtDistance;
+    @ViewById View imgDisclosure;
 
     public OfferMapInfoView(Context context) {
         super(context);
@@ -52,6 +53,7 @@ public class OfferMapInfoView extends LinearLayout {
                 txtAddress.setVisibility(GONE);
             }
             txtDistance.setText(offer.getHumanizedDistance(getContext(), location));
+            imgDisclosure.setVisibility(isClickable() ? VISIBLE : GONE);
         }
     }
 }

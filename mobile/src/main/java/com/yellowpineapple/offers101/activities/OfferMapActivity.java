@@ -233,6 +233,7 @@ public class OfferMapActivity
     public View getInfoContents(Marker marker) {
         Offer offer = markersHash.get(marker);
         OfferMapInfoView view = OfferMapInfoView_.build(OfferMapActivity.this);
+        view.setClickable(!singleOffer);
         view.setOffer(offer, location);
         return view;
     }
