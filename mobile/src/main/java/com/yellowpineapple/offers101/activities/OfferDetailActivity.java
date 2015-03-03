@@ -23,6 +23,7 @@ public class OfferDetailActivity extends OfferListActivity implements OfferDetai
 
     @Extra Offer offer;
     @Extra Location location;
+    @Extra boolean fromStoreOffers = false;
 
     /* Views */
     @ViewById StaggeredGridView gridView;
@@ -87,6 +88,11 @@ public class OfferDetailActivity extends OfferListActivity implements OfferDetai
 
     @Override
     public void onStoreOffersClicked(Offer offer) {
-        StoreOffersActivity_.intent(this).offer(offer).location(location).start();
+        if (fromStoreOffers) {
+            onBackPressed();
+        } else {
+            StoreOffersActivity_.intent(this).offer(offer).location(location).start();
+            slideInTransition();
+        }
     }
 }

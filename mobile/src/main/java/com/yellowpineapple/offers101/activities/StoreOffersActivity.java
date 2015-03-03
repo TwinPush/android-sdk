@@ -38,4 +38,9 @@ public class StoreOffersActivity extends OfferListActivity {
     public PullToRefreshLayout getPullToRefreshLayout() {
         return ptrLayout;
     }
+
+    protected void showOfferDetailActivity(Offer offer, Location currentLocation) {
+        OfferDetailActivity_.intent(this).offer(offer).location(currentLocation).fromStoreOffers(true).start();
+        slideInTransition();
+    }
 }
