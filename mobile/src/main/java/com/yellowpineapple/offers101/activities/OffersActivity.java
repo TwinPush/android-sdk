@@ -13,6 +13,7 @@ import com.twincoders.twinpush.sdk.activities.RichNotificationActivity;
 import com.twincoders.twinpush.sdk.notifications.PushNotification;
 import com.twincoders.twinpush.sdk.notifications.TwinPushIntentService;
 import com.yellowpineapple.offers101.R;
+import com.yellowpineapple.offers101.views.PullToRefreshLayout;
 
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Click;
@@ -20,8 +21,6 @@ import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.ViewById;
 
 import java.util.Date;
-
-import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout;
 
 @EActivity(R.layout.activity_offers)
 public class OffersActivity extends OfferListActivity {

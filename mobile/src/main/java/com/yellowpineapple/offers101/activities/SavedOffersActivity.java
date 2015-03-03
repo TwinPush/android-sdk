@@ -6,6 +6,7 @@ import android.view.View;
 import com.etsy.android.grid.StaggeredGridView;
 import com.yellowpineapple.offers101.R;
 import com.yellowpineapple.offers101.models.Offer;
+import com.yellowpineapple.offers101.views.PullToRefreshLayout;
 
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.EActivity;
@@ -15,15 +16,14 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout;
-
 @EActivity(R.layout.activity_my_offers)
 public class SavedOffersActivity extends OfferListActivity {
 
     Date lastUpdate;
 
     @ViewById StaggeredGridView gridView;
-    @ViewById PullToRefreshLayout ptrLayout;
+    @ViewById
+    PullToRefreshLayout ptrLayout;
     @ViewById View emptyView;
 
     @AfterViews

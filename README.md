@@ -14,8 +14,6 @@ The following dependencies are used in the project:
 * [Gson](http://code.google.com/p/google-gson/): Parse and serialize JSON
 * [Calligraphy](https://github.com/chrisjenx/Calligraphy): Allows setting custom typeface to Text Views
 * [Universal-Image-Loader](https://github.com/nostra13/Android-Universal-Image-Loader): Library to load and cache images by URL
-* [ActionBar PullToRefresh](https://github.com/chrisbanes/ActionBar-PullToRefresh): Adds the _pull-to-refresh_ functionality to Grid Views
-* [SmoothProgressBar](https://github.com/castorflex/SmoothProgressBar): Used internally by ActionBar-PullToRefresh to customize progress bar
 * [Autofit TextView](https://github.com/grantland/android-autofittextview): Auto shrink large texts to adapt to available space
 
 ### Android Studio Setup ###

@@ -9,14 +9,13 @@ import com.yellowpineapple.offers101.utils.Ln;
 import com.yellowpineapple.offers101.utils.PersistenceHandler;
 import com.yellowpineapple.offers101.views.OfferDetailView;
 import com.yellowpineapple.offers101.views.OfferDetailView_;
+import com.yellowpineapple.offers101.views.PullToRefreshLayout;
 import com.yellowpineapple.offers101.views.RelatedOffersHeader_;
 
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.Extra;
 import org.androidannotations.annotations.ViewById;
-
-import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout;
 
 @EActivity(R.layout.activity_offers_list)
 public class OfferDetailActivity extends OfferListActivity implements OfferDetailView.Listener {

@@ -18,20 +18,16 @@ import com.yellowpineapple.offers101.communications.requests.OfferListRequestLis
 import com.yellowpineapple.offers101.controllers.OffersAdapter;
 import com.yellowpineapple.offers101.models.Offer;
 import com.yellowpineapple.offers101.utils.NotificationFactory;
+import com.yellowpineapple.offers101.views.PullToRefreshLayout;
 
 import org.androidannotations.annotations.Background;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.UiThread;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import lombok.Getter;
-import uk.co.senab.actionbarpulltorefresh.library.ActionBarPullToRefresh;
-import uk.co.senab.actionbarpulltorefresh.library.Options;
-import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout;
-import uk.co.senab.actionbarpulltorefresh.library.listeners.OnRefreshListener;
 
 /**
  * Created by agutierrez on 09/02/15.
@@ -83,18 +79,6 @@ public abstract class OfferListActivity extends ParentActivity implements AbsLis
             setupPullToRefresh(getPullToRefreshLayout());
         }
 
-        offersAdapter = new OffersAdapter(this);
-
-        // do we have saved data?
-        if (shouldReloadOffers()) reloadOffers();
-
-        offersAdapter.setOffers(offers);
-
-        gridView.setAdapter(offersAdapter);
-        gridView.setOnScrollListener(this);
-        gridView.setOnItemClickListener(this);
-        gridView.setOnItemLongClickListener(this);
-
         if (emptyView != null) emptyView.setVisibility(View.GONE);
 
         if (hideActionBarOnScroll) {
@@ -109,7 +93,24 @@ public abstract class OfferListActivity extends ParentActivity implements AbsLis
             mActionBar = getActionBar();
 
             gridView.setPadding(gridView.getPaddingLeft(), Math.round(mActionBarHeight), gridView.getPaddingRight(), gridView.getPaddingBottom());
+            if (getPullToRefreshLayout() != null) {
+                getPullToRefreshLayout().setProgressViewOffset(false,
+                        Math.round(mActionBarHeight - actionBarHeight),
+                        Math.round(mActionBarHeight + getResources().getDimension(R.dimen.pulltorefresh_margin)));
+            }
         }
+
+        offersAdapter = new OffersAdapter(this);
+
+        // do we have saved data?
+        if (shouldReloadOffers()) reloadOffers();
+
+        offersAdapter.setOffers(offers);
+
+        gridView.setAdapter(offersAdapter);
+        gridView.setOnScrollListener(this);
+        gridView.setOnItemClickListener(this);
+        gridView.setOnItemLongClickListener(this);
     }
 
     public PullToRefreshLayout getPullToRefreshLayout() {
@@ -117,27 +118,17 @@ public abstract class OfferListActivity extends ParentActivity implements AbsLis
     }
 
     void setupPullToRefresh(PullToRefreshLayout pullToRefreshLayout) {
-        // Now setup the PullToRefreshLayout
-        ActionBarPullToRefresh.from(this)
-                // Mark All Children as pullable
-                .allChildrenArePullable()
-                        // Set a OnRefreshListener
-                .listener(new OnRefreshListener() {
-                    @Override
-                    public void onRefreshStarted(View view) {
-                        reloadOffers();
-                    }
-                }).options(Options.create().minimize(1000).build())
-                // Finally commit the setup to our PullToRefreshLayout
-                .setup(pullToRefreshLayout);
+        pullToRefreshLayout.setOnRefreshListener(new PullToRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                reloadOffers();
+            }
+        });
+        pullToRefreshLayout.setColorSchemeResources(R.color.green, R.color.purple);
+        pullToRefreshLayout.setSwipeableChildren(gridView, emptyView);
     }
 
     protected void reloadOffers() {
-        if (offers == null) {
-            offers = new ArrayList<>();
-        } else {
-            offers.clear();
-        }
         requestLoadPage(FIRST_PAGE);
     }
 
@@ -167,9 +158,13 @@ public abstract class OfferListActivity extends ParentActivity implements AbsLis
     @Override
     public void setLoading(boolean loading) {
         if (getPullToRefreshLayout() != null) {
-            getPullToRefreshLayout().setRefreshing(loading);
-            if (!loading) {
-                getPullToRefreshLayout().setRefreshComplete();
+            if (loading) {
+                if (!getPullToRefreshLayout().isRefreshing()) {
+                    setProgressBarIndeterminateVisibility(true);
+                }
+            } else {
+                setProgressBarIndeterminateVisibility(false);
+                getPullToRefreshLayout().setRefreshing(false);
             }
         } else {
             super.setLoading(loading);
@@ -180,18 +175,7 @@ public abstract class OfferListActivity extends ParentActivity implements AbsLis
         return new OfferListRequestListener() {
             @Override
             public void onSuccess(List<Offer> offers) {
-                mHasMoreResults = offers.size() >= PER_PAGE;
-                OfferListActivity.this.offers.addAll(offers);
-                getOffersAdapter().setCurrentLocation(currentLocation);
-                getOffersAdapter().notifyDataSetChanged();
-                mHasRequestedMore = false;
-                setLoading(false);
-                offersRequest = null;
-                if (offersPage == 0) {
-                    showWearableOffers(offers);
-                }
-                setEmptyViewVisible(OfferListActivity.this.offers.size() == 0);
-
+                setOffers(offersPage, offers);
             }
 
             @Override
@@ -203,6 +187,27 @@ public abstract class OfferListActivity extends ParentActivity implements AbsLis
             }
         };
     }
+
+    void setOffers(int page, List<Offer> newOffers) {
+        mHasMoreResults = newOffers.size() >= PER_PAGE;
+        if (page == FIRST_PAGE) {
+            this.offers = newOffers;
+        } else {
+            this.offers.addAll(newOffers);
+        }
+
+        getOffersAdapter().setCurrentLocation(currentLocation);
+        getOffersAdapter().setOffers(this.offers);
+        getOffersAdapter().notifyDataSetChanged();
+        mHasRequestedMore = false;
+        setLoading(false);
+        offersRequest = null;
+        if (page == FIRST_PAGE) {
+            showWearableOffers(offers);
+        }
+        setEmptyViewVisible(offers.size() == 0);
+    }
+
 
     @Background
     void showWearableOffers(List<Offer> offers) {

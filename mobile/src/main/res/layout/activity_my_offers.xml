@@ -5,51 +5,57 @@
     android:layout_height="match_parent"
     tools:context=".OffersActivity">
 
-    <uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout
+    <com.yellowpineapple.offers101.views.PullToRefreshLayout
         android:id="@+id/ptr_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <com.etsy.android.grid.StaggeredGridView
-            xmlns:android="http://schemas.android.com/apk/res/android"
-            xmlns:app="http://schemas.android.com/apk/res-auto"
-            android:id="@+id/grid_view"
+        <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            app:item_margin="8dp" />
+            android:layout_height="match_parent">
 
-        <ScrollView
-            android:id="@+id/emptyView"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:paddingTop="80dp">
-
-            <LinearLayout
+            <com.etsy.android.grid.StaggeredGridView
+                xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                android:id="@+id/grid_view"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:orientation="vertical"
-                android:padding="40dp"
-                android:gravity="center">
+                app:item_margin="8dp" />
 
-                <com.yellowpineapple.offers101.views.ColorImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:src="@drawable/ic_saved_offers"
-                    app:imageColor="@color/light_text"/>
+            <ScrollView
+                android:id="@+id/emptyView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:paddingTop="80dp">
 
-                <TextView
+                <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/no_saved_offers"
-                    android:gravity="center"
-                    android:textColor="@color/light_text"
-                    android:layout_marginTop="20dp"
-                    style="@style/AppTheme.Text.Title"/>
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    android:padding="40dp"
+                    android:gravity="center">
 
-            </LinearLayout>
+                    <com.yellowpineapple.offers101.views.ColorImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/ic_saved_offers"
+                        app:imageColor="@color/light_text"/>
 
-        </ScrollView>
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/no_saved_offers"
+                        android:gravity="center"
+                        android:textColor="@color/light_text"
+                        android:layout_marginTop="20dp"
+                        style="@style/AppTheme.Text.Title"/>
 
-    </uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout>
+                </LinearLayout>
+
+            </ScrollView>
+
+        </FrameLayout>
+
+    </com.yellowpineapple.offers101.views.PullToRefreshLayout>
 
 </RelativeLayout>

@@ -5,13 +5,12 @@ import android.location.Location;
 import com.etsy.android.grid.StaggeredGridView;
 import com.yellowpineapple.offers101.R;
 import com.yellowpineapple.offers101.models.Offer;
+import com.yellowpineapple.offers101.views.PullToRefreshLayout;
 
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.Extra;
 import org.androidannotations.annotations.ViewById;
-
-import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout;
 
 @EActivity(R.layout.activity_offers_list)
 public class StoreOffersActivity extends OfferListActivity {

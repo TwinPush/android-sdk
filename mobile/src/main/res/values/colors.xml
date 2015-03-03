@@ -4,33 +4,24 @@
     <color name="list_item_pressed">#1A000000</color>
     <color name="translucent_white">#33FFFFFF</color>
 
-    <color name="background">#D5D5D5</color>
-    <color name="actionbar_bg">#3C1E3D</color>
-    <color name="actionbar_text">#A47BA6</color>
-    <color name="main_text">#505050</color>
-    <color name="bold_text">#393939</color>
-    <color name="light_text">#8F8F8F</color>
     <color name="light_gray">#DDD</color>
     <color name="green">#809718</color>
     <color name="dark_green">#617213</color>
+    <color name="purple">#7B4C7D</color>
+    <color name="light_purple">#A47BA6</color>
+
+    <color name="background">#D5D5D5</color>
+    <color name="actionbar_bg">#3C1E3D</color>
+    <color name="actionbar_text">@color/light_purple</color>
+    <color name="main_text">#505050</color>
+    <color name="bold_text">#393939</color>
+    <color name="light_text">#8F8F8F</color>
 
     <color name="offer_short_desc">@color/green</color>
 
     <!-- Action buttons -->
-    <color name="action_active">#7B4C7D</color>
+    <color name="action_active">@color/purple</color>
     <color name="action_pressed">@color/white</color>
     <color name="action_inactive">@color/light_text</color>
-
-
-    <!-- Progress bar colors -->
-    <color name="pull_to_refresh">#E2AAE7</color>
-    <color name="pb_dark">#A47BA6</color>
-    <color name="pb_medium">#E2AAE7</color>
-    <color name="pb_light">#FFF</color>
-    <integer-array name="pb_colors">
-        <item>@color/pb_dark</item>
-        <item>@color/pb_medium</item>
-        <item>@color/pb_light</item>
-    </integer-array>
 
 </resources>

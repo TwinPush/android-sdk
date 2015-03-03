@@ -10,5 +10,6 @@
     <dimen name="medium_text">15sp</dimen>
     <dimen name="small_text">12sp</dimen>
 
+    <dimen name="pulltorefresh_margin">10dp</dimen>
 
 </resources>
