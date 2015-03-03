@@ -100,6 +100,38 @@
         android:layout_height="1dp"
         android:background="@color/background"/>
 
+
+    <LinearLayout
+        android:id="@+id/storeOffersView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:padding="5dp"
+        android:background="@drawable/clickable_green">
+
+        <TextView
+            android:id="@+id/txtStoreOffers"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:padding="0dp"
+            android:gravity="center"
+            android:background="@drawable/circle_white"
+            android:textColor="@color/clickable_green"
+            android:textSize="@dimen/title_text"
+            style="@style/AppTheme.Text.Bold"
+            android:text="22"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:text="@string/store_offers"
+            style="@style/AppTheme.Text.Bold"
+            android:textColor="@color/white"/>
+
+    </LinearLayout>
+
     <com.yellowpineapple.offers101.views.RemoteImageView
         android:id="@+id/imgOffer"
         android:layout_width="match_parent"

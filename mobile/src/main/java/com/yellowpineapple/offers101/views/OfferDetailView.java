@@ -32,6 +32,7 @@ public class OfferDetailView extends LinearLayout {
         void onOpenLinkClicked(Offer offer);
         void onShareClicked(Offer offer);
         void onDescriptionClicked(Offer offer);
+        void onStoreOffersClicked(Offer offer);
     }
 
     Offer offer;
@@ -50,6 +51,8 @@ public class OfferDetailView extends LinearLayout {
     @ViewById View viewDescription;
     @ViewById View storeView;
     @ViewById ImageView imgDisclosureAddress;
+    @ViewById View storeOffersView;
+    @ViewById TextView txtStoreOffers;
 
     @ViewById OfferActionButton btnWebsite;
     @ViewById OfferActionButton btnMap;
@@ -86,6 +89,10 @@ public class OfferDetailView extends LinearLayout {
             txtShortDescription.setText(offer.getShortDescription());
             txtShortOffer.setText(offer.getShortOffer());
             txtExpiration.setText(offer.getHumanizedExpiration(getContext()));
+
+            // Offers count
+            txtStoreOffers.setText(String.valueOf(offer.getCompany().getOfferCount()));
+            storeOffersView.setVisibility(offer.getCompany().getOfferCount() > 1 ? VISIBLE : GONE);
 
             boolean hasLocation = offer.hasLocation();
             imgDisclosureAddress.setVisibility(hasLocation ? VISIBLE : GONE);
@@ -129,4 +136,7 @@ public class OfferDetailView extends LinearLayout {
 
     @Click
     void btnShare() { if (listener != null) listener.onShareClicked(offer); }
+
+    @Click
+    void storeOffersView() { if (listener != null) listener.onStoreOffersClicked(offer); }
 }

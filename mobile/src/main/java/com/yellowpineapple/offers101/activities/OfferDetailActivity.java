@@ -18,7 +18,7 @@ import org.androidannotations.annotations.ViewById;
 
 import uk.co.senab.actionbarpulltorefresh.library.PullToRefreshLayout;
 
-@EActivity(R.layout.activity_offer_detail)
+@EActivity(R.layout.activity_offers_list)
 public class OfferDetailActivity extends OfferListActivity implements OfferDetailView.Listener {
 
     @Extra Offer offer;
@@ -83,5 +83,10 @@ public class OfferDetailActivity extends OfferListActivity implements OfferDetai
     @Override
     public PullToRefreshLayout getPullToRefreshLayout() {
         return ptrLayout;
+    }
+
+    @Override
+    public void onStoreOffersClicked(Offer offer) {
+        StoreOffersActivity_.intent(this).offer(offer).location(location).start();
     }
 }

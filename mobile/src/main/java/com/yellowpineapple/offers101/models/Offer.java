@@ -32,22 +32,18 @@ public class Offer implements Serializable {
     @Getter @Setter Store store;
 
     public boolean hasLocation() {
-        return !isOnline() && store != null && store.getLocation() != null;
+        return store != null && store.getLocation() != null;
     }
 
     private static int KM_LIMIT = 1000;
 
     public CharSequence getHumanizedDistance(Context context, Location currentLocation) {
         CharSequence distanceText;
-        if (isOnline()) {
-            distanceText = context.getText(R.string.offer_online);
-        } else {
-            int distance = Store.LOCATION_INVALID;
-            distanceText = context.getText(R.string.offer_distance_undefined);
-            if (currentLocation != null) {
-                if (store != null) {
-                    distance = store.getDistance(currentLocation);
-                }
+        distanceText = context.getText(R.string.offer_distance_undefined);
+
+        if (currentLocation != null) {
+            if (hasLocation()) {
+                int distance = store.getDistance(currentLocation);
                 if (distance != Store.LOCATION_INVALID) {
                     if (distance < KM_LIMIT) {
                         distanceText = String.format(context.getText(R.string.offer_distance_x_meters).toString(), distance);
@@ -55,6 +51,8 @@ public class Offer implements Serializable {
                         distanceText = String.format(context.getText(R.string.offer_distance_x_km).toString(), (distance / 1000f));
                     }
                 }
+            } else if (isOnline()) {
+                distanceText = context.getText(R.string.offer_online);
             }
         }
         return distanceText;

@@ -12,5 +12,6 @@ public class Company implements Serializable {
     @Getter int id;
     @Getter RemoteImage logo;
     @Getter String name;
+    @Getter int offerCount;
 
 }

@@ -22,11 +22,11 @@ public class FindOffersRequest extends BaseRequest {
     OfferListRequestListener listener;
 
     public FindOffersRequest(Location location, Double radiusInKm, OfferListRequestListener listener) {
-        this(location, true, FIRST_PAGE, LOCATED_RESULTS_PER_PAGE, radiusInKm, listener);
+        this(location, false, FIRST_PAGE, LOCATED_RESULTS_PER_PAGE, radiusInKm, listener);
     }
 
     public FindOffersRequest(Location location, int page, OfferListRequestListener listener) {
-        this(location, false, page, RESULTS_PER_PAGE, null, listener);
+        this(location, true, page, RESULTS_PER_PAGE, null, listener);
     }
 
     public FindOffersRequest(Location location, boolean includeOnline, int page, int perPage, Double radiusInKm, OfferListRequestListener listener) {
