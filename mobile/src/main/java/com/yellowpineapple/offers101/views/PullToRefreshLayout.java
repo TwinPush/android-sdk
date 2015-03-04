@@ -1,7 +1,6 @@
 package com.yellowpineapple.offers101.views;
 
 import android.content.Context;
-import android.support.v4.view.ViewCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.AttributeSet;
 import android.view.View;
@@ -80,13 +79,7 @@ public class PullToRefreshLayout extends SwipeRefreshLayout {
      * needed.
      */
     private static boolean canViewScrollUp(View view) {
-        if (android.os.Build.VERSION.SDK_INT >= 14) {
-            // For ICS and above we can call canScrollVertically() to determine this
-            return ViewCompat.canScrollVertically(view, -1);
-        } else {
             if (view instanceof AbsListView) {
-                // Pre-ICS we need to manually check the first visible item and the child view's top
-                // value
                 final AbsListView listView = (AbsListView) view;
                 return listView.getChildCount() > 0 &&
                         (listView.getFirstVisiblePosition() > 0
@@ -95,7 +88,6 @@ public class PullToRefreshLayout extends SwipeRefreshLayout {
                 // For all other view types we just check the getScrollY() value
                 return view.getScrollY() > 0;
             }
-        }
     }
 
 }
