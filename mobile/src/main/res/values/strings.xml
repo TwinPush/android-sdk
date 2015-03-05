@@ -19,6 +19,12 @@
     <string name="no_results">No se han encontrado resultados</string>
     <string name="no_saved_offers">No tienes ninguna oferta guardada.\n\nAñade a tus favoritos aquellas ofertas que quieras tener siempre a mano.</string>
 
+    <!-- Menu -->
+    <string name="menu_map">Ver en mapa</string>
+    <string name="menu_my_offers_add">Añadir a mis ofertas</string>
+    <string name="menu_my_offers_remove">Eliminar de mis ofertas</string>
+    <string name="menu_share">Compartir</string>
+
     <!-- Offer Detail Activity -->
     <string name="menu_search">Buscar</string>
 

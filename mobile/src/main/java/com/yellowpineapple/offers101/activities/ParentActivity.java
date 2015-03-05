@@ -320,9 +320,37 @@ public abstract class ParentActivity extends FragmentActivity {
         super.onDestroy();
     }
 
-    protected void showOfferDetailActivity(Offer offer, Location currentLocation) {
+    // Actions
+
+    protected void showOfferDetail(Offer offer, Location currentLocation) {
         OfferDetailActivity_.intent(this).offer(offer).location(currentLocation).start();
         slideInTransition();
+    }
+
+    protected void displayInMap(Offer offer, Location currentLocation) {
+        OfferMapActivity_.intent(this).offer(offer).location(currentLocation).start();
+        slideInTransition();
+    }
+
+    protected boolean isSavedOffer(Offer offer) {
+        PersistenceHandler persistence = getPersistence();
+        return persistence.isSavedOffer(offer);
+    }
+
+    protected void saveOffer(Offer offer) {
+        PersistenceHandler persistence = getPersistence();
+        persistence.saveOffer(offer);
+    }
+
+    protected void removeSavedOffer(Offer offer) {
+        PersistenceHandler persistence = getPersistence();
+        persistence.removeSavedOffer(offer);
+    }
+
+    protected void openOfferLink(Offer offer) {
+        if (offer.isOnline()) {
+            //TODO open online link
+        }
     }
 
     /* Activity transitions */

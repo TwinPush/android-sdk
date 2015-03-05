@@ -16,12 +16,13 @@ import com.yellowpineapple.offers101.models.Offer;
 import org.androidannotations.annotations.EViewGroup;
 import org.androidannotations.annotations.ViewById;
 
+import lombok.Getter;
 import me.grantland.widget.AutofitTextView;
 
 @EViewGroup(R.layout.list_item_offer)
 public class OfferListView extends FrameLayout {
 
-    Offer offer;
+    @Getter Offer offer;
 
     /* Views */
     @ViewById RemoteImageView offerImageView;

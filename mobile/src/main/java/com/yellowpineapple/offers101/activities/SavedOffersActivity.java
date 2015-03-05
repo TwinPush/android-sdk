@@ -61,4 +61,12 @@ public class SavedOffersActivity extends OfferListActivity {
     public PullToRefreshLayout getPullToRefreshLayout() {
         return ptrLayout;
     }
+
+    @Override
+    protected void afterContextItemSelected(OfferMenuItem menuItem) {
+        // Reload offers after removing from my offers to refresh displayed data
+        if (menuItem == OfferMenuItem.MY_OFFERS_REMOVE) {
+            reloadOffers();
+        }
+    }
 }

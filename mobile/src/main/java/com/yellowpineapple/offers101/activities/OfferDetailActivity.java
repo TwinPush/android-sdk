@@ -5,7 +5,6 @@ import android.location.Location;
 import com.etsy.android.grid.StaggeredGridView;
 import com.yellowpineapple.offers101.R;
 import com.yellowpineapple.offers101.models.Offer;
-import com.yellowpineapple.offers101.utils.Ln;
 import com.yellowpineapple.offers101.utils.PersistenceHandler;
 import com.yellowpineapple.offers101.views.OfferDetailView;
 import com.yellowpineapple.offers101.views.OfferDetailView_;
@@ -51,8 +50,7 @@ public class OfferDetailActivity extends OfferListActivity implements OfferDetai
 
     @Override
     public void onViewOnMapClicked(Offer offer) {
-        OfferMapActivity_.intent(this).offer(offer).location(location).start();
-        slideInTransition();
+        displayInMap(offer, currentLocation);
     }
 
     @Override
@@ -64,15 +62,15 @@ public class OfferDetailActivity extends OfferListActivity implements OfferDetai
     public void onSaveClicked(Offer offer) {
         PersistenceHandler persistence = getPersistence();
         if (persistence.isSavedOffer(offer)) {
-            persistence.removeSavedOffer(offer);
+            removeSavedOffer(offer);
         } else {
-            persistence.saveOffer(offer);
+            saveOffer(offer);
         }
     }
 
     @Override
     public void onOpenLinkClicked(Offer offer) {
-        Ln.i("Open link clicked");
+        openOfferLink(offer);
     }
 
     @Override

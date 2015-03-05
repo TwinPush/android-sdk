@@ -3,12 +3,13 @@ package com.yellowpineapple.offers101.activities;
 import android.app.ActionBar;
 import android.content.res.TypedArray;
 import android.location.Location;
+import android.view.ContextMenu;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.AbsListView;
-import android.widget.AdapterView;
-import android.widget.Toast;
 
 import com.etsy.android.grid.StaggeredGridView;
 import com.yellowpineapple.offers101.R;
@@ -33,7 +34,7 @@ import lombok.Getter;
  * Created by agutierrez on 09/02/15.
  */
 @EActivity
-public abstract class OfferListActivity extends ParentActivity implements AbsListView.OnScrollListener, AbsListView.OnItemClickListener, AdapterView.OnItemLongClickListener {
+public abstract class OfferListActivity extends ParentActivity implements AbsListView.OnScrollListener, OffersAdapter.Listener {
 
     @Getter OffersAdapter offersAdapter;
     boolean mHasRequestedMore;
@@ -44,6 +45,7 @@ public abstract class OfferListActivity extends ParentActivity implements AbsLis
     Location currentLocation = null;
 
     @Getter List<Offer> offers;
+    Offer selectedOffer = null;
 
     static int FIRST_PAGE = BaseRequest.FIRST_PAGE;
     static int PER_PAGE = BaseRequest.RESULTS_PER_PAGE;
@@ -75,6 +77,8 @@ public abstract class OfferListActivity extends ParentActivity implements AbsLis
         this.hideActionBarOnScroll = hideActionBarOnScroll;
         this.navigationView = navigationView;
 
+        registerForContextMenu(gridView);
+
         if (getPullToRefreshLayout() != null) {
             setupPullToRefresh(getPullToRefreshLayout());
         }
@@ -101,6 +105,7 @@ public abstract class OfferListActivity extends ParentActivity implements AbsLis
         }
 
         offersAdapter = new OffersAdapter(this);
+        offersAdapter.setListener(this);
 
         // do we have saved data?
         if (shouldReloadOffers()) reloadOffers();
@@ -109,8 +114,6 @@ public abstract class OfferListActivity extends ParentActivity implements AbsLis
 
         gridView.setAdapter(offersAdapter);
         gridView.setOnScrollListener(this);
-        gridView.setOnItemClickListener(this);
-        gridView.setOnItemLongClickListener(this);
     }
 
     public PullToRefreshLayout getPullToRefreshLayout() {
@@ -306,19 +309,78 @@ public abstract class OfferListActivity extends ParentActivity implements AbsLis
     }
 
     @Override
-    public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
-        int offerPosition = position - gridView.getHeaderViewsCount();
-        if (offerPosition >= 0) {
-            showOfferDetailActivity(offers.get(offerPosition), currentLocation);
+    public void onOfferClick(Offer offer, View view) {
+        showOfferDetail(offer, currentLocation);
+    }
+
+    @Override
+    public void onOfferLongClick(Offer offer, View view) {
+        this.selectedOffer = offer;
+        openContextMenu(gridView);
+    }
+
+    abstract void onRequestOffers(final int page, final Location location);
+
+    // Context menu
+
+    enum OfferMenuItem {
+        VIEW_IN_MAP(1, R.string.menu_map),
+        MY_OFFERS_SAVE(2, R.string.menu_my_offers_add),
+        MY_OFFERS_REMOVE(3, R.string.menu_my_offers_remove),
+        SHARE(4, R.string.menu_share);
+
+        @Getter int id;
+        @Getter int textResId;
+
+        private OfferMenuItem(int id, int textResId) {
+            this.id = id;
+            this.textResId = textResId;
+        }
+
+        public static OfferMenuItem fromId(int id) {
+            for (OfferMenuItem item : values()) {
+                if (item.getId() == id) {
+                    return item;
+                }
+            }
+            return null;
         }
     }
 
     @Override
-    public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id)
-    {
-        Toast.makeText(this, "Item Long Clicked: " + position, Toast.LENGTH_SHORT).show();
+    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+        super.onCreateContextMenu(menu, v, menuInfo);
+        if (v == gridView) {
+            if (selectedOffer.hasLocation()) {
+                addMenuItem(menu, OfferMenuItem.VIEW_IN_MAP);
+            }
+            if (isSavedOffer(selectedOffer)) {
+                addMenuItem(menu, OfferMenuItem.MY_OFFERS_REMOVE);
+            } else {
+                addMenuItem(menu, OfferMenuItem.MY_OFFERS_SAVE);
+            }
+            addMenuItem(menu, OfferMenuItem.SHARE);
+        }
+    }
+
+    void addMenuItem(ContextMenu menu, OfferMenuItem menuItem) {
+        menu.add(Menu.NONE, menuItem.getId(), Menu.NONE, menuItem.getTextResId());
+    }
+
+    @Override
+    public boolean onContextItemSelected(MenuItem item) {
+        OfferMenuItem menuItem = OfferMenuItem.fromId(item.getItemId());
+        switch (menuItem) {
+            case VIEW_IN_MAP: displayInMap(selectedOffer, currentLocation); break;
+            case MY_OFFERS_SAVE: saveOffer(selectedOffer); break;
+            case MY_OFFERS_REMOVE: removeSavedOffer(selectedOffer); break;
+            case SHARE: shareOffer(selectedOffer); break;
+        }
+        afterContextItemSelected(menuItem);
         return true;
     }
 
-    abstract void onRequestOffers(final int page, final Location location);
+    protected void afterContextItemSelected(OfferMenuItem menuItem) {
+
+    }
 }

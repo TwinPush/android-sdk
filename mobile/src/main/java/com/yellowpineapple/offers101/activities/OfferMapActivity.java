@@ -241,6 +241,6 @@ public class OfferMapActivity
     @Override
     public void onInfoWindowClick(Marker marker) {
         Offer offer = markersHash.get(marker);
-        showOfferDetailActivity(offer, location);
+        showOfferDetail(offer, location);
     }
 }
