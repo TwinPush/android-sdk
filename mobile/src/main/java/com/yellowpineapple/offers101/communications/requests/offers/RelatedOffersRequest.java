@@ -25,7 +25,7 @@ public class RelatedOffersRequest extends BaseRequest {
         addSegmentParams(SEGMENTS);
         addPagination(page, perPage);
         if (offer.getStore() != null) {
-            addParam("storeId", offer.getId());
+            addParam("storeId", offer.getStore().getId());
         }
         addParam("offerId", offer.getId());
         this.listener = listener;
