@@ -32,6 +32,8 @@ public class OffersActivity extends OfferListActivity {
 
     Date backPressedTime = null;
 
+    private static final String BIG_OFFER_URL = "http://app.101offers.co/offers/highlighted";
+
     // TwinPush Token & API Key
     private static final String TWINPUSH_TOKEN = "dd14472100f1650da778127888fa9cb3";
     private static final String TWINPUSH_APP_ID = "e7d58f902033a833";
@@ -82,8 +84,7 @@ public class OffersActivity extends OfferListActivity {
 
     @Click(R.id.btnBigOffer)
     void bigOfferPressed() {
-        String url = "http://ow.ly/JIB5v";
-        WebViewActivity_.intent(this).url(url).titleId(R.string.big_offer).start();
+        WebViewActivity_.intent(this).url(BIG_OFFER_URL).titleId(R.string.big_offer).start();
         slideInTransition();
     }
 
