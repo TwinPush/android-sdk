@@ -55,7 +55,8 @@
         </activity>
 
         <activity
-            android:name="com.twincoders.twinpush.sdk.activities.RichNotificationActivity">
+            android:name="com.twincoders.twinpush.sdk.activities.RichNotificationActivity"
+            android:screenOrientation="portrait">
         </activity>
 
         <meta-data android:name="com.google.android.gms.version"
