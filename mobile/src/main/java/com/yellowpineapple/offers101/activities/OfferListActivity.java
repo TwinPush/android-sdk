@@ -205,9 +205,10 @@ public abstract class OfferListActivity extends ParentActivity implements AbsLis
         mHasRequestedMore = false;
         setLoading(false);
         offersRequest = null;
-        if (page == FIRST_PAGE) {
-            showWearableOffers(offers);
-        }
+        // Wearable offers are disabled for production
+//        if (page == FIRST_PAGE) {
+//            showWearableOffers(offers);
+//        }
         setEmptyViewVisible(offers.size() == 0);
     }
 
