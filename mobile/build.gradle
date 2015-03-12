@@ -21,8 +21,8 @@ android {
         applicationId "com.yellowpineapple.offers101"
         minSdkVersion 15
         targetSdkVersion 21
-        versionCode 1
-        versionName "1.0"
+        versionCode 101
+        versionName "1.0.1"
     }
     buildTypes {
         release {

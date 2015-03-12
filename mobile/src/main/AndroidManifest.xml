@@ -95,17 +95,4 @@
     <permission android:name="com.yellowpineapple.offers101.permission.C2D_MESSAGE" android:protectionLevel="signature" />
     <uses-permission android:name="com.yellowpineapple.offers101.permission.C2D_MESSAGE" />
 
-    <!-- Compatible only with Handsets -->
-    <compatible-screens>
-        <!-- all small size screens -->
-        <screen android:screenSize="small" android:screenDensity="ldpi" />
-        <screen android:screenSize="small" android:screenDensity="mdpi" />
-        <screen android:screenSize="small" android:screenDensity="hdpi" />
-        <screen android:screenSize="small" android:screenDensity="xhdpi" />
-        <!-- all normal size screens -->
-        <screen android:screenSize="normal" android:screenDensity="ldpi" />
-        <screen android:screenSize="normal" android:screenDensity="mdpi" />
-        <screen android:screenSize="normal" android:screenDensity="hdpi" />
-        <screen android:screenSize="normal" android:screenDensity="xhdpi" />
-    </compatible-screens>
 </manifest>
