@@ -1,22 +1,20 @@
 package com.twincoders.twinpush.sdk.services;
 
-import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
+import android.location.Location;
+import android.location.LocationListener;
 import android.location.LocationManager;
+import android.os.Bundle;
 import android.os.IBinder;
 
 import com.twincoders.twinpush.sdk.TwinPushSDK;
 import com.twincoders.twinpush.sdk.logging.Ln;
-import com.twincoders.twinpush.sdk.util.LocationUpdateRequester;
 
-public class LocationService extends Service {
-
-	protected PendingIntent locationListenerPassivePendingIntent;
+public class LocationService extends Service implements LocationListener {
 
 	LocationManager locationManager;
-	LocationChangeReceiver locaitonChangeReceiver = new LocationChangeReceiver();
 
 	@Override
 	public IBinder onBind(Intent intent) {
@@ -26,23 +24,34 @@ public class LocationService extends Service {
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startId) {
 		Ln.i("Location service started");
-		
+
 		TwinPushSDK twinPush = TwinPushSDK.getInstance(getApplicationContext());
 		int minUpdateDistance = twinPush.getLocationMinUpdateDistance();
 		long minUpdateTime = twinPush.getLocationMinUpdateTime();
-		Intent passiveIntent = new Intent(this, LocationChangeReceiver.class);
-		locationListenerPassivePendingIntent = PendingIntent.getBroadcast(this, 0, passiveIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 		// Passive location updates from 3rd party apps when the Activity isn't visible.
-		LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-		LocationUpdateRequester locationUpdateRequester = new LocationUpdateRequester(locationManager);
-		locationUpdateRequester.requestPassiveLocationUpdates(minUpdateDistance, minUpdateTime, locationListenerPassivePendingIntent);
+		locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+		locationManager.requestLocationUpdates(LocationManager.PASSIVE_PROVIDER, minUpdateTime, minUpdateDistance, this);
 
 		return START_STICKY;
 	}
 
 	@Override
 	public void onDestroy() {
-		unregisterReceiver(locaitonChangeReceiver);
+		if (locationManager != null) {
+			locationManager.removeUpdates(this);
+		}
 		super.onDestroy();
 	}
+	
+	/* LocationListener */
+	
+	@Override
+    public void onLocationChanged(Location location) {
+    	Ln.d("Updated location");
+    	TwinPushSDK.getInstance(getApplicationContext()).setLocation(location);
+    }
+
+    @Override public void onStatusChanged(String s, int i, Bundle bundle) { }
+    @Override public void onProviderEnabled(String s) { }
+    @Override public void onProviderDisabled(String s) { }
 }
