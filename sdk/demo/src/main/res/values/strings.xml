@@ -1,0 +1,16 @@
+<resources>
+    <string name="app_name">TwinPush Demo</string>
+
+    <!-- Register Strings -->
+    <string name="prompt_username">Username</string>
+    <string name="prompt_age">Age</string>
+    <string name="prompt_status">Status</string>
+    <string name="action_sign_in">Register</string>
+
+    <string-array name="status_arrays">
+        <item>Single</item>
+        <item>Married</item>
+        <item>Divorced</item>
+        <item>Separated</item>
+    </string-array>
+</resources>

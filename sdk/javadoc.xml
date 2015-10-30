@@ -1,6 +1,0 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<project default="javadoc">
-    <target name="javadoc">
-        <javadoc access="public" author="true" classpath="libs/gcm.jar:libs/android-async-http-1.4.2.jar:libs/android-support-v4.jar" destdir="doc" nodeprecated="false" nodeprecatedlist="false" noindex="false" nonavbar="false" notree="false" packagenames="com.twincoders.twinpush.sdk.notifications,com.twincoders.twinpush.sdk.communications.requests,com.twincoders.twinpush.sdk.communications.requests.notifications,com.twincoders.twinpush.sdk.activities,com.twincoders.twinpush.sdk,com.twincoders.twinpush.sdk.controllers,com.twincoders.twinpush.sdk.communications.requests.register,com.twincoders.twinpush.sdk.logging,com.twincoders.twinpush.sdk.communications" source="1.6" sourcepath="src:gen" splitindex="true" use="true" version="true"/>
-    </target>
-</project>
