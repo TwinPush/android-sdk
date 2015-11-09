@@ -18,7 +18,7 @@ import com.twincoders.twinpush.sdk.demo.adapters.DividerItemDecoration;
 import com.twincoders.twinpush.sdk.demo.adapters.InboxAdapter;
 import com.twincoders.twinpush.sdk.demo.adapters.ItemClickSupport;
 import com.twincoders.twinpush.sdk.notifications.PushNotification;
-import com.twincoders.twinpush.sdk.notifications.TwinPushIntentService;
+import com.twincoders.twinpush.sdk.services.NotificationIntentService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -93,7 +93,7 @@ public class InboxActivity extends ParentActivity implements ItemClickSupport.On
     public void onItemClicked(RecyclerView recyclerView, int position, View v) {
         PushNotification notification = mAdapter.getNotifications().get(position);
         Intent richIntent = new Intent(this, RichNotificationActivity.class);
-        richIntent.putExtra(TwinPushIntentService.EXTRA_NOTIFICATION, notification);
+        richIntent.putExtra(NotificationIntentService.EXTRA_NOTIFICATION, notification);
         startActivity(richIntent);
     }
 

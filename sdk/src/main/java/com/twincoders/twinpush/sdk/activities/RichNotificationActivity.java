@@ -9,7 +9,7 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
 import com.twincoders.twinpush.sdk.notifications.PushNotification;
-import com.twincoders.twinpush.sdk.notifications.TwinPushIntentService;
+import com.twincoders.twinpush.sdk.services.NotificationIntentService;
 
 public class RichNotificationActivity extends Activity {
 	
@@ -27,7 +27,7 @@ public class RichNotificationActivity extends Activity {
 		webView.getSettings().setJavaScriptCanOpenWindowsAutomatically(true);
 		// Get notification
 		Intent intent = getIntent();
-		PushNotification notification = (PushNotification) intent.getSerializableExtra(TwinPushIntentService.EXTRA_NOTIFICATION);
+		PushNotification notification = (PushNotification) intent.getSerializableExtra(NotificationIntentService.EXTRA_NOTIFICATION);
 		webView.loadUrl(notification.getRichURL());
 		setContentView(webView);
 	}

@@ -1,4 +1,4 @@
-package com.twincoders.twinpush.sdk.notifications;
+package com.twincoders.twinpush.sdk.services;
 
 import android.app.Notification;
 import android.app.NotificationManager;
@@ -11,6 +11,7 @@ import android.support.v4.app.NotificationCompat;
 import com.google.android.gms.gcm.GcmListenerService;
 import com.twincoders.twinpush.sdk.TwinPushSDK;
 import com.twincoders.twinpush.sdk.logging.Ln;
+import com.twincoders.twinpush.sdk.notifications.PushNotification;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -20,7 +21,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
-public class TwinPushIntentService extends GcmListenerService {
+public class NotificationIntentService extends GcmListenerService {
 
 	public final static String EXTRA_NOTIFICATION_TITLE = "title";
 	public final static String EXTRA_NOTIFICATION_MESSAGE = "message";
@@ -31,7 +32,7 @@ public class TwinPushIntentService extends GcmListenerService {
 	public final static String ON_NOTIFICATION_OPENED_ACTION = "con.twincoders.twinpush.sdk.PUSH_NOTIFICATION_OPENED";
 	public final static String EXTRA_NOTIFICATION = "notification";
 	
-    public TwinPushIntentService() {
+    public NotificationIntentService() {
         super();
     }
 
