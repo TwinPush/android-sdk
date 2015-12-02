@@ -22,6 +22,7 @@ import com.twincoders.twinpush.sdk.communications.requests.statistics.OpenAppReq
 import com.twincoders.twinpush.sdk.communications.requests.statistics.OpenNotificationRequest;
 import com.twincoders.twinpush.sdk.communications.requests.statistics.ReportStatisticsRequest;
 import com.twincoders.twinpush.sdk.entities.PropertyType;
+import com.twincoders.twinpush.sdk.entities.RegistrationInfo;
 import com.twincoders.twinpush.sdk.notifications.PushNotification;
 
 public class TwinPushRequestFactory {
@@ -59,8 +60,8 @@ public class TwinPushRequestFactory {
 	
 	/* Register */
 	
-	public TwinPushRequest register(String alias, String registrationId, String deviceUDID, RegisterRequest.Listener listener) {
-        TwinPushRequest request = new RegisterRequest(alias, registrationId, getAppId(), deviceUDID, listener);
+	public TwinPushRequest register(RegistrationInfo registrationInfo, RegisterRequest.Listener listener) {
+        TwinPushRequest request = new RegisterRequest(getAppId(), registrationInfo, listener);
         launch(request);
         return request;
     }

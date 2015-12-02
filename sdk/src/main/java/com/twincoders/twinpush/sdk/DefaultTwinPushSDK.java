@@ -6,8 +6,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationListener;
 import android.os.Bundle;
@@ -25,6 +23,7 @@ import com.twincoders.twinpush.sdk.communications.requests.notifications.GetNoti
 import com.twincoders.twinpush.sdk.communications.requests.register.RegisterRequest;
 import com.twincoders.twinpush.sdk.entities.LocationPrecision;
 import com.twincoders.twinpush.sdk.entities.PropertyType;
+import com.twincoders.twinpush.sdk.entities.RegistrationInfo;
 import com.twincoders.twinpush.sdk.entities.TwinPushOptions;
 import com.twincoders.twinpush.sdk.logging.Ln;
 import com.twincoders.twinpush.sdk.logging.Strings;
@@ -45,7 +44,7 @@ public class DefaultTwinPushSDK extends TwinPushSDK implements LocationListener 
 
     /* Constants */
     private static final String PREF_FILE_NAME = "TwinPushPrefs";
-    private static final String PREF_APP_VERSION = "APP_VERSION";
+    private static final String PREF_REGISTRATION_HASH = "REGISTRATION_HASH";
     private static final String PREF_GCM_REGISTERED = "GCM_REGISTERED";
     private static final String PREF_NOTIFICATION_SMALL_ICON = "NOTIFICATION_SMALL_ICON";
     private static final String PREF_DEVICE_ID = "DEVICE_ID";
@@ -100,18 +99,18 @@ public class DefaultTwinPushSDK extends TwinPushSDK implements LocationListener 
 
     void onGCMRegister(final String deviceAlias, final String pushToken, final OnRegistrationListener listener) {
         Ln.d("GCM registration completed");
-        // Only register if registrationId or alias has changed since last register
-        boolean aliasUpdated = deviceAlias != null && !Strings.equals(deviceAlias, getDeviceAlias());
-        boolean pushTokenUpdated = !Strings.equals(pushToken, getPushToken());
+        // Only register if registration info has changed since last register
+        RegistrationInfo info = RegistrationInfo.fromContext(getContext(), getDeviceUDID(), deviceAlias, pushToken);
+        String registrationHash = encrypt(info.toString());
 
-        if (aliasUpdated || pushTokenUpdated) {
-
+        if (!Strings.equals(registrationHash, getRegistrationHash())) {
+            Ln.d("Registration changed! Launching new registration request");
             // Device is already registered on GCM
             if (registerRequest != null) {
                 registerRequest.cancel();
             }
             registerRequest = getRequestFactory().
-                    register(deviceAlias, pushToken, getDeviceUDID(),
+                    register(info,
                             new RegisterRequest.Listener() {
 
                                 @Override
@@ -132,12 +131,18 @@ public class DefaultTwinPushSDK extends TwinPushSDK implements LocationListener 
                                 }
                             });
         } else {
-            Ln.i("Device already registered with given Push Token and Alias");
+            Ln.d("Registration info did not change since last registration");
             if (listener != null) {
                 listener.onRegistrationSuccess(deviceAlias);
             }
 
         }
+    }
+
+    RegistrationInfo getRegistrationInfo(String deviceAlias, String pushToken) {
+        RegistrationInfo info = new RegistrationInfo();
+
+        return info;
     }
 
 	/* Public API Methods */
@@ -521,17 +526,6 @@ public class DefaultTwinPushSDK extends TwinPushSDK implements LocationListener 
         return deviceId;
     }
 
-    private int getCurrentAppVersion() {
-        try {
-            PackageInfo packageInfo = getContext().getPackageManager().getPackageInfo(getContext().getPackageName(), 0);
-            return packageInfo.versionCode;
-        } catch (PackageManager.NameNotFoundException e) {
-            Ln.e(e);
-            // should never happen
-            throw new RuntimeException("Could not get package name: " + e);
-        }
-    }
-
     @Override
     public boolean setup(TwinPushOptions options) {
         if (options != null) {
@@ -721,5 +715,15 @@ public class DefaultTwinPushSDK extends TwinPushSDK implements LocationListener 
     public String getServerHost() {
         return getSharedPreferences().getString(PREF_TWINPUSH_CUSTOM_HOST, String.format(DEFAULT_HOST, getSubdomain()));
     }
+
+    private void setRegistrationHash(String registrationHash) {
+        getSharedPreferences().edit().putString(PREF_REGISTRATION_HASH, registrationHash).commit();
+    }
+
+    private String getRegistrationHash() {
+        return getSharedPreferences().getString(PREF_REGISTRATION_HASH, null);
+    }
+
+
 
 }
