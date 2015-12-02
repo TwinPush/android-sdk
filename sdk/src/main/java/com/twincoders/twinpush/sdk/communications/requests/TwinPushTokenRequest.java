@@ -14,10 +14,10 @@ public abstract class TwinPushTokenRequest extends TwinPushRequest {
 	@Override
 	public void onSetupClient(AsyncHttpClient client) {
 		super.onSetupClient(client);
-		client.addHeader(TOKEN_KEY, getToken());
+		client.addHeader(TOKEN_KEY, getApiToken());
 	}
 	
-	protected String getToken() {
-		return TwinPushSDK.getInstance(getRequestLauncher().getContext()).getToken();
+	protected String getApiToken() {
+		return TwinPushSDK.getInstance(getRequestLauncher().getContext()).getApiKey();
 	}
 }

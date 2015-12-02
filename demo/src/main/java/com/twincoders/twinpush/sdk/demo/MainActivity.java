@@ -12,6 +12,7 @@ import android.widget.Toast;
 
 import com.twincoders.twinpush.sdk.TwinPushSDK;
 import com.twincoders.twinpush.sdk.activities.RichNotificationActivity;
+import com.twincoders.twinpush.sdk.entities.TwinPushOptions;
 import com.twincoders.twinpush.sdk.logging.Strings;
 import com.twincoders.twinpush.sdk.notifications.PushNotification;
 import com.twincoders.twinpush.sdk.services.NotificationIntentService;
@@ -21,15 +22,6 @@ import java.util.Arrays;
 import fr.ganfra.materialspinner.MaterialSpinner;
 
 public class MainActivity extends ParentActivity {
-
-    // TwinPush Token & API Key
-    private static final String TWINPUSH_APP_ID = "811xxxxxxxx5C2";
-    private static final String TWINPUSH_API_KEY = "a204998xxxxxxxxxxxx1847d55";
-    // GCM Google Project number
-    private static final String GOOGLE_PROJECT_NUMBER = "823XXXXX5729";
-    // TwinPush Auth
-    public static final String APP_ID = "xxx";
-    public static final String API_KEY = "xxx";
 
     // Preferences
     static final String PREFS = "shared";
@@ -69,11 +61,15 @@ public class MainActivity extends ParentActivity {
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         statusSpinner.setAdapter(adapter);
 
-
-        // Setup TwinPush SDK
         twinPush = TwinPushSDK.getInstance(this);
-        twinPush.setNotificationSmallIcon(R.drawable.ic_notification);
-        twinPush.setup(TWINPUSH_APP_ID, TWINPUSH_API_KEY, GOOGLE_PROJECT_NUMBER);
+        // Setup TwinPush SDK
+        TwinPushOptions options = new TwinPushOptions();                // Initialize options
+        options.twinPushAppId =     "7687ddf345fe8317";                 // - APP ID
+        options.twinPushApiKey =    "c5ca7576cf49a0e9be0b75d0ffd81592"; // - API Key
+        options.gcmProjectNumber =  "843900965729";                     // - GCM Project Number
+        options.subdomain =         "mycompany";                        // - Application subdomain
+        options.notificationIcon =  R.drawable.ic_notification;         // - Notification icon
+        TwinPushSDK.getInstance(this).setup(options);                   // Call setup
 
         // Show previous values when present
         usernameTxt.setText(twinPush.getDeviceAlias());

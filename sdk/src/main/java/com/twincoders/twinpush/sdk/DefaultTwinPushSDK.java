@@ -25,6 +25,7 @@ import com.twincoders.twinpush.sdk.communications.requests.notifications.GetNoti
 import com.twincoders.twinpush.sdk.communications.requests.register.RegisterRequest;
 import com.twincoders.twinpush.sdk.entities.LocationPrecision;
 import com.twincoders.twinpush.sdk.entities.PropertyType;
+import com.twincoders.twinpush.sdk.entities.TwinPushOptions;
 import com.twincoders.twinpush.sdk.logging.Ln;
 import com.twincoders.twinpush.sdk.logging.Strings;
 import com.twincoders.twinpush.sdk.notifications.PushNotification;
@@ -50,8 +51,8 @@ public class DefaultTwinPushSDK extends TwinPushSDK implements LocationListener 
     private static final String PREF_DEVICE_ID = "DEVICE_ID";
     private static final String PREF_DEVICE_ALIAS = "DEVICE_ALIAS";
     private static final String PREF_DEVICE_PUSH_TOKEN = "DEVICE_PUSH_TOKEN";
-    private static final String PREF_GCM_SENDER_ID = "GCM_SENDER_ID";
-    private static final String PREF_TWINPUSH_TOKEN = "TWINPUSH_TOKEN";
+    private static final String PREF_GCM_PROJECT_NUMBER = "GCM_SENDER_ID";
+    private static final String PREF_TWINPUSH_API_KEY = "TWINPUSH_TOKEN";
     private static final String PREF_TWINPUSH_APP_ID = "TWINPUSH_APP_ID";
     private static final String PREF_TWINPUSH_SUBDOMAIN = "TWINPUSH_SUBDOMAIN";
     private static final String PREF_TWINPUSH_CUSTOM_HOST = "TWINPUSH_CUSTOM_HOST";
@@ -85,8 +86,8 @@ public class DefaultTwinPushSDK extends TwinPushSDK implements LocationListener 
     private String deviceAlias = null;
     private String deviceId = null;
     private int notificationSmallIcon = 0;
-    private String gcmSenderId = null;
-    private String token = null;
+    private String gcmProjectNumber = null;
+    private String apiKey = null;
     private String appId = null;
     private String pushToken = null;
 
@@ -153,9 +154,9 @@ public class DefaultTwinPushSDK extends TwinPushSDK implements LocationListener 
 
     @Override
     public void register(final String deviceAlias, final OnRegistrationListener listener) {
-        String gcmSenderId = getGCMSenderId();
+        String gcmSenderId = getGcmProjectNumber();
         String appId = getAppId();
-        String token = getToken();
+        String token = getApiKey();
         if (gcmSenderId != null) {
             if (appId != null) {
                 if (token != null) {
@@ -427,8 +428,7 @@ public class DefaultTwinPushSDK extends TwinPushSDK implements LocationListener 
         return notificationSmallIcon;
     }
 
-    @Override
-    public void setNotificationSmallIcon(int notificationSmallIcon) {
+    private void setNotificationSmallIcon(int notificationSmallIcon) {
         getSharedPreferences().edit().putInt(PREF_NOTIFICATION_SMALL_ICON, notificationSmallIcon).commit();
         this.notificationSmallIcon = notificationSmallIcon;
     }
@@ -459,37 +459,29 @@ public class DefaultTwinPushSDK extends TwinPushSDK implements LocationListener 
         this.deviceId = deviceId;
     }
 
-    @Override
-    public void setGCMSenderId(String gcmSenderId) {
-        getSharedPreferences().edit().putString(PREF_GCM_SENDER_ID, gcmSenderId).commit();
-        this.gcmSenderId = gcmSenderId;
-    }
-
-    public String getGCMSenderId() {
-        if (gcmSenderId == null) {
-            gcmSenderId = getSharedPreferences().getString(PREF_GCM_SENDER_ID, null);
+    public String getGcmProjectNumber() {
+        if (gcmProjectNumber == null) {
+            gcmProjectNumber = getSharedPreferences().getString(PREF_GCM_PROJECT_NUMBER, null);
         }
-        return gcmSenderId;
+        return gcmProjectNumber;
+    }
+
+    private void setGcmProjectNumber(String gcmProjectNumber) {
+        getSharedPreferences().edit().putString(PREF_GCM_PROJECT_NUMBER, gcmProjectNumber).commit();
+        this.gcmProjectNumber = gcmProjectNumber;
     }
 
     @Override
-    public void setToken(String token) {
-        getSharedPreferences().edit().putString(PREF_TWINPUSH_TOKEN, token).commit();
-        this.token = token;
-    }
-
-    @Override
-    public String getToken() {
-        if (token == null) {
-            token = getSharedPreferences().getString(PREF_TWINPUSH_TOKEN, null);
+    public String getApiKey() {
+        if (apiKey == null) {
+            apiKey = getSharedPreferences().getString(PREF_TWINPUSH_API_KEY, null);
         }
-        return token;
+        return apiKey;
     }
 
-    @Override
-    public void setAppId(String appId) {
-        getSharedPreferences().edit().putString(PREF_TWINPUSH_APP_ID, appId).commit();
-        this.appId = appId;
+    protected void setApiKey(String token) {
+        getSharedPreferences().edit().putString(PREF_TWINPUSH_API_KEY, token).commit();
+        this.apiKey = token;
     }
 
     public String getAppId() {
@@ -497,6 +489,11 @@ public class DefaultTwinPushSDK extends TwinPushSDK implements LocationListener 
             appId = getSharedPreferences().getString(PREF_TWINPUSH_APP_ID, null);
         }
         return appId;
+    }
+
+    protected void setAppId(String appId) {
+        getSharedPreferences().edit().putString(PREF_TWINPUSH_APP_ID, appId).commit();
+        this.appId = appId;
     }
 
     public String getPushToken() {
@@ -536,11 +533,42 @@ public class DefaultTwinPushSDK extends TwinPushSDK implements LocationListener 
     }
 
     @Override
-    public void setup(String twinPushAppId, String twinPushToken, String gcmSenderId) {
-        setAppId(twinPushAppId);
-        setToken(twinPushToken);
-        setGCMSenderId(gcmSenderId);
-        resetSSLChecks();
+    public boolean setup(TwinPushOptions options) {
+        if (options != null) {
+            String appId = options.twinPushAppId;
+            String apiKey = options.twinPushApiKey;
+            String gcmProjectNumber = options.gcmProjectNumber;
+            String subdomain = options.subdomain;
+            String serverHost = options.serverHost;
+            int smallIcon = options.notificationIcon;
+
+            boolean validSetup = Strings.notEmpty(appId) && Strings.notEmpty(apiKey) &&
+                    Strings.notEmpty(gcmProjectNumber) && smallIcon > 0;
+            boolean validHost = Strings.notEmpty(subdomain) || Strings.notEmpty(serverHost);
+
+            if (validSetup) {
+                if (validHost) {
+                    setAppId(options.twinPushAppId);
+                    setApiKey(options.twinPushApiKey);
+                    setGcmProjectNumber(options.gcmProjectNumber);
+                    setNotificationSmallIcon(options.notificationIcon);
+                    if (options.serverHost != null) {
+                        setServerHost(options.serverHost);
+                    } else {
+                        setSubdomain(options.subdomain);
+                    }
+                    resetSSLChecks();
+                    return true;
+                } else {
+                    Ln.e("TwinPush Setup Error: subdomain or serverHost are required");
+                }
+            } else {
+                Ln.e("TwinPush Setup Error: some of the required fields are missing");
+            }
+        } else {
+            Ln.e("TwinPush Setup Error: options object is null");
+        }
+        return false;
     }
 
     private TwinPushRequestFactory getRequestFactory() {

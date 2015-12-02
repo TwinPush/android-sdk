@@ -29,7 +29,7 @@ public class RegistrationIntentService extends IntentService {
         try {
             Ln.d("Obtaining GCM Push Token");
             InstanceID instanceID = InstanceID.getInstance(this);
-            String token = instanceID.getToken(twinPush.getGCMSenderId(),
+            String token = instanceID.getToken(twinPush.getGcmProjectNumber(),
                     GoogleCloudMessaging.INSTANCE_ID_SCOPE, null);
             Ln.d("GCM Registration Push Token: %s", token);
 

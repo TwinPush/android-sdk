@@ -32,7 +32,15 @@ The next step is to setup the TwinPush application. This can be done through the
 ![](http://developers.twinpush.com/assets/android_apikey-7d67473c7ca735ac5ff674dbcc7841bf.png)
 
 ## Building the application
-### Library import
+
+### Gradle Dependency
+Use this dependency in your build.gradle file to reference this library in your project
+
+```groovy
+compile 'com.twincoders.twinpush:android-sdk:1.1.0'
+```
+
+### Non-Gradle Library import
 
 You have to add the following libraries to the project by dragging them to the libs folder:
 
@@ -109,39 +117,37 @@ Where `my_app_package` must be replaced by the package name of your application.
 
 ### Starting TwinPush SDK
 
-To Setup TwinPush SDK you will need the following constants:
+To Setup TwinPush SDK you will need the following information:
 
-* TwinPush App ID: Application ID obtained from Settings section of TwinPush platform
-* TwinPush API Key: TwinPush Application API Key displayed in Settings section
-* Google Project Number: Project number (formerly Sender ID) obtained in the Google APIs Console
+* **TwinPush App ID**: Application ID obtained from Settings section of TwinPush platform
+* **TwinPush API Key**: TwinPush Application API Key displayed in Settings section
+* **Google Project Number**: Project number (formerly Sender ID) obtained in the Google APIs Console
+* **Subdomain**: Server subdomain where the application is deployed. Can be obtained in the Settings section of the TwinPush platform.
+* **Notification icon**: An image resource that will be displayed on action bar when a Push notification is received
+  
+![](http://developers.twinpush.com/assets/android_icon-2f9119a5e58e5ac4854d3f637699c18b.png)
 
-You can declare the constants in the main activity of your application:
-
-```java
-// TwinPush Token & API Key
-private static final String TWINPUSH_APP_ID = "811xxxxxxxx5C2";
-private static final String TWINPUSH_API_KEY = "a204998xxxxxxxxxxxx1847d55";
-// GCM Google Project number
-private static final String GOOGLE_PROJECT_NUMBER = "823XXXXX5729";
-```
-    
-Override the onCreate method of this activity and setup the TwinPush SDK using the previously defined constants.
+To initialize the SDK you will ussually override the `onCreate` method of main activity and call `setup` method from the TwinPush SDK, that accepts a `TwinPushOptions` object as  parameter that will hold the required information.
 
 ```java
 public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    /* TwinPush setup */
-    TwinPushSDK twinPush = TwinPushSDK.getInstance(this);
-    twinPush.setup(TWINPUSH_APP_ID, TWINPUSH_API_KEY, GOOGLE_PROJECT_NUMBER);
-    // Icon that will be displayed on status bar when a notification is received
-    twinPush.setNotificationSmallIcon(R.drawable.ic_notification);
+    // Setup TwinPush SDK
+    TwinPushOptions options = new TwinPushOptions();                // Initialize options
+    options.twinPushAppId =     "7687xxxxxxxxxxxx";                 // - APP ID
+    options.twinPushApiKey =    "c5caxxxxxxxxxxxxxxxxxxxxxxxx1592"; // - API Key
+    options.gcmProjectNumber =  "8xxxxxxxxxxx";                     // - GCM Project Number
+    options.subdomain =         "mycompany";                        // - Application subdomain
+    options.notificationIcon =  R.drawable.ic_notification;         // - Notification icon
+    TwinPushSDK.getInstance(this).setup(options);                   // Call setup
     /* Your code goes here... */
 }
 ```
 
-You will also have to setup the icon that will be used to display the received notification on the status bar.
+The `setup` method will return **false** if any of the required parameter is missing.
 
-![](http://developers.twinpush.com/assets/android_icon-2f9119a5e58e5ac4854d3f637699c18b.png)
+As seen in the previous example, to access to the shared instance of TwinPush SDK, it is possible to invoque `TwinPushSDK.getInstance` class method that takes the context as parameter.
+
 
 ## Basic TwinPush integration
 
