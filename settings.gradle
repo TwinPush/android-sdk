@@ -1,1 +1,2 @@
 include ':sdk', ':demo'
+rootProject.name = 'twinpush'

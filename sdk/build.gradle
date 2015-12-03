@@ -1,4 +1,15 @@
+import java.text.SimpleDateFormat
+
 apply plugin: 'com.android.library'
+apply plugin: 'com.github.dcendents.android-maven'
+apply plugin: 'com.jfrog.bintray'
+
+def libraryVersion = '2.0'
+def libraryVersionCode = 2000
+
+// Maven group and version
+version = libraryVersion
+group = 'com.twinpush'
 
 android {
     compileSdkVersion 23
@@ -7,8 +18,8 @@ android {
     defaultConfig {
         minSdkVersion 9
         targetSdkVersion 23
-        versionCode 110
-        versionName "1.1.0"
+        versionName libraryVersion
+        versionCode libraryVersionCode
     }
     buildTypes {
         release {
@@ -25,4 +36,68 @@ dependencies {
 
     compile 'com.google.android.gms:play-services-gcm:8.1.0'
     compile "cz.msebera.android:httpclient:4.4.1.1"
+}
+
+def siteUrl = 'https://github.com/TwinPush/android-sdk'      // Homepage URL of the library
+def gitUrl = 'https://github.com/TwinPush/android-sdk.git'   // Git repository URL
+group = "com.twinpush.android.sdk"                           // Maven Group ID for the artifact
+
+install {
+    repositories.mavenInstaller {
+        // This generates POM.xml with proper parameters
+        pom {
+            project {
+                packaging 'aar'
+            }
+        }
+    }
+}
+
+dependencies {
+}
+
+task sourcesJar(type: Jar) {
+    from android.sourceSets.main.java.srcDirs
+    classifier = 'sources'
+}
+
+task javadoc(type: Javadoc) {
+    source = android.sourceSets.main.java.srcDirs
+    classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
+}
+
+task javadocJar(type: Jar, dependsOn: javadoc) {
+    classifier = 'javadoc'
+    from javadoc.destinationDir
+    //options.encoding = 'UTF-8'
+}
+artifacts {
+    archives javadocJar
+    archives sourcesJar
+}
+
+Properties properties = new Properties()
+properties.load(project.rootProject.file('local.properties').newDataInputStream())
+
+bintray {
+    user = properties.getProperty("bintray.user")
+    key = properties.getProperty("bintray.apikey")
+
+    configurations = ['archives']
+    pkg {
+        userOrg = "twinpush"
+        repo = "sdk"
+        name = "android-sdk"
+        websiteUrl = siteUrl
+        vcsUrl = gitUrl
+        licenses = ["MIT"]
+        publish = true
+
+        version {
+            name = libraryVersion
+            desc = 'TwinPush SDK for Android ' + libraryVersion
+            released  = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZZ").format(new java.util.Date())
+            vcsTag = 'v' + libraryVersion
+        }
+    }
 }
