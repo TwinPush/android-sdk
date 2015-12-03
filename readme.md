@@ -1,6 +1,5 @@
+#TwinPush SDK Library
 [ ![Download](https://api.bintray.com/packages/twinpush/sdk/android-sdk/images/download.svg) ](https://bintray.com/twinpush/sdk/android-sdk/_latestVersion)
-TwinPush SDK Library
-==================
 
 Native Android SDK for TwinPush platform.
 
