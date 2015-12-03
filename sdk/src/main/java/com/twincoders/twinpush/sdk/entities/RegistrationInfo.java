@@ -83,15 +83,19 @@ public class RegistrationInfo {
     }
 
     public void printLog() {
+        Ln.d("============================================");
+        Ln.d("===      TwinPush Registration info      ===");
+        Ln.d("============================================");
         Ln.d("TwinPush App ID: %s", appID);
-        Ln.d("App Version: %s", appVersion);
-        Ln.d("SDK Version: %s", sdkVersion);
+        Ln.d("App Version:     %s", appVersion);
+        Ln.d("SDK Version:     %s", sdkVersion);
         Ln.d("Android Version: %s (API %d)", osVersion, osVersionInt);
-        Ln.d("Device: %s %s (%s)", deviceManufacturer, deviceModel, deviceCode);
-        Ln.d("UDID: %s", udid);
-        Ln.d("Language: %s", language);
-        Ln.d("Alias: %s", deviceAlias);
-        Ln.d("Push Token: %s", pushToken);
+        Ln.d("Device:          %s %s (%s)", deviceManufacturer, deviceModel, deviceCode);
+        Ln.d("UDID:            %s", udid);
+        Ln.d("Language:        %s", language);
+        Ln.d("Alias:           %s", deviceAlias);
+        Ln.d("Push Token:      %s", pushToken);
+        Ln.d("============================================");
     }
 
     public Map<String, Object> toMap() {

@@ -104,6 +104,7 @@ public class DefaultTwinPushSDK extends TwinPushSDK implements LocationListener 
         String registrationHash = encrypt(info.toString());
 
         if (!Strings.equals(registrationHash, getRegistrationHash())) {
+            setRegistrationHash(registrationHash);
             Ln.d("Registration changed! Launching new registration request");
             // Device is already registered on GCM
             if (registerRequest != null) {
