@@ -4,12 +4,14 @@ apply plugin: 'com.android.library'
 apply plugin: 'com.github.dcendents.android-maven'
 apply plugin: 'com.jfrog.bintray'
 
-def libraryVersion = '2.0'
-def libraryVersionCode = 2000
+def libraryVersion = '2.0.1'
+def libraryVersionCode = 2001
 
 // Maven group and version
 version = libraryVersion
-group = 'com.twinpush'
+def siteUrl = 'https://github.com/TwinPush/android-sdk'      // Homepage URL of the library
+def gitUrl = 'https://github.com/TwinPush/android-sdk.git'   // Git repository URL
+group = "com.twinpush.android"                               // Maven Group ID for the artifact
 
 android {
     compileSdkVersion 23
@@ -38,9 +40,6 @@ dependencies {
     compile "cz.msebera.android:httpclient:4.4.1.1"
 }
 
-def siteUrl = 'https://github.com/TwinPush/android-sdk'      // Homepage URL of the library
-def gitUrl = 'https://github.com/TwinPush/android-sdk.git'   // Git repository URL
-group = "com.twinpush.android.sdk"                           // Maven Group ID for the artifact
 
 install {
     repositories.mavenInstaller {
