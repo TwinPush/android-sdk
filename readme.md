@@ -1,3 +1,4 @@
+[ ![Download](https://api.bintray.com/packages/twinpush/sdk/android-sdk/images/download.svg) ](https://bintray.com/twinpush/sdk/android-sdk/_latestVersion)
 TwinPush SDK Library
 ==================
 
@@ -34,31 +35,31 @@ The next step is to setup the TwinPush application. This can be done through the
 ## Building the application
 
 ### Gradle Dependency
-Use this dependency in your build.gradle file to reference this library in your project
+Use this dependency in your `build.gradle` file to reference this library in your project
 
 ```groovy
-compile 'com.twincoders.twinpush:android-sdk:1.1.0'
+repositories {
+    maven {
+        url  "http://dl.bintray.com/twinpush/sdk"
+    }
+}
+
+dependencies {
+    compile 'com.twinpush.android:sdk:2.0.1'
+}
 ```
 
 ### Non-Gradle Library import
 
 You have to add the following libraries to the project by dragging them to the libs folder:
 
-* [twinpush-sdk.jar](https://github.com/TwinPush/android-sdk/raw/master/sdk/bin/twinpush-sdk.jar) - TwinPush Library. Provides native access to the TwinPush API and includes convenience methods.
+* [twinpush-sdk.jar](https://bintray.com/twinpush/sdk/android-sdk/_latestVersion) - TwinPush stand-alone Library JAR. Provides native access to the TwinPush API and includes convenience methods.
 * [gcm.jar](http://code.google.com/p/gcm/source/browse/gcm-client/dist/?r=af0f427f11ec05c252d8424fffb9ff5521b59495) - Google Cloud Messaging Library. Required for device registration in GCM and receiving notifications.
 * android-support-v4 - Android Compatibility Library. Allows the use of methods and classes of an API Level on devices with lower versions.
 
 The libraries must be checked to be exported with the project.
 
-### Configuring Android manifest
-
-To use GCM is needed Android 2.2 or higher. Therefore, the application must have a minimum API Level of 8:
-
-```xml
-<uses-sdk android:minSdkVersion="8" android:targetSdkVersion="xx"/>
-```
-    
-Add the following permissions:
+Additionally it is neccesary to include the following permissions in the _Manifest.xml_ file of your application:
 
 ```xml
 <!-- [START twinpush_permission] -->
@@ -76,6 +77,14 @@ Add the following permissions:
 <permission android:name="my_app_package.permission.C2D_MESSAGE" android:protectionLevel="signature" />
 <uses-permission android:name="my_app_package.permission.C2D_MESSAGE" />
 <!-- [END twinpush_permission] -->
+```
+
+### Configuring Android manifest
+
+To use GCM is needed Android 2.2 or higher. Therefore, the application must have a minimum API Level of 8:
+
+```xml
+<uses-sdk android:minSdkVersion="8" android:targetSdkVersion="xx"/>
 ```
 
 Inside the _application_ node include the GCM receiver:
