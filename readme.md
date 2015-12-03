@@ -1,9 +1,7 @@
 #TwinPush SDK Library
 [ ![Download](https://api.bintray.com/packages/twinpush/sdk/android-sdk/images/download.svg) ](https://bintray.com/twinpush/sdk/android-sdk/_latestVersion)
 
-Native Android SDK for TwinPush platform.
-
-For detailed information see TwinPush [oficial documentation](http://developers.twinpush.com/quickstart?platform=android).
+Native Android SDK library for [TwinPush](http://twinpush.com) platform.
 
 ## Register For Google Cloud Messaging
 
