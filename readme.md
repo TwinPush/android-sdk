@@ -1,5 +1,6 @@
 #TwinPush SDK Library
-[ ![Download](https://api.bintray.com/packages/twinpush/sdk/android-sdk/images/download.svg) ](https://bintray.com/twinpush/sdk/android-sdk/_latestVersion)
+[![Download](https://api.bintray.com/packages/twinpush/sdk/android-sdk/images/download.svg)](https://bintray.com/twinpush/sdk/android-sdk/_latestVersion) [![License](https://go-shields.herokuapp.com/license-MIT-blue.png)](https://raw.githubusercontent.com/TwinPush/android-sdk/master/LICENSE)
+
 
 Native Android SDK library for [TwinPush](http://twinpush.com) platform.
 
@@ -27,12 +28,14 @@ The next step is to setup the TwinPush application. This can be done through the
 4. Enter the Server API Key obtained during Google Cloud Messaging registration
 5. Enter the Android Application package
 
-![](http://developers.twinpush.com/assets/android_apikey-7d67473c7ca735ac5ff674dbcc7841bf.png)
+![Notification in Actionbar](http://developers.twinpush.com/assets/android_apikey-7d67473c7ca735ac5ff674dbcc7841bf.png)
 
 ## Building the application
 
 ### Gradle Dependency
-Use this dependency in your `build.gradle` file to reference this library in your project
+Google recommends using [Android Studio](https://developer.android.com/sdk/index.html) with Gradle for Android Projects.
+
+Include this dependency in your `build.gradle` file to reference this library in your project
 
 ```groovy
 repositories {
@@ -48,11 +51,20 @@ dependencies {
 
 ### Non-Gradle Library import
 
-You have to add the following libraries to the project by dragging them to the libs folder:
+For projects not using Android Studio, first it is needed to Setup the project for **Google Play Services**. This is done by adding `google-play-services_lib` library as an Android Library Dependency and include the following service declaration in the `application` node of your *manifest* file:
 
-* [twinpush-sdk.jar](https://bintray.com/twinpush/sdk/android-sdk/_latestVersion) - TwinPush stand-alone Library JAR. Provides native access to the TwinPush API and includes convenience methods.
-* [gcm.jar](http://code.google.com/p/gcm/source/browse/gcm-client/dist/?r=af0f427f11ec05c252d8424fffb9ff5521b59495) - Google Cloud Messaging Library. Required for device registration in GCM and receiving notifications.
-* android-support-v4 - Android Compatibility Library. Allows the use of methods and classes of an API Level on devices with lower versions.
+```xml
+<meta-data android:name="com.google.android.gms.version" 
+           android:value="@integer/google_play_services_version" />
+```
+
+You can follow official documentation [here](https://developers.google.com/android/guides/setup).
+
+In addition, it is necessaryto include the following libraries to the project by dragging them to the libs folder:
+
+* **[twinpush-sdk.jar](https://bintray.com/twinpush/sdk/android-sdk/_latestVersion)** - TwinPush stand-alone Library JAR. Provides native access to the TwinPush API and includes convenience methods.
+* **[httpclient-4.4.1.1.jar](http://central.maven.org/maven2/cz/msebera/android/httpclient/4.4.1.1/httpclient-4.4.1.1.jar)** - Library used by TwinPush to resolve communications
+* **android-support-v4** - Android Compatibility Library. Allows the use of methods and classes of an API Level on devices with lower versions. Can be added to Eclipse project by *right clicking the project -> Android Tools -> Add Support Library*
 
 The libraries must be checked to be exported with the project.
 
@@ -489,27 +501,3 @@ public void onCreate(Bundle savedInstanceState) {
     /* ... */
 }
 ```
-
-## License
-
-    The MIT License (MIT)
-    
-    Copyright (c) 2015 TwinCoders S.L.
-    
-    Permission is hereby granted, free of charge, to any person obtaining a copy
-    of this software and associated documentation files (the "Software"), to deal
-    in the Software without restriction, including without limitation the rights
-    to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-    copies of the Software, and to permit persons to whom the Software is
-    furnished to do so, subject to the following conditions:
-    
-    The above copyright notice and this permission notice shall be included in all
-    copies or substantial portions of the Software.
-    
-    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-    IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-    FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-    AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-    LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-    OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-    SOFTWARE.

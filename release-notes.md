@@ -7,6 +7,7 @@
 * Library is now available in Maven and as a Gradle dependency
 * Subdomain is now a mandatory parameter to setup library
 * Updated library setup method that now will take a `TwinPushOptions` transport entity as parameter
+* `TwinPushIntentService` has been renamed to `NotificationIntentService` and moved to `services` package.
 * Improved registration request to only be launched when any of the registration attributes has changed since last request
 * Registration requests now will automatically gather and send to server the following information:
   * App version
