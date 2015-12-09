@@ -60,7 +60,7 @@ For projects not using Android Studio, first it is needed to Setup the project f
 
 You can follow official documentation [here](https://developers.google.com/android/guides/setup).
 
-In addition, it is necessaryto include the following libraries to the project by dragging them to the libs folder:
+In addition, it is mandatory to include the following libraries to the project by dragging them to the libs folder:
 
 * **[twinpush-sdk.jar](https://bintray.com/twinpush/sdk/android-sdk/_latestVersion)** - TwinPush stand-alone Library JAR. Provides native access to the TwinPush API and includes convenience methods.
 * **[httpclient-4.4.1.1.jar](http://central.maven.org/maven2/cz/msebera/android/httpclient/4.4.1.1/httpclient-4.4.1.1.jar)** - Library used by TwinPush to resolve communications
@@ -68,7 +68,13 @@ In addition, it is necessaryto include the following libraries to the project by
 
 The libraries must be checked to be exported with the project.
 
-Additionally it is neccesary to include the following permissions in the _Manifest.xml_ file of your application:
+To use GCM is needed Android 2.3 or higher. Therefore, the application must have a minimum API Level of 9:
+
+```xml
+<uses-sdk android:minSdkVersion="9" android:targetSdkVersion="xx"/>
+```
+
+Also it is neccesary to include the following permissions in the _Manifest.xml_ file of your application:
 
 ```xml
 <!-- [START twinpush_permission] -->
@@ -89,12 +95,6 @@ Additionally it is neccesary to include the following permissions in the _Manife
 ```
 
 ### Configuring Android manifest
-
-To use GCM is needed Android 2.2 or higher. Therefore, the application must have a minimum API Level of 8:
-
-```xml
-<uses-sdk android:minSdkVersion="8" android:targetSdkVersion="xx"/>
-```
 
 Inside the _application_ node include the GCM receiver:
 
