@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     tools:context=".OffersActivity">
 
-    <com.yellowpineapple.offers101.views.PullToRefreshLayout
+    <com.yellowpineapple.wakup.views.PullToRefreshLayout
         android:id="@+id/ptr_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -35,7 +35,7 @@
                     android:padding="40dp"
                     android:gravity="center">
 
-                    <com.yellowpineapple.offers101.views.ColorImageView
+                    <com.yellowpineapple.wakup.views.ColorImageView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:src="@drawable/ic_saved_offers"
@@ -56,6 +56,6 @@
 
         </FrameLayout>
 
-    </com.yellowpineapple.offers101.views.PullToRefreshLayout>
+    </com.yellowpineapple.wakup.views.PullToRefreshLayout>
 
 </RelativeLayout>

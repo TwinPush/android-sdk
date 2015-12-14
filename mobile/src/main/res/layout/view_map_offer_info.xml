@@ -5,7 +5,7 @@
     android:layout_width="280dp"
     android:layout_height="wrap_content">
 
-    <com.yellowpineapple.offers101.views.RemoteImageView
+    <com.yellowpineapple.wakup.views.RemoteImageView
         android:id="@+id/imgCompany"
         android:layout_width="120dp"
         android:layout_height="70dp"
@@ -39,7 +39,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp">
 
-            <com.yellowpineapple.offers101.views.ColorImageView
+            <com.yellowpineapple.wakup.views.ColorImageView
                 android:id="@+id/imgDistance"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -65,7 +65,7 @@
 
     </LinearLayout>
 
-    <com.yellowpineapple.offers101.views.ColorImageView
+    <com.yellowpineapple.wakup.views.ColorImageView
         android:id="@+id/imgDisclosure"
         android:layout_centerVertical="true"
         android:layout_alignParentRight="true"

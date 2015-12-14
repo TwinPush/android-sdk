@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.yellowpineapple.offers101.views.AspectKeepFrameLayout
+<com.yellowpineapple.wakup.views.AspectKeepFrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/actionView"
@@ -41,4 +41,4 @@
 
     </LinearLayout>
 
-</com.yellowpineapple.offers101.views.AspectKeepFrameLayout>
+</com.yellowpineapple.wakup.views.AspectKeepFrameLayout>

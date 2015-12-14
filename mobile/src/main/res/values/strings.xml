@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">101 Ofertas</string>
+    <string name="app_name">Wakup</string>
     <string name="error_message_title">Error</string>
     <string name="error_message_button">Aceptar</string>
     <string name="back_button_once">Pulse de nuevo \'volver\' para salir</string>
@@ -37,7 +37,7 @@
     <string name="related_offers">Ofertas relacionadas:</string>
     <string name="share_offer_title">Compartir oferta</string>
     <string name="share_offer_error">Ocurrió un error al tratar de compartir la oferta</string>
-    <string name="share_offer_subject" formatted="false">101 Ofertas - %s: %s</string>
+    <string name="share_offer_subject" formatted="false">Wakup - %s: %s</string>
     <string name="store_offers">ofertas en este comercio</string>
 
     <!-- Store Offers Activity -->

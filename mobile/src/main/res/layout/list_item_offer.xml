@@ -13,7 +13,7 @@
         android:background="@color/white"
         android:padding="2dp">
 
-        <com.yellowpineapple.offers101.views.RemoteImageView
+        <com.yellowpineapple.wakup.views.RemoteImageView
             android:id="@+id/offerImageView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -60,7 +60,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content">
 
-                    <com.yellowpineapple.offers101.views.ColorImageView
+                    <com.yellowpineapple.wakup.views.ColorImageView
                         android:id="@+id/imgDistance"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -88,7 +88,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="5dp">
 
-                    <com.yellowpineapple.offers101.views.ColorImageView
+                    <com.yellowpineapple.wakup.views.ColorImageView
                         android:id="@+id/imgExpiration"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"

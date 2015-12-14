@@ -4,7 +4,7 @@
     android:layout_height="match_parent"
     tools:context=".OffersActivity">
 
-    <com.yellowpineapple.offers101.views.PullToRefreshLayout
+    <com.yellowpineapple.wakup.views.PullToRefreshLayout
         android:id="@+id/ptr_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -17,6 +17,6 @@
             android:layout_height="match_parent"
             app:item_margin="8dp" />
 
-    </com.yellowpineapple.offers101.views.PullToRefreshLayout>
+    </com.yellowpineapple.wakup.views.PullToRefreshLayout>
 
 </RelativeLayout>

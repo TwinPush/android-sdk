@@ -11,7 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="70dp">
 
-        <com.yellowpineapple.offers101.views.RemoteImageView
+        <com.yellowpineapple.wakup.views.RemoteImageView
             android:id="@+id/imgCompany"
             android:layout_width="120dp"
             android:layout_height="match_parent"
@@ -56,7 +56,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
 
-                    <com.yellowpineapple.offers101.views.ColorImageView
+                    <com.yellowpineapple.wakup.views.ColorImageView
                         android:id="@+id/imgDistance"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -82,7 +82,7 @@
 
             </LinearLayout>
 
-            <com.yellowpineapple.offers101.views.ColorImageView
+            <com.yellowpineapple.wakup.views.ColorImageView
                 android:id="@+id/imgDisclosureAddress"
                 android:layout_centerVertical="true"
                 android:layout_alignParentRight="true"
@@ -132,7 +132,7 @@
 
     </LinearLayout>
 
-    <com.yellowpineapple.offers101.views.RemoteImageView
+    <com.yellowpineapple.wakup.views.RemoteImageView
         android:id="@+id/imgOffer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
@@ -164,7 +164,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp">
 
-                <com.yellowpineapple.offers101.views.ColorImageView
+                <com.yellowpineapple.wakup.views.ColorImageView
                     android:id="@+id/imgExpiration"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -227,7 +227,7 @@
             android:ellipsize="end"
             android:padding="10dp"/>
 
-        <com.yellowpineapple.offers101.views.ColorImageView
+        <com.yellowpineapple.wakup.views.ColorImageView
             android:id="@+id/imgDisclosureDescription"
             android:layout_centerVertical="true"
             android:layout_alignParentRight="true"
@@ -251,7 +251,7 @@
         android:paddingTop="10dp"
         android:paddingBottom="10dp">
 
-        <com.yellowpineapple.offers101.views.OfferActionButton_
+        <com.yellowpineapple.wakup.views.OfferActionButton_
             android:id="@+id/btnWebsite"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -261,7 +261,7 @@
             app:buttonText="@string/action_offer_website"
             app:buttonIcon="@drawable/ic_btn_website"/>
 
-        <com.yellowpineapple.offers101.views.OfferActionButton_
+        <com.yellowpineapple.wakup.views.OfferActionButton_
             android:id="@+id/btnMap"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -270,7 +270,7 @@
             app:buttonText="@string/action_offer_map"
             app:buttonIcon="@drawable/ic_btn_location"/>
 
-        <com.yellowpineapple.offers101.views.OfferActionButton_
+        <com.yellowpineapple.wakup.views.OfferActionButton_
             android:id="@+id/btnSave"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -279,7 +279,7 @@
             app:buttonText="@string/action_offer_save"
             app:buttonIcon="@drawable/ic_btn_save"/>
 
-        <com.yellowpineapple.offers101.views.OfferActionButton_
+        <com.yellowpineapple.wakup.views.OfferActionButton_
             android:id="@+id/btnShare"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
