@@ -32,7 +32,7 @@ public class OffersActivity extends OfferListActivity {
 
     Date backPressedTime = null;
 
-    private static final String BIG_OFFER_URL = "http://app.101offers.co/offers/highlighted";
+    private static final String BIG_OFFER_URL = "http://app.wakup.net/offers/highlighted";
 
     // TwinPush Token & API Key
     private static final String TWINPUSH_TOKEN = "dd14472100f1650da778127888fa9cb3";

@@ -22,7 +22,7 @@ public class RequestClient {
 	private static RequestClient sharedInstance = null;
 
     public enum Environment {
-        PRODUCTION("http://app.101offers.co/", false);
+        PRODUCTION("http://app.wakup.net/", false);
 
         @Getter
         String url;

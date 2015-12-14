@@ -55,7 +55,7 @@ public class NotificationFactory {
                                     new NotificationCompat.Builder(context)
                                             .setSmallIcon(R.drawable.ic_action_logo)
                                             .setContentTitle(offer.getCompany().getName())
-                                            .setContentIntent(getContentIntent(offer)).setGroup("101Offers");
+                                            .setContentIntent(getContentIntent(offer)).setGroup("wakup");
 
                             NotificationCompat.BigTextStyle bigStyle = new NotificationCompat.BigTextStyle();
                             bigStyle.bigText(String.format("(%s)\n%s: %s",
