@@ -3,18 +3,16 @@ package com.yellowpineapple.wakup.communications;
 import android.content.Context;
 import android.os.Handler;
 
-import com.loopj.android.http.AsyncHttpClient;
-import com.loopj.android.http.AsyncHttpResponseHandler;
-import com.loopj.android.http.PersistentCookieStore;
+import com.twincoders.twinpush.sdk.communications.asyhttp.AsyncHttpClient;
+import com.twincoders.twinpush.sdk.communications.asyhttp.PersistentCookieStore;
 import com.yellowpineapple.wakup.utils.Ln;
-
-import org.apache.http.Header;
-import org.apache.http.client.HttpResponseException;
-import org.apache.http.entity.StringEntity;
 
 import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
 import java.util.Map;
+
+import cz.msebera.android.httpclient.client.HttpResponseException;
+import cz.msebera.android.httpclient.entity.StringEntity;
 
 public class DefaultRequestLauncher implements RequestLauncher {
 	
@@ -77,37 +75,30 @@ public class DefaultRequestLauncher implements RequestLauncher {
             asyncHttpClient.addHeader(header, request.getHeaders().get(header));
         }
         // Include response handler
-		AsyncHttpResponseHandler responseHandler = new AsyncHttpResponseHandler() {
-
+        com.twincoders.twinpush.sdk.communications.asyhttp.AsyncHttpResponseHandler responseHandler = new com.twincoders.twinpush.sdk.communications.asyhttp.AsyncHttpResponseHandler() {
             @Override
-            public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
+            public void onFailure(Throwable throwable, String response) {
                 boolean validResponse = false;
-                if (error instanceof HttpResponseException) {
-                    int httpResponseCode = ((HttpResponseException) error).getStatusCode();
+                if (throwable instanceof HttpResponseException) {
+                    int httpResponseCode = ((HttpResponseException) throwable).getStatusCode();
                     validResponse = request.isHttpResponseStatusValid(httpResponseCode);
                 }
                 if (validResponse) {
-                    this.onSuccess(statusCode, headers, responseBody);
+                    this.onSuccess(response);
                 } else {
-                    Ln.w(error, "Request failed. Response: %s", error);
+                    com.twincoders.twinpush.sdk.logging.Ln.w(throwable, "Request failed. Response: %s", response);
                     requestEnded(request);
-                    request.onRequestError(new Exception(error));
+                    request.onRequestError(new Exception(throwable));
                 }
             }
 
             @Override
-            public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
-                try {
-                    String response = responseBody == null ? null : new String(responseBody, getCharset());
-                    Ln.v("OUTPUT: %s", response);
-                    requestEnded(request);
-                    request.onResponseProcess(response);
-                } catch (UnsupportedEncodingException e) {
-                    Ln.e(e);
-                    request.onRequestError(e);
-                }
+            public void onSuccess(String response) {
+                com.twincoders.twinpush.sdk.logging.Ln.v("OUTPUT: %s", response);
+                requestEnded(request);
+                request.onResponseProcess(response);
             }
-		};
+        };
 		// Give the request a chance to setup the client
 		request.onSetupClient(asyncHttpClient);
 		

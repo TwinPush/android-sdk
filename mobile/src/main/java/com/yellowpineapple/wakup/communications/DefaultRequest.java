@@ -1,13 +1,13 @@
 package com.yellowpineapple.wakup.communications;
 
-import com.loopj.android.http.AsyncHttpClient;
-
-import org.apache.http.protocol.HTTP;
+import com.twincoders.twinpush.sdk.communications.asyhttp.AsyncHttpClient;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import cz.msebera.android.httpclient.protocol.HTTP;
 
 public abstract class DefaultRequest implements Request {
 	

@@ -4,7 +4,7 @@ buildscript {
     }
     dependencies {
         // replace with the current version of the Android plugin
-        classpath 'com.android.tools.build:gradle:1.2.3'
+        classpath 'com.android.tools.build:gradle:1.5.0'
         // the latest version of the android-apt plugin
         classpath 'com.neenbedankt.gradle.plugins:android-apt:1.4'
     }
@@ -14,8 +14,8 @@ apply plugin: 'com.android.application'
 apply plugin: 'com.neenbedankt.android-apt'
 
 android {
-    compileSdkVersion 21
-    buildToolsVersion "21.1.2"
+    compileSdkVersion 23
+    buildToolsVersion "23.0.1"
 
     defaultConfig {
         applicationId "com.yellowpineapple.wakup"
@@ -35,13 +35,15 @@ android {
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     wearApp project(':wear')
-    compile 'com.google.android.gms:play-services:6.5.87'
-    compile 'com.etsy.android.grid:library:1.+'
-    compile 'com.loopj.android:android-async-http:1.4.5'
-    compile 'com.google.code.gson:gson:2.3.+'
+
+    compile 'com.google.android.gms:play-services:8.1.0'
+    compile 'com.etsy.android.grid:library:1.0.5'
+    compile 'com.google.code.gson:gson:2.4'
     compile 'uk.co.chrisjenx:calligraphy:2.0.1'
     compile 'com.nostra13.universalimageloader:universal-image-loader:1.9.3'
-    compile 'me.grantland:autofittextview:0.2.+'
+    compile 'me.grantland:autofittextview:0.2.1'
+    compile 'com.twinpush.android:sdk:2.0.1'
+    compile "cz.msebera.android:httpclient:4.4.1.1"
 
     provided "org.projectlombok:lombok:1.12.6"
     apt "org.projectlombok:lombok:1.12.6"

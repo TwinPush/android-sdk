@@ -4,7 +4,6 @@ import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
-import com.loopj.android.http.AsyncHttpClient;
 import com.yellowpineapple.wakup.communications.RESTJSONRequest;
 import com.yellowpineapple.wakup.communications.RequestClient;
 import com.yellowpineapple.wakup.communications.serializers.CategorySerializer;
@@ -21,11 +20,6 @@ public abstract class BaseRequest extends RESTJSONRequest {
     @Override
 	public String getBaseURL() {
 		return environment.getUrl();
-	}
-
-	@Override
-	public void onSetupClient(AsyncHttpClient client) {
-		super.onSetupClient(client);
 	}
 
     @Override

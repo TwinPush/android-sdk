@@ -10,8 +10,9 @@ import android.widget.Toast;
 import com.etsy.android.grid.StaggeredGridView;
 import com.twincoders.twinpush.sdk.TwinPushSDK;
 import com.twincoders.twinpush.sdk.activities.RichNotificationActivity;
+import com.twincoders.twinpush.sdk.entities.TwinPushOptions;
 import com.twincoders.twinpush.sdk.notifications.PushNotification;
-import com.twincoders.twinpush.sdk.notifications.TwinPushIntentService;
+import com.twincoders.twinpush.sdk.services.NotificationIntentService;
 import com.yellowpineapple.wakup.R;
 import com.yellowpineapple.wakup.views.PullToRefreshLayout;
 
@@ -34,12 +35,6 @@ public class OffersActivity extends OfferListActivity {
 
     private static final String BIG_OFFER_URL = "http://app.wakup.net/offers/highlighted";
 
-    // TwinPush Token & API Key
-    private static final String TWINPUSH_TOKEN = "dd14472100f1650da778127888fa9cb3";
-    private static final String TWINPUSH_APP_ID = "e7d58f902033a833";
-    // GCM Google Project number
-    public static final String GOOGLE_PROJECT_NUMBER = "614578197410";
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -51,9 +46,14 @@ public class OffersActivity extends OfferListActivity {
 
         /* TwinPush setup */
         TwinPushSDK twinPush = TwinPushSDK.getInstance(this);
-        twinPush.setup(TWINPUSH_APP_ID, TWINPUSH_TOKEN, GOOGLE_PROJECT_NUMBER);
-        // Icon that will be displayed on status bar when a notification is received
-        twinPush.setNotificationSmallIcon(R.drawable.ic_notification);
+        // Setup TwinPush SDK
+        TwinPushOptions options = new TwinPushOptions();                // Initialize options
+        options.twinPushAppId =     "afb821e1c8c715c7";                 // - APP ID
+        options.twinPushApiKey =    "965aac21649e505ab3d1bc9e9402b8ff"; // - API Key
+        options.gcmProjectNumber =  "614578197410";                     // - GCM Project Number
+        options.subdomain =         TwinPushOptions.DEFAULT_SUBDOMAIN;  // - Application subdomain
+        options.notificationIcon =  R.drawable.ic_notification;         // - Notification icon
+        twinPush.setup(options);                                        // Call setup
         twinPush.register();
 
         // Check push notification
@@ -115,13 +115,13 @@ public class OffersActivity extends OfferListActivity {
 
     // Checks if the intent contains a Push notification and displays rich content when appropriated
     void checkPushNotification(Intent intent) {
-        if (intent != null && intent.getAction() != null && intent.getAction().equals(TwinPushIntentService.ON_NOTIFICATION_OPENED_ACTION)) {
-            PushNotification notification = (PushNotification) intent.getSerializableExtra(TwinPushIntentService.EXTRA_NOTIFICATION);
+        if (intent != null && intent.getAction() != null && intent.getAction().equals(NotificationIntentService.ON_NOTIFICATION_OPENED_ACTION)) {
+            PushNotification notification = (PushNotification) intent.getSerializableExtra(NotificationIntentService.EXTRA_NOTIFICATION);
             TwinPushSDK.getInstance(this).onNotificationOpen(notification);
 
             if (notification != null && notification.isRichNotification()) {
                 Intent richIntent = new Intent(this, RichNotificationActivity.class);
-                richIntent.putExtra(TwinPushIntentService.EXTRA_NOTIFICATION, notification);
+                richIntent.putExtra(NotificationIntentService.EXTRA_NOTIFICATION, notification);
                 startActivity(richIntent);
             }
         }

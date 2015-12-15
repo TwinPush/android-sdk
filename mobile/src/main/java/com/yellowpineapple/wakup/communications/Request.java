@@ -1,6 +1,6 @@
 package com.yellowpineapple.wakup.communications;
 
-import com.loopj.android.http.AsyncHttpClient;
+import com.twincoders.twinpush.sdk.communications.asyhttp.AsyncHttpClient;
 
 import java.util.List;
 import java.util.Map;
