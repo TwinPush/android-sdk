@@ -5,7 +5,7 @@ import com.google.gson.JsonSyntaxException;
 import com.google.gson.reflect.TypeToken;
 import com.yellowpineapple.wakup.communications.requests.BaseRequest;
 import com.yellowpineapple.wakup.communications.requests.OfferListRequestListener;
-import com.yellowpineapple.wakup.models.Company;
+import com.yellowpineapple.wakup.models.CompanyDetail;
 import com.yellowpineapple.wakup.models.Offer;
 import com.yellowpineapple.wakup.models.Store;
 
@@ -21,10 +21,10 @@ public class CompanyOffersRequest extends BaseRequest {
     /* Properties */
     OfferListRequestListener listener;
 
-    Company company;
+    CompanyDetail company;
     Store store;
 
-    public CompanyOffersRequest(Company company, Store store, int page, int perPage, OfferListRequestListener listener) {
+    public CompanyOffersRequest(CompanyDetail company, Store store, int page, int perPage, OfferListRequestListener listener) {
         super();
         this.httpMethod = HttpMethod.GET;
         this.company = company;

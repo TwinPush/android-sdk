@@ -9,7 +9,8 @@ import com.yellowpineapple.wakup.communications.requests.offers.CompanyOffersReq
 import com.yellowpineapple.wakup.communications.requests.offers.FindOffersRequest;
 import com.yellowpineapple.wakup.communications.requests.offers.GetOffersByIdRequest;
 import com.yellowpineapple.wakup.communications.requests.offers.RelatedOffersRequest;
-import com.yellowpineapple.wakup.models.Company;
+import com.yellowpineapple.wakup.communications.requests.search.SearchRequest;
+import com.yellowpineapple.wakup.models.CompanyDetail;
 import com.yellowpineapple.wakup.models.Offer;
 import com.yellowpineapple.wakup.models.Store;
 
@@ -28,7 +29,7 @@ public class RequestClient {
         String url;
         @Getter boolean dummy;
 
-        private Environment(String url, boolean dummy) {
+        Environment(String url, boolean dummy) {
             this.url = url;
             this.dummy = dummy;
         }
@@ -73,8 +74,14 @@ public class RequestClient {
         return launch(new GetOffersByIdRequest(offerIds, location, page, listener));
     }
 
-    public Request getCompanyOffers(Company company, Store store, int page, OfferListRequestListener listener) {
+    public Request getCompanyOffers(CompanyDetail company, Store store, int page, OfferListRequestListener listener) {
         return launch(new CompanyOffersRequest(company, store, page, BaseRequest.RESULTS_PER_PAGE, listener));
+    }
+
+    // Search
+
+    public Request search(String query, SearchRequest.Listener listener) {
+        return launch(new SearchRequest(query, listener));
     }
 
 	/* Private methods */

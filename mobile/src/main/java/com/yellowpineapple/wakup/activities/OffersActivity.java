@@ -19,11 +19,14 @@ import com.yellowpineapple.wakup.views.PullToRefreshLayout;
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EActivity;
+import org.androidannotations.annotations.OptionsItem;
+import org.androidannotations.annotations.OptionsMenu;
 import org.androidannotations.annotations.ViewById;
 
 import java.util.Date;
 
 @EActivity(R.layout.activity_offers)
+@OptionsMenu(R.menu.main_menu)
 public class OffersActivity extends OfferListActivity {
 
     @ViewById StaggeredGridView gridView;
@@ -52,7 +55,7 @@ public class OffersActivity extends OfferListActivity {
         options.twinPushApiKey =    "965aac21649e505ab3d1bc9e9402b8ff"; // - API Key
         options.gcmProjectNumber =  "614578197410";                     // - GCM Project Number
         options.subdomain =         TwinPushOptions.DEFAULT_SUBDOMAIN;  // - Application subdomain
-        options.notificationIcon =  R.drawable.ic_notification;         // - Notification icon
+        options.notificationIcon =  R.drawable.ic_action_logo;          // - Notification icon
         twinPush.setup(options);                                        // Call setup
         twinPush.register();
 
@@ -125,5 +128,10 @@ public class OffersActivity extends OfferListActivity {
                 startActivity(richIntent);
             }
         }
+    }
+
+    @OptionsItem
+    void menuSearchSelected() {
+        SearchActivity_.intent(this).start();
     }
 }

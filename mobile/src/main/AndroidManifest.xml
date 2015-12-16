@@ -55,6 +55,11 @@
         </activity>
 
         <activity
+            android:name="com.yellowpineapple.wakup.activities.SearchActivity_"
+            android:screenOrientation="portrait">
+        </activity>
+
+        <activity
             android:name="com.twincoders.twinpush.sdk.activities.RichNotificationActivity"
             android:screenOrientation="portrait">
         </activity>

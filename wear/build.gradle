@@ -6,7 +6,7 @@ android {
     buildToolsVersion "21.1.2"
 
     defaultConfig {
-        applicationId "com.yellowpineapple.offers101"
+        applicationId "com.yellowpineapple.wakup"
         minSdkVersion 20
         targetSdkVersion 21
         versionCode 1

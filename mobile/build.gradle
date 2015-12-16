@@ -20,7 +20,7 @@ android {
     defaultConfig {
         applicationId "com.yellowpineapple.wakup"
         minSdkVersion 15
-        targetSdkVersion 21
+        targetSdkVersion 23
         versionCode 110
         versionName "1.1.0"
     }
@@ -36,13 +36,13 @@ dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     wearApp project(':wear')
 
-    compile 'com.google.android.gms:play-services:8.1.0'
+    compile 'com.google.android.gms:play-services:8.3.0'
     compile 'com.etsy.android.grid:library:1.0.5'
     compile 'com.google.code.gson:gson:2.4'
     compile 'uk.co.chrisjenx:calligraphy:2.0.1'
     compile 'com.nostra13.universalimageloader:universal-image-loader:1.9.3'
     compile 'me.grantland:autofittextview:0.2.1'
-    compile 'com.twinpush.android:sdk:2.0.1'
+    compile 'com.twinpush.android:sdk:2.0.2'
     compile "cz.msebera.android:httpclient:4.4.1.1"
 
     provided "org.projectlombok:lombok:1.12.6"

@@ -147,6 +147,7 @@ public abstract class OfferListActivity extends ParentActivity implements AbsLis
             public void onLocationSuccess(final Location location) {
                 currentLocation = location;
                 onRequestOffers(page, location);
+
             }
 
             @Override
