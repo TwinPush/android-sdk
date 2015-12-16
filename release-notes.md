@@ -1,5 +1,10 @@
 # TwinPush Android SDK Release Notes
 
+## 2.0.2
+* Removed unnecessary AppCompat dependency
+* Updated minimum SDK Version to 9 (Android 2.3) due to Google Play Services requirement
+* Updated [Google Play Services](https://developers.google.com/android/guides/setup) dependency to last available version: 8.3.0
+
 ## 2.0.1
 
 * Updated GCM Library now using [GoogleCloudMessaging](https://developers.google.com/android/reference/com/google/android/gms/gcm/GoogleCloudMessaging) instead of GCMBroadcastReceiver

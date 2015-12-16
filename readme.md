@@ -45,7 +45,7 @@ repositories {
 }
 
 dependencies {
-    compile 'com.twinpush.android:sdk:2.0.1'
+    compile 'com.twinpush.android:sdk:2.0.2'
 }
 ```
 
