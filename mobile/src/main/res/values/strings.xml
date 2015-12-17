@@ -66,4 +66,7 @@
     <string name="category_services">Servicios</string>
     <string name="category_shopping">Compras</string>
 
+    <!-- Search -->
+    <string name="search_error">Ocurrió un error al procesar la solicitud</string>
+
 </resources>
