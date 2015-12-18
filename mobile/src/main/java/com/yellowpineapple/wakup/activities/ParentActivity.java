@@ -114,22 +114,15 @@ public abstract class ParentActivity extends FragmentActivity {
         super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
     }
 
-    protected Handler mUiHandler = new Handler(Looper.getMainLooper());
-
     /**
      * Override setTitle method to avoid text ellispis even thouth there is room for all text
      */
     @Override
     public void setTitle(final CharSequence title) {
-        mUiHandler.post(new Runnable() {
+        new Handler(Looper.getMainLooper()).post(new Runnable() {
             @Override
             public void run() {
-                ActionBar ab = getActionBar();
-                if (ab != null) {
-                    ab.setDisplayShowTitleEnabled(false);
-                    ParentActivity.super.setTitle(title);
-                    ab.setDisplayShowTitleEnabled(true);
-                }
+                ParentActivity.super.setTitle(title);
             }
         });
     }
