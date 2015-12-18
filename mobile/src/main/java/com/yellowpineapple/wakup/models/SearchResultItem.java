@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import lombok.Getter;
+import lombok.Setter;
 
 /**
  * Created by agutierrez on 17/12/15.
@@ -23,7 +24,7 @@ public class SearchResultItem implements Serializable {
 
     static final int MAX_FIELDS = 3;
 
-    @Getter boolean recent = false;
+    @Setter @Getter boolean recent = false;
     @Getter Type type;
     @Getter String name;
     @Getter String description;

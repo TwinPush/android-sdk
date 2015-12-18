@@ -51,7 +51,9 @@ public class SearchResultActivity extends OfferListActivity {
     }
 
     protected void showOfferDetail(Offer offer, Location currentLocation) {
-        OfferDetailActivity_.intent(this).offer(offer).location(currentLocation).start();
+        // Check that there is no category filter selected
+        boolean fromStoreOffers = searchItem.getType() == SearchResultItem.Type.COMPANY;
+        OfferDetailActivity_.intent(this).offer(offer).location(currentLocation).fromStoreOffers(fromStoreOffers).start();
         slideInTransition();
     }
 }

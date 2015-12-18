@@ -3,8 +3,13 @@ package com.yellowpineapple.wakup.utils;
 import android.content.Context;
 import android.content.SharedPreferences;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonParser;
+import com.google.gson.reflect.TypeToken;
 import com.yellowpineapple.wakup.models.Offer;
+import com.yellowpineapple.wakup.models.SearchResultItem;
 
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
@@ -19,9 +24,12 @@ public class PersistenceHandler {
     private static PersistenceHandler INSTANCE = null;
     private static final String PREFS_NAME = "101OffersPref";
     private static final String KEY_USER_OFFERS = "KEY_USER_OFFERS";
+    private static final String KEY_RECENT_SEARCHES = "KEY_RECENT_SEARCHES";
+    private static final int MAX_RECENT_SEARCHES = 5;
 
     private SharedPreferences preferences = null;
     private List<String> userOffers = null;
+    private List<SearchResultItem> recentSearches = null;
 
     Date savedOffersUpdatedAt = new Date();
 
@@ -42,6 +50,8 @@ public class PersistenceHandler {
     private SharedPreferences getPreferences() {
         return preferences;
     }
+
+    // User saved offers
 
     public List<String> getUserOffers() {
         if (userOffers == null) {
@@ -81,5 +91,44 @@ public class PersistenceHandler {
 
     public boolean userOffersChanged(Date dateSince) {
         return savedOffersUpdatedAt != null && savedOffersUpdatedAt.after(dateSince);
+    }
+
+    // Recent searches
+
+    public void addRecentSearch(SearchResultItem item) {
+        if (recentSearches == null) recentSearches = new ArrayList<>();
+        if (recentSearches.contains(item)) {
+            recentSearches.remove(item);
+        }
+        recentSearches.add(0, item);
+        // Remove last elements if max size exceeded
+        while (recentSearches.size() > MAX_RECENT_SEARCHES) {
+            recentSearches.remove(MAX_RECENT_SEARCHES);
+        }
+        storeRecentSearches();
+    }
+
+    public List<SearchResultItem> getRecentSearches() {
+        if (recentSearches == null) {
+            try {
+                String json = getPreferences().getString(KEY_RECENT_SEARCHES, "[]");
+                Type type = new TypeToken<List<SearchResultItem>>() {}.getType();
+                recentSearches = new Gson().fromJson(new JsonParser().parse(json), type);
+            } catch (Exception ex) {
+                Ln.e(ex, "Error while trying to load recent searches");
+                recentSearches = new ArrayList<>();
+            }
+        }
+        return recentSearches;
+    }
+
+    public void storeRecentSearches() {
+        String json;
+        if (recentSearches != null) {
+            json = new Gson().toJson(recentSearches);
+        } else {
+            json = new Gson().toJson(new ArrayList<SearchResultItem>());
+        }
+        getPreferences().edit().putString(KEY_RECENT_SEARCHES, json).commit();
     }
 }

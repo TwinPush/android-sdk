@@ -32,6 +32,7 @@ public class SearchResultAdapter extends BaseAdapter implements View.OnClickList
     Location currentLocation;
 
     @Getter @Setter Listener listener;
+    @Setter List<SearchResultItem> recentSearches = new ArrayList<>();
     @Getter List<SearchResultItem> resultItems = new ArrayList<>();
 
     public interface Listener {
@@ -74,6 +75,8 @@ public class SearchResultAdapter extends BaseAdapter implements View.OnClickList
             address.setLongitude(currentLocation.getLongitude());
 
             items.add(new SearchResultItem(false, address));
+
+            items.addAll(recentSearches);
         }
         this.resultItems = items;
     }

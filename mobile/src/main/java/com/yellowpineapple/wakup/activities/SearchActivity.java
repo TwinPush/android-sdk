@@ -79,8 +79,13 @@ public class SearchActivity extends ParentActivity {
             public void onItemClick(SearchResultItem item, View view) {
                 SearchResultActivity_.intent(SearchActivity.this).searchItem(item).start();
                 slideInTransition();
+                getPersistence().addRecentSearch(item);
+                listAdapter.setRecentSearches(getPersistence().getRecentSearches());
+                listAdapter.notifyDataSetChanged();
             }
         });
+        listAdapter.setRecentSearches(getPersistence().getRecentSearches());
+        listAdapter.notifyDataSetChanged();
         listView.setAdapter(listAdapter);
     }
 
