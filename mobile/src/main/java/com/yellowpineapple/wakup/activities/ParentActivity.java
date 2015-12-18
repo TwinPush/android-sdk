@@ -11,6 +11,8 @@ import android.content.pm.ActivityInfo;
 import android.graphics.Bitmap;
 import android.location.Location;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentActivity;
 import android.view.View;
@@ -110,6 +112,26 @@ public abstract class ParentActivity extends FragmentActivity {
     @Override
     protected void attachBaseContext(Context newBase) {
         super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
+    }
+
+    protected Handler mUiHandler = new Handler(Looper.getMainLooper());
+
+    /**
+     * Override setTitle method to avoid text ellispis even thouth there is room for all text
+     */
+    @Override
+    public void setTitle(final CharSequence title) {
+        mUiHandler.post(new Runnable() {
+            @Override
+            public void run() {
+                ActionBar ab = getActionBar();
+                if (ab != null) {
+                    ab.setDisplayShowTitleEnabled(false);
+                    ParentActivity.super.setTitle(title);
+                    ab.setDisplayShowTitleEnabled(true);
+                }
+            }
+        });
     }
 
     /* Google API Service */

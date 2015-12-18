@@ -25,7 +25,6 @@ public class SearchResultActivity extends OfferListActivity {
     @AfterViews
     void afterViews() {
         setTitle(searchItem.getName());
-        getActionBar().setTitle(searchItem.getName());
         setupOffersGrid(gridView, null, true);
     }
 
