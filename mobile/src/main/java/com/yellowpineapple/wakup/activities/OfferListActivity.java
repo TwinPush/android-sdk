@@ -321,7 +321,7 @@ public abstract class OfferListActivity extends ParentActivity implements AbsLis
         openContextMenu(gridView);
     }
 
-    abstract void onRequestOffers(final int page, final Location location);
+    abstract void onRequestOffers(final int page, final Location currentLocation);
 
     // Context menu
 

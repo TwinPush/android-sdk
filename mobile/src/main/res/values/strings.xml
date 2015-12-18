@@ -68,5 +68,6 @@
 
     <!-- Search -->
     <string name="search_error">Ocurrió un error al procesar la solicitud</string>
+    <string name="near_me">Cerca de mí</string>
 
 </resources>

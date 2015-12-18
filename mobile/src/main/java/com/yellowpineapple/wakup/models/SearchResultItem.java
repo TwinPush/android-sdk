@@ -1,10 +1,12 @@
 package com.yellowpineapple.wakup.models;
 
 import android.location.Address;
+import android.location.Location;
 import android.text.TextUtils;
 
 import com.yellowpineapple.wakup.utils.Strings;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,21 +15,20 @@ import lombok.Getter;
 /**
  * Created by agutierrez on 17/12/15.
  */
-public class SearchResultItem {
+public class SearchResultItem implements Serializable {
 
-    enum Type {
+    public enum Type {
         COMPANY, LOCATION;
     }
 
-
     static final int MAX_FIELDS = 3;
 
-    @Getter
-    boolean recent = false;
+    @Getter boolean recent = false;
     @Getter Type type;
     @Getter String name;
-    @Getter
-    Address address;
+    @Getter String description;
+    @Getter double latitude;
+    @Getter double longitude;
     @Getter Company company;
 
     public SearchResultItem(boolean recent, Address address) {
@@ -47,16 +48,24 @@ public class SearchResultItem {
                 info.add(field);
             }
         }
-        this.name = TextUtils.join(", ", info);
-        this.address = address;
+        this.description = TextUtils.join(", ", info);
+        this.name = address.getFeatureName();
+        this.latitude = address.getLatitude();
+        this.longitude = address.getLongitude();
         this.company = null;
+    }
+
+    public Location getLocation() {
+        Location mLocation = new Location(this.name);
+        mLocation.setLatitude(getLatitude());
+        mLocation.setLongitude(getLongitude());
+        return mLocation;
     }
 
     public SearchResultItem(boolean recent, Company company) {
         this.recent = recent;
-        this.type = Type.LOCATION;
-        this.name = company.getName();
-        this.address = null;
+        this.type = Type.COMPANY;
+        this.name = this.description = company.getName();
         this.company = company;
     }
 }

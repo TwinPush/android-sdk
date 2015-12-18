@@ -6,14 +6,16 @@ import android.location.Location;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.TextView;
 
+import com.yellowpineapple.wakup.R;
 import com.yellowpineapple.wakup.models.Company;
-import com.yellowpineapple.wakup.models.Offer;
 import com.yellowpineapple.wakup.models.SearchResultItem;
+import com.yellowpineapple.wakup.views.SearchItemView;
+import com.yellowpineapple.wakup.views.SearchItemView_;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -22,24 +24,25 @@ import lombok.Setter;
  * ADAPTER
  */
 
-public class SearchResultAdapter extends BaseAdapter implements View.OnLongClickListener, View.OnClickListener {
+public class SearchResultAdapter extends BaseAdapter implements View.OnClickListener {
 
-    @Getter List<Company> companies;
-    @Getter List<Address> addresses;
+    @Getter List<Company> companies = null;
+    @Getter List<Address> addresses = null;
     @Getter Context context;
-    @Setter Location currentLocation;
+    Location currentLocation;
 
     @Getter @Setter Listener listener;
     @Getter List<SearchResultItem> resultItems = new ArrayList<>();
 
     public interface Listener {
-        void onOfferClick(Offer offer, View view);
-        void onOfferLongClick(Offer offer, View view);
+        void onItemClick(SearchResultItem item, View view);
     }
 
-    public SearchResultAdapter(final Context context) {
+    public SearchResultAdapter(final Context context, Location currentLocation) {
         super();
         this.context = context;
+        this.currentLocation = currentLocation;
+        refreshResultItems();
     }
 
     public void setAddresses(List<Address> addresses) {
@@ -64,6 +67,14 @@ public class SearchResultAdapter extends BaseAdapter implements View.OnLongClick
                 items.add(new SearchResultItem(false, address));
             }
         }
+        if (items.isEmpty() && currentLocation != null) {
+            Address address = new Address(Locale.getDefault());
+            address.setFeatureName(context.getText(R.string.near_me).toString());
+            address.setLatitude(currentLocation.getLatitude());
+            address.setLongitude(currentLocation.getLongitude());
+
+            items.add(new SearchResultItem(false, address));
+        }
         this.resultItems = items;
     }
 
@@ -74,7 +85,11 @@ public class SearchResultAdapter extends BaseAdapter implements View.OnLongClick
 
     @Override
     public SearchResultItem getItem(int position) {
-        return getResultItems().get(position);
+        SearchResultItem item = null;
+        if (position < resultItems.size()) {
+            item = resultItems.get(position);
+        }
+        return item;
     }
 
     @Override
@@ -84,35 +99,26 @@ public class SearchResultAdapter extends BaseAdapter implements View.OnLongClick
 
     @Override
     public View getView(final int position, View convertView, final ViewGroup parent) {
-        View view;
-        final TextView itemView;
+        final SearchItemView itemView;
         if (convertView == null) {
-            itemView = new TextView(context);
+            itemView = SearchItemView_.build(context);
         } else {
-            itemView = (TextView) convertView;
+            itemView = (SearchItemView) convertView;
         }
-        final String item = getItem(position).getName();
-        itemView.setText(item);
-        view = itemView;
+        final SearchResultItem searchItem = getItem(position);
 
-        return view;
+        itemView.setClickable(true);
+        itemView.setOnClickListener(this);
+
+        itemView.setSearchItem(searchItem);
+        return itemView;
     }
 
     @Override
     public void onClick(View v) {
-//        if (v instanceof TextView) {
-//            TextView view = (TextView) v;
-//            if (listener != null) listener.onOfferClick(view.getOffer(), offerView);
-//        }
-    }
-
-    @Override
-    public boolean onLongClick(View v) {
-//        if (v instanceof OfferListView) {
-//            OfferListView offerView = (OfferListView) v;
-//            if (listener != null) listener.onOfferLongClick(offerView.getOffer(), offerView);
-//            return true;
-//        }
-        return false;
+        if (v instanceof SearchItemView) {
+            SearchItemView view = (SearchItemView) v;
+            if (listener != null) listener.onItemClick(view.getSearchItem(), view);
+        }
     }
 }

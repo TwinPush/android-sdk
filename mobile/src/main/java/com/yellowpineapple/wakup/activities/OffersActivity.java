@@ -132,7 +132,7 @@ public class OffersActivity extends OfferListActivity {
 
     @OptionsItem
     void menuSearchSelected() {
-        SearchActivity_.intent(this).start();
+        SearchActivity_.intent(this).location(currentLocation).start();
         slideInTransition();
     }
 }

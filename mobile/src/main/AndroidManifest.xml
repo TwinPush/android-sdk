@@ -60,6 +60,12 @@
         </activity>
 
         <activity
+            android:name="com.yellowpineapple.wakup.activities.SearchResultActivity_"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.ActionBarOverlay">
+        </activity>
+
+        <activity
             android:name="com.twincoders.twinpush.sdk.activities.RichNotificationActivity"
             android:screenOrientation="portrait">
         </activity>

@@ -2,8 +2,10 @@ package com.yellowpineapple.wakup.activities;
 
 import android.location.Address;
 import android.location.Geocoder;
+import android.location.Location;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ListView;
 import android.widget.SearchView;
 import android.widget.Toast;
@@ -13,12 +15,14 @@ import com.yellowpineapple.wakup.communications.Request;
 import com.yellowpineapple.wakup.communications.requests.search.SearchRequest;
 import com.yellowpineapple.wakup.controllers.SearchResultAdapter;
 import com.yellowpineapple.wakup.models.SearchResult;
+import com.yellowpineapple.wakup.models.SearchResultItem;
 import com.yellowpineapple.wakup.utils.Ln;
 import com.yellowpineapple.wakup.utils.Strings;
 
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Background;
 import org.androidannotations.annotations.EActivity;
+import org.androidannotations.annotations.Extra;
 import org.androidannotations.annotations.OptionsMenu;
 import org.androidannotations.annotations.UiThread;
 import org.androidannotations.annotations.ViewById;
@@ -32,10 +36,13 @@ public class SearchActivity extends ParentActivity {
 
     SearchView searchView;
     Request searchRequest = null;
+    @Extra Location location = null;
 
     // Views
     @ViewById ListView listView;
     SearchResultAdapter listAdapter;
+
+    String searchQuery = null;
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -44,7 +51,9 @@ public class SearchActivity extends ParentActivity {
         searchView.setIconified(false);
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
-            public boolean onQueryTextSubmit(String query) { return true; }
+            public boolean onQueryTextSubmit(String query) {
+                return true;
+            }
 
             @Override
             public boolean onQueryTextChange(String newText) {
@@ -64,11 +73,19 @@ public class SearchActivity extends ParentActivity {
 
     @AfterViews
     void afterViews() {
-        listAdapter = new SearchResultAdapter(this);
+        listAdapter = new SearchResultAdapter(this, location);
+        listAdapter.setListener(new SearchResultAdapter.Listener() {
+            @Override
+            public void onItemClick(SearchResultItem item, View view) {
+                SearchResultActivity_.intent(SearchActivity.this).searchItem(item).start();
+                slideInTransition();
+            }
+        });
         listView.setAdapter(listAdapter);
     }
 
-    void search(String query) {
+    void search(final String query) {
+        this.searchQuery = query;
         if (searchRequest != null) {
             searchRequest.cancel();
         }
@@ -77,8 +94,11 @@ public class SearchActivity extends ParentActivity {
                 @Override
                 public void onSuccess(SearchResult searchResult) {
                     searchRequest = null;
-                    listAdapter.setCompanies(searchResult.getCompanies());
-                    refreshList();
+                    // Check if query is still valid
+                    if (Strings.equals(query, searchQuery)) {
+                        listAdapter.setCompanies(searchResult.getCompanies());
+                        refreshList();
+                    }
                 }
 
                 @Override
@@ -102,7 +122,7 @@ public class SearchActivity extends ParentActivity {
     }
 
     @Background
-    void geoSearch(String query, String country, String countryCode) {
+    void geoSearch(final String query, String country, String countryCode) {
         if (Geocoder.isPresent()) {
             Geocoder geocoder = new Geocoder(this);
             try {
@@ -114,8 +134,11 @@ public class SearchActivity extends ParentActivity {
                         validAddresses.add(address);
                     }
                 }
-                listAdapter.setAddresses(validAddresses);
-                refreshList();
+                // Check if query is still valid
+                if (Strings.equals(query, searchQuery)) {
+                    listAdapter.setAddresses(validAddresses);
+                    refreshList();
+                }
             } catch (Exception exception) {
                 Ln.e(exception);
                 Toast.makeText(SearchActivity.this, R.string.search_error, Toast.LENGTH_LONG).show();
