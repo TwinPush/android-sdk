@@ -388,6 +388,7 @@ Inside application node:
 ```xml
 <!-- Passive Location tracking service -->
 <service android:name="com.twincoders.twinpush.sdk.services.LocationService"/>
+<receiver android:name="com.twincoders.twinpush.sdk.services.LocationChangeReceiver"/>
 <!-- Restart location tracking service when the device is rebooted -->
 <receiver android:name="com.twincoders.twinpush.sdk.services.BootReceiver" android:exported="false">
     <intent-filter>

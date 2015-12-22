@@ -4,6 +4,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 
+import com.twincoders.twinpush.sdk.TwinPushSDK;
 import com.twincoders.twinpush.sdk.logging.Ln;
 
 public class BootReceiver extends BroadcastReceiver {
@@ -12,7 +13,9 @@ public class BootReceiver extends BroadcastReceiver {
 	public void onReceive(Context context, Intent intent) {
 		Ln.i("Received boot intent");
 		// Launch location service
-		context.startService(new Intent(context, LocationService.class));
+		if (TwinPushSDK.getInstance(context).isMonitoringLocationChanges()) {
+            context.startService(new Intent(context, PassiveLocationService.class));
+        }
 	}
 
 }
