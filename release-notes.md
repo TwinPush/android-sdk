@@ -1,5 +1,8 @@
 # TwinPush Android SDK Release Notes
 
+## 2.0.3
+* Improved background location updates: Now LocationService is not necessary
+
 ## 2.0.2
 * Removed unnecessary AppCompat dependency
 * Updated minimum SDK Version to 9 (Android 2.3) due to Google Play Services requirement

@@ -1,15 +1,20 @@
 package com.twincoders.twinpush.sdk;
 
+import android.Manifest;
 import android.app.Activity;
+import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationListener;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.provider.Settings.Secure;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.content.LocalBroadcastManager;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -28,7 +33,7 @@ import com.twincoders.twinpush.sdk.entities.TwinPushOptions;
 import com.twincoders.twinpush.sdk.logging.Ln;
 import com.twincoders.twinpush.sdk.logging.Strings;
 import com.twincoders.twinpush.sdk.notifications.PushNotification;
-import com.twincoders.twinpush.sdk.services.LocationService;
+import com.twincoders.twinpush.sdk.services.LocationChangeReceiver;
 import com.twincoders.twinpush.sdk.services.RegistrationIntentService;
 import com.twincoders.twinpush.sdk.util.LastLocationFinder;
 import com.twincoders.twinpush.sdk.util.StringEncrypter;
@@ -309,31 +314,6 @@ public class DefaultTwinPushSDK extends TwinPushSDK implements LocationListener 
 
 	/* Location */
 
-    public void startMonitoringLocationChanges() {
-        startMonitoringLocationChanges(LocationPrecision.MEDIUM);
-    }
-
-    public void startMonitoringLocationChanges(LocationPrecision precision) {
-        getSharedPreferences().edit().
-                putLong(PREF_LOCATION_MIN_UPDATE_TIME, precision.getMinUpdateTime()).
-                putInt(PREF_LOCATION_MIN_UPDATE_DISTANCE, precision.getMinUpdateDistance()).commit();
-        setMonitoringLocationChanges(true);
-        getContext().startService(new Intent(getContext(), LocationService.class));
-    }
-
-    public void stopMonitoringLocationChanges() {
-        setMonitoringLocationChanges(false);
-        getContext().stopService(new Intent(getContext(), LocationService.class));
-    }
-
-    private void setMonitoringLocationChanges(boolean monitoring) {
-        getSharedPreferences().edit().putBoolean(PREF_MONITOR_LOCATION_CHANGES, monitoring).commit();
-    }
-
-    public boolean isMonitoringLocationChanges() {
-        return getSharedPreferences().getBoolean(PREF_MONITOR_LOCATION_CHANGES, false);
-    }
-
     public void setLocation(double latitude, double longitude) {
         Location location = new Location("USER_ENTRY");
         location.setLatitude(latitude);
@@ -363,6 +343,57 @@ public class DefaultTwinPushSDK extends TwinPushSDK implements LocationListener 
         if (location != null) {
             setLocation(location.getLatitude(), location.getLongitude());
         }
+    }
+
+    // Background location
+
+    PendingIntent getBackgroundLocationIntent() {
+        Intent passiveIntent = new Intent(getContext(), LocationChangeReceiver.class);
+        return PendingIntent.getBroadcast(getContext(), 0, passiveIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+    }
+
+    public void startMonitoringLocationChanges() {
+        startMonitoringLocationChanges(LocationPrecision.MEDIUM);
+    }
+
+    public void startMonitoringLocationChanges(LocationPrecision precision) {
+        Ln.i("Registering for location updates");
+        getSharedPreferences().edit().
+                putLong(PREF_LOCATION_MIN_UPDATE_TIME, precision.getMinUpdateTime()).
+                putInt(PREF_LOCATION_MIN_UPDATE_DISTANCE, precision.getMinUpdateDistance()).commit();
+        setMonitoringLocationChanges(true);
+        registerForLocationUpdates();
+    }
+
+    public void stopMonitoringLocationChanges() {
+        setMonitoringLocationChanges(false);
+        if (ContextCompat.checkSelfPermission(getContext(), android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
+                || ContextCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            LocationManager locationManager = (LocationManager) getContext().getSystemService(Context.LOCATION_SERVICE);
+            locationManager.removeUpdates(getBackgroundLocationIntent());
+        }
+    }
+
+    public void registerForLocationUpdates() {
+        if (ContextCompat.checkSelfPermission(getContext(), android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
+                || ContextCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            LocationManager locationManager = (LocationManager) getContext().getSystemService(Context.LOCATION_SERVICE);
+            locationManager.requestLocationUpdates(
+                    LocationManager.PASSIVE_PROVIDER,
+                    getLocationMinUpdateTime(),
+                    getLocationMinUpdateDistance(),
+                    getBackgroundLocationIntent());
+        } else {
+            Ln.e("Could not start location updates, required permissions not found");
+        }
+    }
+
+    private void setMonitoringLocationChanges(boolean monitoring) {
+        getSharedPreferences().edit().putBoolean(PREF_MONITOR_LOCATION_CHANGES, monitoring).commit();
+    }
+
+    public boolean isMonitoringLocationChanges() {
+        return getSharedPreferences().getBoolean(PREF_MONITOR_LOCATION_CHANGES, false);
     }
 
 	/* Use statistics */

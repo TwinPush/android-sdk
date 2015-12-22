@@ -16,7 +16,7 @@ public enum LocationPrecision {
 	long minUpdateTime;
 	int minUpdateDistance;
 	
-	private LocationPrecision(long minUpdateTime, int minUpdateDistance) {
+	LocationPrecision(long minUpdateTime, int minUpdateDistance) {
 		this.minUpdateTime = minUpdateTime;
 		this.minUpdateDistance = minUpdateDistance;
 	}
