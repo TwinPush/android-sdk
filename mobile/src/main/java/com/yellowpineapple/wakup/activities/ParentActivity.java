@@ -1,6 +1,7 @@
 package com.yellowpineapple.wakup.activities;
 
 import android.app.ActionBar;
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
@@ -122,7 +123,15 @@ public abstract class ParentActivity extends FragmentActivity {
         new Handler(Looper.getMainLooper()).post(new Runnable() {
             @Override
             public void run() {
-                ParentActivity.super.setTitle(title);
+                Activity activity = ParentActivity.this;
+                ActionBar ab = activity.getActionBar();
+                if (ab != null) {
+                    ab.setDisplayShowTitleEnabled(false);
+                    ParentActivity.super.setTitle(title);
+                    ab.setDisplayShowTitleEnabled(true);
+                } else {
+                    ParentActivity.super.setTitle(title);
+                }
             }
         });
     }
