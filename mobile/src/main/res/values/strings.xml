@@ -69,5 +69,8 @@
     <!-- Search -->
     <string name="search_error">Ocurrió un error al procesar la solicitud</string>
     <string name="near_me">Cerca de mí</string>
+    <string name="search_brands">Marcas</string>
+    <string name="search_recent">Últimas búsquedas</string>
+    <string name="search_locations">Ubicaciones</string>
 
 </resources>

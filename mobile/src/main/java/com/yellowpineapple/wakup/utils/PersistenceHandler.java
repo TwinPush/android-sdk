@@ -25,7 +25,7 @@ public class PersistenceHandler {
     private static final String PREFS_NAME = "101OffersPref";
     private static final String KEY_USER_OFFERS = "KEY_USER_OFFERS";
     private static final String KEY_RECENT_SEARCHES = "KEY_RECENT_SEARCHES";
-    private static final int MAX_RECENT_SEARCHES = 5;
+    private static final int MAX_RECENT_SEARCHES = 10;
 
     private SharedPreferences preferences = null;
     private List<String> userOffers = null;
@@ -96,9 +96,17 @@ public class PersistenceHandler {
     // Recent searches
 
     public void addRecentSearch(SearchResultItem item) {
-        if (recentSearches == null) recentSearches = new ArrayList<>();
-        if (recentSearches.contains(item)) {
-            recentSearches.remove(item);
+        if (recentSearches != null) {
+            // Remove previously searched equal items
+            List<SearchResultItem> itemsToRemove = new ArrayList<>();
+            for (SearchResultItem storedItem : recentSearches) {
+                if (storedItem.equals(item)) {
+                    itemsToRemove.add(storedItem);
+                }
+            }
+            recentSearches.removeAll(itemsToRemove);
+        } else {
+            recentSearches = new ArrayList<>();
         }
         recentSearches.add(0, item);
         // Remove last elements if max size exceeded

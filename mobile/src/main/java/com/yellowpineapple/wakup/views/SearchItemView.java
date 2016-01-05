@@ -20,6 +20,7 @@ public class SearchItemView extends FrameLayout {
     @Getter SearchResultItem searchItem;
 
     /* Views */
+    @ViewById TextView txtName;
     @ViewById TextView txtDescription;
     @ViewById ImageView imgIcon;
 
@@ -45,16 +46,22 @@ public class SearchItemView extends FrameLayout {
     public void setSearchItem(SearchResultItem searchItem) {
         this.searchItem = searchItem;
         if (searchItem != null) {
+            txtName.setText(searchItem.getName());
             txtDescription.setText(searchItem.getDescription());
+            txtDescription.setVisibility(VISIBLE);
             switch (searchItem.getType()) {
                 case COMPANY:
                     imgIcon.setImageResource(R.drawable.ic_search_brand);
+                    txtDescription.setVisibility(GONE);
                     break;
+                case NEAR_ME:
+                    txtDescription.setVisibility(GONE);
                 case LOCATION:
                     imgIcon.setImageResource(R.drawable.ic_search_geo);
                     break;
             }
         } else {
+            txtName.setText(null);
             txtDescription.setText(null);
             imgIcon.setImageDrawable(null);
         }

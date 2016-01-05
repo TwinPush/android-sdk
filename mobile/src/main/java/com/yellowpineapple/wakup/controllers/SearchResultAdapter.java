@@ -10,12 +10,13 @@ import android.widget.BaseAdapter;
 import com.yellowpineapple.wakup.R;
 import com.yellowpineapple.wakup.models.Company;
 import com.yellowpineapple.wakup.models.SearchResultItem;
+import com.yellowpineapple.wakup.views.SearchHeaderView;
+import com.yellowpineapple.wakup.views.SearchHeaderView_;
 import com.yellowpineapple.wakup.views.SearchItemView;
 import com.yellowpineapple.wakup.views.SearchItemView_;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -39,10 +40,11 @@ public class SearchResultAdapter extends BaseAdapter implements View.OnClickList
         void onItemClick(SearchResultItem item, View view);
     }
 
-    public SearchResultAdapter(final Context context, Location currentLocation) {
+    public SearchResultAdapter(final Context context, Location currentLocation, List<SearchResultItem> recentSearches) {
         super();
         this.context = context;
         this.currentLocation = currentLocation;
+        this.recentSearches = recentSearches;
         refreshResultItems();
     }
 
@@ -58,24 +60,23 @@ public class SearchResultAdapter extends BaseAdapter implements View.OnClickList
 
     private void refreshResultItems() {
         List<SearchResultItem> items = new ArrayList<>();
-        if (companies != null) {
+        if (companies != null && !companies.isEmpty()) {
+            items.add(new SearchResultItem(context.getString(R.string.search_brands)));
             for (Company company : companies) {
                 items.add(new SearchResultItem(false, company));
             }
         }
-        if (addresses != null) {
+        if (addresses != null && !addresses.isEmpty()) {
+            items.add(new SearchResultItem(context.getString(R.string.search_locations)));
             for (Address address : addresses) {
                 items.add(new SearchResultItem(false, address));
             }
         }
         if (items.isEmpty() && currentLocation != null) {
-            Address address = new Address(Locale.getDefault());
-            address.setFeatureName(context.getText(R.string.near_me).toString());
-            address.setLatitude(currentLocation.getLatitude());
-            address.setLongitude(currentLocation.getLongitude());
-
-            items.add(new SearchResultItem(false, address));
-
+            items.add(new SearchResultItem(context.getString(R.string.near_me), currentLocation));
+        }
+        if (!recentSearches.isEmpty()) {
+            items.add(new SearchResultItem(context.getString(R.string.search_recent)));
             items.addAll(recentSearches);
         }
         this.resultItems = items;
@@ -102,19 +103,33 @@ public class SearchResultAdapter extends BaseAdapter implements View.OnClickList
 
     @Override
     public View getView(final int position, View convertView, final ViewGroup parent) {
-        final SearchItemView itemView;
-        if (convertView == null) {
-            itemView = SearchItemView_.build(context);
-        } else {
-            itemView = (SearchItemView) convertView;
-        }
+        View view;
         final SearchResultItem searchItem = getItem(position);
 
-        itemView.setClickable(true);
-        itemView.setOnClickListener(this);
+        if (searchItem.getType() == SearchResultItem.Type.HEADER) {
+            final SearchHeaderView headerView;
+            if (convertView != null && convertView instanceof SearchHeaderView) {
+                headerView = (SearchHeaderView) convertView;
+            } else {
+                headerView = SearchHeaderView_.build(context);
+            }
+            headerView.setTitle(searchItem.getName());
+            view = headerView;
+        } else {
+            final SearchItemView itemView;
+            if (convertView != null && convertView instanceof SearchItemView) {
+                itemView = (SearchItemView) convertView;
+            } else {
+                itemView = SearchItemView_.build(context);
+            }
 
-        itemView.setSearchItem(searchItem);
-        return itemView;
+            itemView.setClickable(true);
+            itemView.setOnClickListener(this);
+
+            itemView.setSearchItem(searchItem);
+            view = itemView;
+        }
+        return view;
     }
 
     @Override

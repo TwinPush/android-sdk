@@ -35,6 +35,7 @@ public class SearchResultActivity extends OfferListActivity {
                 offersRequest = getRequestClient().findOffers(location, searchItem.getCompany(), page, getOfferListRequestListener());
                 break;
             }
+            case NEAR_ME:
             case LOCATION: {
                 offersRequest = getRequestClient().findOffers(searchItem.getLocation(), page, getOfferListRequestListener());
                 // Display offers as if the user was in the requested location

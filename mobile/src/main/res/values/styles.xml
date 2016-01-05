@@ -84,4 +84,13 @@
         <item name="fontPath">fonts/AllerDisplay.ttf</item>
     </style>
 
+    <style name="AppTheme.Text.SearchTitle">
+        <item name="fontPath">fonts/Aller_Rg.ttf</item>
+    </style>
+
+    <style name="AppTheme.Text.SearchDetail">
+        <item name="android:textSize">@dimen/small_text</item>
+        <item name="android:textColor">@color/light_text</item>
+    </style>
+
 </resources>

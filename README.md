@@ -19,3 +19,7 @@ The following dependencies are used in the project:
 ### Android Studio Setup ###
 
 It is necessary to include the 'lombok plugin' to compile the project.
+
+### Google Maps Setup
+
+https://developers.google.com/maps/documentation/android-api/start

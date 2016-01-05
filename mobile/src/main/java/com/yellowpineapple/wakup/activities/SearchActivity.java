@@ -73,20 +73,22 @@ public class SearchActivity extends ParentActivity {
 
     @AfterViews
     void afterViews() {
-        listAdapter = new SearchResultAdapter(this, location);
+        listAdapter = new SearchResultAdapter(this, location, getPersistence().getRecentSearches());
         listAdapter.setListener(new SearchResultAdapter.Listener() {
             @Override
             public void onItemClick(SearchResultItem item, View view) {
                 SearchResultActivity_.intent(SearchActivity.this).searchItem(item).start();
                 slideInTransition();
-                getPersistence().addRecentSearch(item);
-                listAdapter.setRecentSearches(getPersistence().getRecentSearches());
-                listAdapter.notifyDataSetChanged();
+                if (item.getType() == SearchResultItem.Type.COMPANY ||
+                        item.getType() == SearchResultItem.Type.LOCATION) {
+                    getPersistence().addRecentSearch(item);
+                    listAdapter.setRecentSearches(getPersistence().getRecentSearches());
+                    refreshList();
+                }
             }
         });
-        listAdapter.setRecentSearches(getPersistence().getRecentSearches());
-        listAdapter.notifyDataSetChanged();
         listView.setAdapter(listAdapter);
+        refreshList();
     }
 
     void search(final String query) {
@@ -146,7 +148,8 @@ public class SearchActivity extends ParentActivity {
                 }
             } catch (Exception exception) {
                 Ln.e(exception);
-                Toast.makeText(SearchActivity.this, R.string.search_error, Toast.LENGTH_LONG).show();
+                listAdapter.setAddresses(new ArrayList<Address>());
+                refreshList();
             }
         }
     }
