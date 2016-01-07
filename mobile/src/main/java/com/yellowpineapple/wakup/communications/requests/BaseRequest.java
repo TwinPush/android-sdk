@@ -17,6 +17,12 @@ public abstract class BaseRequest extends RESTJSONRequest {
 
     RequestClient.Environment environment;
 
+    public BaseRequest() {
+        super();
+        // TODO Export API-Token to a configurable parameter
+        addHeader("API-Token", "075f9656-6909-4e4e-a286-3ddc562a2513");
+    }
+
     @Override
 	public String getBaseURL() {
 		return environment.getUrl();
@@ -50,5 +56,4 @@ public abstract class BaseRequest extends RESTJSONRequest {
                 .registerTypeAdapter(Category.class, new CategorySerializer())
                 .create();
     }
-
 }
