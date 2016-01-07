@@ -62,9 +62,9 @@
     <!-- Categories -->
     <string name="category_unknown">Otros</string>
     <string name="category_leisure">Ocio</string>
-    <string name="category_restaurants">Restaurantes</string>
+    <string name="category_restaurants">Comida</string>
     <string name="category_services">Servicios</string>
-    <string name="category_shopping">Compras</string>
+    <string name="category_shopping">Tiendas</string>
 
     <!-- Search -->
     <string name="search_error">Ocurrió un error al procesar la solicitud</string>

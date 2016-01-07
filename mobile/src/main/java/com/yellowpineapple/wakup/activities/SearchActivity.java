@@ -18,6 +18,8 @@ import com.yellowpineapple.wakup.models.SearchResult;
 import com.yellowpineapple.wakup.models.SearchResultItem;
 import com.yellowpineapple.wakup.utils.Ln;
 import com.yellowpineapple.wakup.utils.Strings;
+import com.yellowpineapple.wakup.views.SearchFiltersView;
+import com.yellowpineapple.wakup.views.SearchFiltersView_;
 
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Background;
@@ -41,6 +43,7 @@ public class SearchActivity extends ParentActivity {
     // Views
     @ViewById ListView listView;
     SearchResultAdapter listAdapter;
+    SearchFiltersView filtersView;
 
     String searchQuery = null;
 
@@ -87,6 +90,8 @@ public class SearchActivity extends ParentActivity {
                 }
             }
         });
+        filtersView = SearchFiltersView_.build(this);
+        listView.addHeaderView(filtersView, null, false);
         listView.setAdapter(listAdapter);
         refreshList();
     }
