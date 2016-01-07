@@ -10,6 +10,7 @@ import com.yellowpineapple.wakup.communications.requests.offers.FindOffersReques
 import com.yellowpineapple.wakup.communications.requests.offers.GetOffersByIdRequest;
 import com.yellowpineapple.wakup.communications.requests.offers.RelatedOffersRequest;
 import com.yellowpineapple.wakup.communications.requests.search.SearchRequest;
+import com.yellowpineapple.wakup.models.Category;
 import com.yellowpineapple.wakup.models.Company;
 import com.yellowpineapple.wakup.models.CompanyDetail;
 import com.yellowpineapple.wakup.models.Offer;
@@ -60,11 +61,11 @@ public class RequestClient {
     // Offers
 
     public Request findOffers(Location location, int page, OfferListRequestListener listener) {
-        return launch(new FindOffersRequest(location, null, page, listener));
+        return launch(new FindOffersRequest(location, null, null, page, listener));
     }
 
-    public Request findOffers(Location location, Company company, int page, OfferListRequestListener listener) {
-        return launch(new FindOffersRequest(location, company, page, listener));
+    public Request findOffers(Location location, Company company, List<Category> categories, int page, OfferListRequestListener listener) {
+        return launch(new FindOffersRequest(location, company, categories, page, listener));
     }
 
     public Request findLocatedOffers(Location location, Double radius, OfferListRequestListener listener) {

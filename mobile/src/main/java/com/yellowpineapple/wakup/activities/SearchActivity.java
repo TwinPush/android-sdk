@@ -80,7 +80,10 @@ public class SearchActivity extends ParentActivity {
         listAdapter.setListener(new SearchResultAdapter.Listener() {
             @Override
             public void onItemClick(SearchResultItem item, View view) {
-                SearchResultActivity_.intent(SearchActivity.this).searchItem(item).start();
+                SearchResultActivity_.intent(SearchActivity.this).
+                        searchItem(item).
+                        categories(filtersView.getSelectedCategories()).
+                        start();
                 slideInTransition();
                 if (item.getType() == SearchResultItem.Type.COMPANY ||
                         item.getType() == SearchResultItem.Type.LOCATION) {

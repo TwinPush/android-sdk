@@ -4,6 +4,7 @@ import android.location.Location;
 
 import com.etsy.android.grid.StaggeredGridView;
 import com.yellowpineapple.wakup.R;
+import com.yellowpineapple.wakup.models.Category;
 import com.yellowpineapple.wakup.models.Offer;
 import com.yellowpineapple.wakup.models.SearchResultItem;
 import com.yellowpineapple.wakup.views.PullToRefreshLayout;
@@ -13,10 +14,13 @@ import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.Extra;
 import org.androidannotations.annotations.ViewById;
 
+import java.util.List;
+
 @EActivity(R.layout.activity_offers_list)
 public class SearchResultActivity extends OfferListActivity {
 
     @Extra SearchResultItem searchItem;
+    @Extra List<Category> categories = null;
 
     /* Views */
     @ViewById StaggeredGridView gridView;
@@ -32,12 +36,12 @@ public class SearchResultActivity extends OfferListActivity {
     void onRequestOffers(final int page, final Location location) {
         switch (searchItem.getType()) {
             case COMPANY: {
-                offersRequest = getRequestClient().findOffers(location, searchItem.getCompany(), page, getOfferListRequestListener());
+                offersRequest = getRequestClient().findOffers(location, searchItem.getCompany(), categories, page, getOfferListRequestListener());
                 break;
             }
             case NEAR_ME:
             case LOCATION: {
-                offersRequest = getRequestClient().findOffers(searchItem.getLocation(), page, getOfferListRequestListener());
+                offersRequest = getRequestClient().findOffers(searchItem.getLocation(), null, categories, page, getOfferListRequestListener());
                 // Display offers as if the user was in the requested location
                 currentLocation = searchItem.getLocation();
                 break;
@@ -53,7 +57,8 @@ public class SearchResultActivity extends OfferListActivity {
 
     protected void showOfferDetail(Offer offer, Location currentLocation) {
         // Check that there is no category filter selected
-        boolean fromStoreOffers = searchItem.getType() == SearchResultItem.Type.COMPANY;
+        boolean fromStoreOffers = searchItem.getType() == SearchResultItem.Type.COMPANY &&
+                (categories == null || categories.isEmpty());
         OfferDetailActivity_.intent(this).offer(offer).location(currentLocation).fromStoreOffers(fromStoreOffers).start();
         slideInTransition();
     }
