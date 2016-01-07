@@ -9,6 +9,7 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.StateListDrawable;
 import android.util.AttributeSet;
+import android.util.TypedValue;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
@@ -35,6 +36,7 @@ public class OfferActionButton extends FrameLayout {
 
     @Getter CharSequence text;
     @Getter Drawable icon;
+    @Getter Float fontSize = 0f;
 
     /* Views */
     @ViewById ViewGroup actionView;
@@ -63,6 +65,9 @@ public class OfferActionButton extends FrameLayout {
                 Drawable icon = a.getDrawable(R.styleable.OfferActionButton_buttonIcon);
                 setIcon(icon);
             }
+            if (a.hasValue(R.styleable.OfferActionButton_buttonFontSize)) {
+                fontSize = a.getDimension(R.styleable.OfferActionButton_buttonFontSize, 0f);
+            }
             a.recycle();
         }
     }
@@ -73,6 +78,10 @@ public class OfferActionButton extends FrameLayout {
         setText(text);
         // Set image
         setIcon(icon);
+        // Set font size
+        if (fontSize > 0) {
+            txtAction.setTextSize(TypedValue.COMPLEX_UNIT_PX, fontSize);
+        }
     }
 
     public void setText(int textResId) {
