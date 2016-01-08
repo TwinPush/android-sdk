@@ -17,7 +17,8 @@
     <string name="my_offers">mis ofertas</string>
     <string name="offers_map">ver mapa</string>
     <string name="no_results">No se han encontrado resultados</string>
-    <string name="no_saved_offers">No tienes ninguna oferta guardada.\n\nAñade a tus favoritos aquellas ofertas que quieras tener siempre a mano.</string>
+    <string name="no_saved_offers">Guarda en tus favoritos aquellas ofertas que quieras tener siempre a mano.</string>
+    <string name="no_search_results">La búsqueda no ha obtenido ninguna oferta. Comprueba los criterios de búsqueda y vuelve a intentarlo</string>
 
     <!-- Menu -->
     <string name="menu_map">Ver en mapa</string>

@@ -1,6 +1,7 @@
 package com.yellowpineapple.wakup.activities;
 
 import android.location.Location;
+import android.view.View;
 
 import com.etsy.android.grid.StaggeredGridView;
 import com.yellowpineapple.wakup.R;
@@ -16,7 +17,7 @@ import org.androidannotations.annotations.ViewById;
 
 import java.util.List;
 
-@EActivity(R.layout.activity_offers_list)
+@EActivity(R.layout.activity_search_results)
 public class SearchResultActivity extends OfferListActivity {
 
     @Extra SearchResultItem searchItem;
@@ -25,11 +26,12 @@ public class SearchResultActivity extends OfferListActivity {
     /* Views */
     @ViewById StaggeredGridView gridView;
     @ViewById PullToRefreshLayout ptrLayout;
+    @ViewById View emptyView;
 
     @AfterViews
     void afterViews() {
         setTitle(searchItem.getName());
-        setupOffersGrid(gridView, null, true);
+        setupOffersGrid(gridView, emptyView, true);
     }
 
     @Override

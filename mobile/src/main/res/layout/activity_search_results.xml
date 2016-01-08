@@ -38,7 +38,7 @@
                     <com.yellowpineapple.wakup.views.ColorImageView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:src="@drawable/ic_saved_offers"
+                        android:src="@drawable/ic_warning"
                         app:imageColor="@color/light_text"/>
 
                     <TextView
@@ -53,10 +53,11 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="@string/no_saved_offers"
+                        android:text="@string/no_search_results"
                         android:gravity="center"
                         android:textColor="@color/light_text"
-                        android:layout_marginTop="20dp"/>
+                        android:layout_marginTop="20dp"
+                        style="@style/AppTheme.Text"/>
 
                 </LinearLayout>
 
