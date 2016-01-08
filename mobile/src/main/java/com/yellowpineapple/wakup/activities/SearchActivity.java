@@ -3,6 +3,7 @@ package com.yellowpineapple.wakup.activities;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
+import android.os.Handler;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -35,6 +36,9 @@ import java.util.List;
 @OptionsMenu(R.menu.search_menu)
 @EActivity(R.layout.activity_search)
 public class SearchActivity extends ParentActivity {
+
+    static private int REQUEST_DELAY = 200;
+    private Handler searchHandler = new Handler();
 
     SearchView searchView;
     Request searchRequest = null;
@@ -100,35 +104,14 @@ public class SearchActivity extends ParentActivity {
     }
 
     void search(final String query) {
-        this.searchQuery = query;
+        // Cancel previous timer and request
+        searchHandler.removeCallbacks(searchRunnable);
         if (searchRequest != null) {
             searchRequest.cancel();
         }
-        if (Strings.notEmpty(query)) {
-            searchRequest = getRequestClient().search(query.trim(), new SearchRequest.Listener() {
-                @Override
-                public void onSuccess(SearchResult searchResult) {
-                    searchRequest = null;
-                    // Check if query is still valid
-                    if (Strings.equals(query, searchQuery)) {
-                        listAdapter.setCompanies(searchResult.getCompanies());
-                        refreshList();
-                    }
-                }
-
-                @Override
-                public void onError(Exception exception) {
-                    searchRequest = null;
-                    Ln.e(exception);
-                    Toast.makeText(SearchActivity.this, R.string.search_error, Toast.LENGTH_LONG).show();
-                }
-            });
-            geoSearch(query.trim(), "Spain", "ES");
-        } else {
-            listAdapter.setCompanies(null);
-            listAdapter.setAddresses(null);
-            refreshList();
-        }
+        this.searchQuery = query;
+        // Start countdown to perform search
+        searchHandler.postDelayed(searchRunnable, REQUEST_DELAY);
     }
 
     @UiThread
@@ -159,6 +142,41 @@ public class SearchActivity extends ParentActivity {
                 listAdapter.setAddresses(new ArrayList<Address>());
                 refreshList();
             }
+        } else {
+            Ln.e("Can not perform search: Geocoder is not present in this device");
         }
     }
+
+    Runnable searchRunnable = new Runnable() {
+        @Override
+        public void run() {
+            final String query = searchQuery;
+            if (Strings.notEmpty(query)) {
+                searchRequest = getRequestClient().search(query.trim(), new SearchRequest.Listener() {
+                    @Override
+                    public void onSuccess(SearchResult searchResult) {
+                        searchRequest = null;
+                        // Check if query is still valid
+                        if (Strings.equals(query, searchQuery)) {
+                            listAdapter.setCompanies(searchResult.getCompanies());
+                            refreshList();
+                        }
+                    }
+
+                    @Override
+                    public void onError(Exception exception) {
+                        searchRequest = null;
+                        Ln.e(exception);
+                        Toast.makeText(SearchActivity.this, R.string.search_error, Toast.LENGTH_LONG).show();
+                    }
+                });
+                // TODO Allow country setup for SDK
+                geoSearch(query.trim(), "Spain", "ES");
+            } else {
+                listAdapter.setCompanies(null);
+                listAdapter.setAddresses(null);
+                refreshList();
+            }
+        }
+    };
 }
