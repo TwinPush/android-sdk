@@ -4,11 +4,13 @@ import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
 import android.os.Handler;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ListView;
 import android.widget.SearchView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.yellowpineapple.wakup.R;
@@ -37,8 +39,8 @@ import java.util.List;
 @EActivity(R.layout.activity_search)
 public class SearchActivity extends ParentActivity {
 
-    static private int REQUEST_DELAY = 200;
-    private Handler searchHandler = new Handler();
+    final static private int REQUEST_DELAY = 200;
+    final private Handler searchHandler = new Handler();
 
     SearchView searchView;
     Request searchRequest = null;
@@ -73,6 +75,16 @@ public class SearchActivity extends ParentActivity {
             public boolean onClose() {
                 searchView.setQuery("", false);
                 return true;
+            }
+        });
+        // Hide Keyboard when keyboard Action button is pressed
+        int id = searchView.getContext().getResources().getIdentifier("android:id/search_src_text", null, null);
+        TextView editText = (TextView) searchView.findViewById(id);
+        editText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                hideSoftKeyboard();
+                return false;
             }
         });
         return super.onCreateOptionsMenu(menu);
