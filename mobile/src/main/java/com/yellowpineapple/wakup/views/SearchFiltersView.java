@@ -2,24 +2,21 @@ package com.yellowpineapple.wakup.views;
 
 import android.content.Context;
 import android.util.AttributeSet;
+import android.view.View;
 import android.widget.FrameLayout;
 
+import com.yellowpineapple.wakup.R;
 import com.yellowpineapple.wakup.models.Category;
-
-import org.androidannotations.annotations.Click;
-import org.androidannotations.annotations.EViewGroup;
-import org.androidannotations.annotations.ViewById;
 
 import java.util.ArrayList;
 import java.util.List;
 
-@EViewGroup(resName="view_search_filters")
 public class SearchFiltersView extends FrameLayout {
 
-    @ViewById OfferActionButton btnLeisure;
-    @ViewById OfferActionButton btnRestaurants;
-    @ViewById OfferActionButton btnServices;
-    @ViewById OfferActionButton btnShopping;
+    OfferActionButton btnLeisure;
+    OfferActionButton btnRestaurants;
+    OfferActionButton btnServices;
+    OfferActionButton btnShopping;
 
     public SearchFiltersView(Context context) {
         super(context);
@@ -37,7 +34,29 @@ public class SearchFiltersView extends FrameLayout {
     }
 
     private void init(AttributeSet attrs, int defStyle) {
+        injectViews();
+    }
 
+    private void injectViews() {
+        inflate(getContext(), R.layout.view_search_filters, this);
+        btnLeisure = ((OfferActionButton) findViewById(R.id.btnLeisure));
+        btnServices = ((OfferActionButton) findViewById(R.id.btnServices));
+        btnRestaurants = ((OfferActionButton) findViewById(R.id.btnRestaurants));
+        btnShopping = ((OfferActionButton) findViewById(R.id.btnShopping));
+
+        OnClickListener onClickListener = new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                v.setSelected(!v.isSelected());
+            }
+        };
+
+        OfferActionButton[] buttons = new OfferActionButton[] {
+                btnLeisure, btnLeisure, btnServices, btnShopping
+        };
+        for (OfferActionButton button : buttons) {
+            button.setOnClickListener(onClickListener);
+        }
     }
 
     public List<Category> getSelectedCategories() {
@@ -47,25 +66,5 @@ public class SearchFiltersView extends FrameLayout {
         if (btnServices.isSelected()) categories.add(Category.SERVICES);
         if (btnShopping.isSelected()) categories.add(Category.SHOPPING);
         return categories;
-    }
-
-    @Click
-    void btnLeisure() {
-        btnLeisure.setSelected(!btnLeisure.isSelected());
-    }
-
-    @Click
-    void btnRestaurants() {
-        btnRestaurants.setSelected(!btnRestaurants.isSelected());
-    }
-
-    @Click
-    void btnServices() {
-        btnServices.setSelected(!btnServices.isSelected());
-    }
-
-    @Click
-    void btnShopping() {
-        btnShopping.setSelected(!btnShopping.isSelected());
     }
 }

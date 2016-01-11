@@ -7,24 +7,21 @@ import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.yellowpineapple.wakup.R;
 import com.yellowpineapple.wakup.models.Offer;
-
-import org.androidannotations.annotations.EViewGroup;
-import org.androidannotations.annotations.ViewById;
 
 /**
  * Created by agutierrez on 09/02/15.
  */
-@EViewGroup(resName="view_map_offer_info")
 public class OfferMapInfoView extends LinearLayout {
 
     Offer offer;
     /* Views */
-    @ViewById RemoteImageView imgCompany;
-    @ViewById TextView txtCompany;
-    @ViewById TextView txtAddress;
-    @ViewById TextView txtDistance;
-    @ViewById View imgDisclosure;
+    RemoteImageView imgCompany;
+    TextView txtCompany;
+    TextView txtAddress;
+    TextView txtDistance;
+    View imgDisclosure;
 
     public OfferMapInfoView(Context context) {
         super(context);
@@ -36,6 +33,20 @@ public class OfferMapInfoView extends LinearLayout {
 
     public OfferMapInfoView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
+        init();
+    }
+
+    private void init() {
+        injectViews();
+    }
+
+    private void injectViews() {
+        inflate(getContext(), R.layout.view_map_offer_info, this);
+        txtDistance = ((TextView) findViewById(R.id.txtDistance));
+        txtCompany = ((TextView) findViewById(R.id.txtCompany));
+        txtAddress = ((TextView) findViewById(R.id.txtAddress));
+        imgDisclosure = findViewById(R.id.imgDisclosure);
+        imgCompany = ((RemoteImageView) findViewById(R.id.imgCompany));
     }
 
     public void setOffer(Offer offer, Location location) {

@@ -4,17 +4,15 @@ import android.location.Location;
 
 import java.io.Serializable;
 
-import lombok.Getter;
-
 /**
  * Created by agutierrez on 04/02/15.
  */
 public class Store implements Serializable {
-    @Getter int id;
-    @Getter String name;
-    @Getter String address;
-    @Getter double latitude;
-    @Getter double longitude;
+    int id;
+    String name;
+    String address;
+    double latitude;
+    double longitude;
 
     public Location getLocation() {
         Location location = null;
@@ -34,5 +32,25 @@ public class Store implements Serializable {
             distance = Math.round(location.distanceTo(storeLocation));
         }
         return distance;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public double getLatitude() {
+        return latitude;
+    }
+
+    public double getLongitude() {
+        return longitude;
     }
 }

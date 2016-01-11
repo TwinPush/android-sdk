@@ -10,24 +10,17 @@ import android.widget.TextView;
 
 import com.yellowpineapple.wakup.R;
 
-import org.androidannotations.annotations.AfterViews;
-import org.androidannotations.annotations.EViewGroup;
-import org.androidannotations.annotations.ViewById;
-
-import lombok.Getter;
-
 /**
  * Created by agutierrez on 05/02/15.
  */
-@EViewGroup(resName="view_navbar_button")
 public class NavBarButton extends FrameLayout {
 
-    @Getter CharSequence text;
-    @Getter Drawable icon;
+    CharSequence text;
+    Drawable icon;
 
     /* Views */
-    @ViewById ImageView imgIcon;
-    @ViewById TextView txtAction;
+    ImageView imgIcon;
+    TextView txtAction;
 
     /* Constructors */
     public NavBarButton(Context context) {
@@ -53,14 +46,21 @@ public class NavBarButton extends FrameLayout {
             }
             a.recycle();
         }
+        init();
     }
 
-    @AfterViews
-    void afterViews() {
+    private void init() {
+        injectViews();
         // Set text
         setText(text);
         // Set image
         setIcon(icon);
+    }
+
+    private void injectViews() {
+        inflate(getContext(), R.layout.view_navbar_button, this);
+        imgIcon = (ImageView) findViewById(R.id.imgIcon);
+        txtAction = (TextView) findViewById(R.id.txtAction);
     }
 
     public void setText(int textResId) {

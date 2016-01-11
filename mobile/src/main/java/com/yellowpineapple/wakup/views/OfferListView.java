@@ -19,20 +19,17 @@ import org.androidannotations.annotations.ViewById;
 import lombok.Getter;
 import me.grantland.widget.AutofitTextView;
 
-@EViewGroup(resName="list_item_offer")
 public class OfferListView extends FrameLayout {
 
-    @Getter Offer offer;
+    Offer offer;
 
     /* Views */
-    @ViewById RemoteImageView offerImageView;
-    @ViewById TextView txtCompany;
-    @ViewById TextView txtDescription;
-    @ViewById RelativeLayout viewShortOffer;
-    @ViewById TextView txtDistance;
-    @ViewById TextView txtExpiration;
-
-    float shortOfferSize = 0;
+    RemoteImageView offerImageView;
+    TextView txtCompany;
+    TextView txtDescription;
+    RelativeLayout viewShortOffer;
+    TextView txtDistance;
+    TextView txtExpiration;
 
     public OfferListView(Context context) {
         super(context);
@@ -50,7 +47,17 @@ public class OfferListView extends FrameLayout {
     }
 
     private void init(AttributeSet attrs, int defStyle) {
+        injectViews();
+    }
 
+    private void injectViews() {
+        inflate(getContext(), R.layout.list_item_offer, this);
+        txtDistance = ((TextView) findViewById(R.id.txtDistance));
+        viewShortOffer = ((RelativeLayout) findViewById(R.id.viewShortOffer));
+        txtExpiration = ((TextView) findViewById(R.id.txtExpiration));
+        txtDescription = ((TextView) findViewById(R.id.txtDescription));
+        txtCompany = ((TextView) findViewById(R.id.txtCompany));
+        offerImageView = ((RemoteImageView) findViewById(R.id.offerImageView));
     }
 
     public void setOffer(Offer offer, Location currentLocation) {
@@ -79,5 +86,8 @@ public class OfferListView extends FrameLayout {
         viewShortOffer.addView(txtShortOffer, layoutParams);
     }
 
+    public Offer getOffer() {
+        return offer;
+    }
 
 }

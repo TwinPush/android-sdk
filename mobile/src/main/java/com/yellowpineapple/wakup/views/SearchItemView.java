@@ -9,20 +9,14 @@ import android.widget.TextView;
 import com.yellowpineapple.wakup.R;
 import com.yellowpineapple.wakup.models.SearchResultItem;
 
-import org.androidannotations.annotations.EViewGroup;
-import org.androidannotations.annotations.ViewById;
-
-import lombok.Getter;
-
-@EViewGroup(resName="list_item_search")
 public class SearchItemView extends FrameLayout {
 
-    @Getter SearchResultItem searchItem;
+    SearchResultItem searchItem;
 
     /* Views */
-    @ViewById TextView txtName;
-    @ViewById TextView txtDescription;
-    @ViewById ImageView imgIcon;
+    TextView txtName;
+    TextView txtDescription;
+    ImageView imgIcon;
 
     public SearchItemView(Context context) {
         super(context);
@@ -40,7 +34,14 @@ public class SearchItemView extends FrameLayout {
     }
 
     private void init(AttributeSet attrs, int defStyle) {
+        injectViews();
+    }
 
+    private void injectViews() {
+        inflate(getContext(), R.layout.list_item_search, this);
+        imgIcon = ((ImageView) findViewById(R.id.imgIcon));
+        txtDescription = ((TextView) findViewById(R.id.txtDescription));
+        txtName = ((TextView) findViewById(R.id.txtName));
     }
 
     public void setSearchItem(SearchResultItem searchItem) {
@@ -65,5 +66,9 @@ public class SearchItemView extends FrameLayout {
             txtDescription.setText(null);
             imgIcon.setImageDrawable(null);
         }
+    }
+
+    public SearchResultItem getSearchItem() {
+        return searchItem;
     }
 }

@@ -11,25 +11,22 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
-import lombok.Getter;
-import lombok.Setter;
-
 /**
  * Created by agutierrez on 02/02/15.
  */
 public class Offer implements Serializable {
 
-    @Getter int id;
-    @Getter boolean isOnline;
-    @Getter @Setter CompanyDetail company;
-    @Getter Category category;
-    @Getter String description;
-    @Getter String shortDescription;
-    @Getter String shortOffer;
-    @Getter Date expirationDate;
-    @Getter RemoteImage image;
-    @Getter RemoteImage thumbnail;
-    @Getter @Setter Store store;
+    int id;
+    boolean isOnline;
+    CompanyDetail company;
+    Category category;
+    String description;
+    String shortDescription;
+    String shortOffer;
+    Date expirationDate;
+    RemoteImage image;
+    RemoteImage thumbnail;
+    Store store;
 
     public boolean hasLocation() {
         return store != null && store.getLocation() != null;
@@ -105,5 +102,57 @@ public class Offer implements Serializable {
         expiration.set(Calendar.MINUTE, 59);
         expiration.set(Calendar.SECOND, 59);
         return expiration;
+    }
+
+    public Store getStore() {
+        return store;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public boolean isOnline() {
+        return isOnline;
+    }
+
+    public CompanyDetail getCompany() {
+        return company;
+    }
+
+    public Category getCategory() {
+        return category;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public String getShortDescription() {
+        return shortDescription;
+    }
+
+    public String getShortOffer() {
+        return shortOffer;
+    }
+
+    public Date getExpirationDate() {
+        return expirationDate;
+    }
+
+    public RemoteImage getImage() {
+        return image;
+    }
+
+    public RemoteImage getThumbnail() {
+        return thumbnail;
+    }
+
+    public void setCompany(CompanyDetail company) {
+        this.company = company;
+    }
+
+    public void setStore(Store store) {
+        this.store = store;
     }
 }

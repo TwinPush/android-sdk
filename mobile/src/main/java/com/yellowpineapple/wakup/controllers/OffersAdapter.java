@@ -13,26 +13,17 @@ import com.yellowpineapple.wakup.views.OfferListView_;
 
 import java.util.List;
 
-import lombok.Getter;
-import lombok.Setter;
-
 /***
  * ADAPTER
  */
 
 public class OffersAdapter extends BaseAdapter implements View.OnLongClickListener, View.OnClickListener {
 
-    @Getter @Setter List<Offer> offers;
-    @Getter @Setter boolean loading;
-    @Getter Context context;
-    @Setter Location currentLocation;
-
-    public interface Listener {
-        void onOfferClick(Offer offer, View view);
-        void onOfferLongClick(Offer offer, View view);
-    }
-
-    @Getter @Setter Listener listener;
+    List<Offer> offers;
+    boolean loading;
+    Context context;
+    Location currentLocation;
+    Listener listener;
 
     public OffersAdapter(final Context context) {
         super();
@@ -112,5 +103,42 @@ public class OffersAdapter extends BaseAdapter implements View.OnLongClickListen
             return true;
         }
         return false;
+    }
+
+    public interface Listener {
+        void onOfferClick(Offer offer, View view);
+        void onOfferLongClick(Offer offer, View view);
+    }
+
+    public Listener getListener() {
+        return listener;
+    }
+
+    public void setListener(Listener listener) {
+        this.listener = listener;
+    }
+
+    public List<Offer> getOffers() {
+        return offers;
+    }
+
+    public void setOffers(List<Offer> offers) {
+        this.offers = offers;
+    }
+
+    public boolean isLoading() {
+        return loading;
+    }
+
+    public void setLoading(boolean loading) {
+        this.loading = loading;
+    }
+
+    public Context getContext() {
+        return context;
+    }
+
+    public void setCurrentLocation(Location currentLocation) {
+        this.currentLocation = currentLocation;
     }
 }

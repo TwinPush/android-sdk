@@ -79,11 +79,6 @@ public abstract class ParentActivity extends FragmentActivity {
         requestClient = RequestClient.getSharedInstance(this, RequestClient.Environment.PRODUCTION);
         persistence = PersistenceHandler.getSharedInstance(this);
         super.onCreate(savedInstanceState);
-        CalligraphyConfig.initDefault(new CalligraphyConfig.Builder()
-                        .setDefaultFontPath("fonts/Aller_Lt.ttf")
-                        .setFontAttrId(R.attr.fontPath)
-                        .build()
-        );
         // Create global configuration and initialize ImageLoader with this config
         ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(this).build();
         ImageLoader.getInstance().init(config);

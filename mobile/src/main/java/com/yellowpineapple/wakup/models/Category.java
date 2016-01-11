@@ -2,8 +2,6 @@ package com.yellowpineapple.wakup.models;
 
 import com.yellowpineapple.wakup.R;
 
-import lombok.Getter;
-
 /**
  * Created by agutierrez on 10/02/15.
  */
@@ -15,9 +13,9 @@ public enum Category {
     SERVICES("services", R.string.category_services, R.drawable.ic_pin_services),
     SHOPPING("shopping", R.string.category_shopping, R.drawable.ic_pin_shopping);
 
-    @Getter String identifier;
-    @Getter int nameResId;
-    @Getter int iconResId;
+    String identifier;
+    int nameResId;
+    int iconResId;
 
     private Category(String identifier, int nameResId, int iconResId) {
         this.identifier = identifier;
@@ -35,5 +33,17 @@ public enum Category {
             }
         }
         return value;
+    }
+
+    public String getIdentifier() {
+        return identifier;
+    }
+
+    public int getIconResId() {
+        return iconResId;
+    }
+
+    public int getNameResId() {
+        return nameResId;
     }
 }

@@ -33,10 +33,9 @@ import lombok.Getter;
 /**
  * Created by agutierrez on 09/02/15.
  */
-@EActivity
 public abstract class OfferListActivity extends ParentActivity implements AbsListView.OnScrollListener, OffersAdapter.Listener {
 
-    @Getter OffersAdapter offersAdapter;
+    OffersAdapter offersAdapter;
     boolean mHasRequestedMore;
     boolean mHasMoreResults = false;
     Request offersRequest = null;
@@ -44,7 +43,7 @@ public abstract class OfferListActivity extends ParentActivity implements AbsLis
 
     Location currentLocation = null;
 
-    @Getter List<Offer> offers;
+    List<Offer> offers;
     Offer selectedOffer = null;
 
     static int FIRST_PAGE = BaseRequest.FIRST_PAGE;
@@ -331,8 +330,8 @@ public abstract class OfferListActivity extends ParentActivity implements AbsLis
         MY_OFFERS_REMOVE(3, R.string.menu_my_offers_remove),
         SHARE(4, R.string.menu_share);
 
-        @Getter int id;
-        @Getter int textResId;
+        int id;
+        int textResId;
 
         private OfferMenuItem(int id, int textResId) {
             this.id = id;
@@ -346,6 +345,14 @@ public abstract class OfferListActivity extends ParentActivity implements AbsLis
                 }
             }
             return null;
+        }
+
+        public int getId() {
+            return id;
+        }
+
+        public int getTextResId() {
+            return textResId;
         }
     }
 
@@ -384,5 +391,13 @@ public abstract class OfferListActivity extends ParentActivity implements AbsLis
 
     protected void afterContextItemSelected(OfferMenuItem menuItem) {
 
+    }
+
+    public OffersAdapter getOffersAdapter() {
+        return offersAdapter;
+    }
+
+    public List<Offer> getOffers() {
+        return offers;
     }
 }

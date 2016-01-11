@@ -13,17 +13,9 @@ import com.yellowpineapple.wakup.models.Offer;
 import com.yellowpineapple.wakup.utils.PersistenceHandler;
 import com.yellowpineapple.wakup.utils.Strings;
 
-import org.androidannotations.annotations.Click;
-import org.androidannotations.annotations.EViewGroup;
-import org.androidannotations.annotations.ViewById;
-
-import lombok.Getter;
-import lombok.Setter;
-
 /**
  * Created by agutierrez on 09/02/15.
  */
-@EViewGroup(resName="view_offer_detail")
 public class OfferDetailView extends LinearLayout {
 
     public interface Listener {
@@ -36,39 +28,47 @@ public class OfferDetailView extends LinearLayout {
     }
 
     Offer offer;
-    @Setter @Getter Listener listener;
+    Listener listener;
 
     /* Views */
-    @ViewById RemoteImageView imgCompany;
-    @ViewById TextView txtCompany;
-    @ViewById TextView txtAddress;
-    @ViewById TextView txtDistance;
-    @ViewById RemoteImageView imgOffer;
-    @ViewById TextView txtShortDescription;
-    @ViewById TextView txtDescription;
-    @ViewById TextView txtShortOffer;
-    @ViewById TextView txtExpiration;
-    @ViewById View viewDescription;
-    @ViewById View storeView;
-    @ViewById ImageView imgDisclosureAddress;
-    @ViewById View storeOffersView;
-    @ViewById TextView txtStoreOffers;
+    RemoteImageView imgCompany;
+    TextView txtCompany;
+    TextView txtAddress;
+    TextView txtDistance;
+    RemoteImageView imgOffer;
+    TextView txtShortDescription;
+    TextView txtDescription;
+    TextView txtShortOffer;
+    TextView txtExpiration;
+    View viewDescription;
+    View storeView;
+    ImageView imgDisclosureAddress;
+    View storeOffersView;
+    TextView txtStoreOffers;
 
-    @ViewById OfferActionButton btnWebsite;
-    @ViewById OfferActionButton btnMap;
-    @ViewById OfferActionButton btnSave;
-    @ViewById OfferActionButton btnShare;
+    OfferActionButton btnWebsite;
+    OfferActionButton btnMap;
+    OfferActionButton btnSave;
+    OfferActionButton btnShare;
 
     public OfferDetailView(Context context) {
         super(context);
+        init();
     }
 
     public OfferDetailView(Context context, AttributeSet attrs) {
         super(context, attrs);
+        init();
     }
 
     public OfferDetailView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
+        init();
+    }
+
+    private void init() {
+        injectViews();
+
     }
 
     public void setOffer(Offer offer, Location location) {
@@ -106,37 +106,84 @@ public class OfferDetailView extends LinearLayout {
         }
     }
 
+    public void setListener(Listener listener) {
+        this.listener = listener;
+    }
+
     void refreshSavedState() {
         boolean saved = PersistenceHandler.getSharedInstance(getContext()).isSavedOffer(offer);
         btnSave.setText(saved ? R.string.action_offer_saved : R.string.action_offer_save);
         btnSave.setSelected(saved);
     }
 
-    @Click(resName="viewDescription")
+    private void injectViews() {
+        inflate(getContext(), R.layout.view_offer_detail, this);
+        btnShare = ((OfferActionButton) findViewById(R.id.btnShare));
+        imgOffer = ((RemoteImageView) findViewById(R.id.imgOffer));
+        txtExpiration = ((TextView) findViewById(R.id.txtExpiration));
+        txtDescription = ((TextView) findViewById(R.id.txtDescription));
+        imgCompany = ((RemoteImageView) findViewById(R.id.imgCompany));
+        btnWebsite = ((OfferActionButton) findViewById(R.id.btnWebsite));
+        txtShortOffer = ((TextView) findViewById(R.id.txtShortOffer));
+        txtStoreOffers = ((TextView) findViewById(R.id.txtStoreOffers));
+        txtShortDescription = ((TextView) findViewById(R.id.txtShortDescription));
+        imgDisclosureAddress = ((ImageView) findViewById(R.id.imgDisclosureAddress));
+        storeOffersView = findViewById(R.id.storeOffersView);
+        viewDescription = findViewById(R.id.viewDescription);
+        btnMap = ((OfferActionButton) findViewById(R.id.btnMap));
+        storeView = findViewById(R.id.storeView);
+        txtCompany = ((TextView) findViewById(R.id.txtCompany));
+        txtAddress = ((TextView) findViewById(R.id.txtAddress));
+        txtDistance = ((TextView) findViewById(R.id.txtDistance));
+        btnSave = ((OfferActionButton) findViewById(R.id.btnSave));
+
+        OnClickListener clickListener = new OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (view == btnSave) {
+                    saveOffer();
+                } else if (view == btnWebsite) {
+                    openWebsite();
+                } else if (view == viewDescription) {
+                    onDescriptionClicked();
+                } else if (view == btnShare) {
+                    shareOffer();
+                } else if (view == storeOffersView) {
+                    openStoreDetails();
+                } else if (view == btnMap) {
+                    openMap();
+                } else if (view == storeView) {
+                    onAddressClicked();
+                }
+            }
+        };
+
+        View[] onClickViews = new View[] {
+                btnSave, btnWebsite, viewDescription, btnShare, storeOffersView, btnMap, storeView
+        };
+        for (View view : onClickViews) {
+            view.setOnClickListener(clickListener);
+        }
+    }
+
     void onDescriptionClicked() {
         if (listener != null) listener.onDescriptionClicked(offer);
     }
 
-    @Click(resName="storeView")
     void onAddressClicked() {
         if (listener != null) listener.onViewOnMapClicked(offer);
     }
 
-    @Click
-    void btnMap() { if (listener != null) listener.onViewOnMapClicked(offer); }
+    void openMap() { if (listener != null) listener.onViewOnMapClicked(offer); }
 
-    @Click
-    void btnWebsite() { if (listener != null) listener.onOpenLinkClicked(offer); }
+    void openWebsite() { if (listener != null) listener.onOpenLinkClicked(offer); }
 
-    @Click
-    void btnSave() {
+    void saveOffer() {
         if (listener != null) listener.onSaveClicked(offer);
         refreshSavedState();
     }
 
-    @Click
-    void btnShare() { if (listener != null) listener.onShareClicked(offer); }
+    void shareOffer() { if (listener != null) listener.onShareClicked(offer); }
 
-    @Click
-    void storeOffersView() { if (listener != null) listener.onStoreOffersClicked(offer); }
+    void openStoreDetails() { if (listener != null) listener.onStoreOffersClicked(offer); }
 }

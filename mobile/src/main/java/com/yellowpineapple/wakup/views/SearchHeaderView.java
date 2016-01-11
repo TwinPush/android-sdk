@@ -5,14 +5,12 @@ import android.util.AttributeSet;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 
-import org.androidannotations.annotations.EViewGroup;
-import org.androidannotations.annotations.ViewById;
+import com.yellowpineapple.wakup.R;
 
-@EViewGroup(resName="list_item_search_header")
 public class SearchHeaderView extends FrameLayout {
 
     /* Views */
-    @ViewById TextView txtName;
+    TextView txtName;
 
     public SearchHeaderView(Context context) {
         super(context);
@@ -30,7 +28,12 @@ public class SearchHeaderView extends FrameLayout {
     }
 
     private void init(AttributeSet attrs, int defStyle) {
+        injectViews();
+    }
 
+    private void injectViews() {
+        inflate(getContext(), R.layout.list_item_search_header, this);
+        txtName = (TextView) findViewById(R.id.txtName);
     }
 
     public void setTitle(String title) {

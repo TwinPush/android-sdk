@@ -10,9 +10,6 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-import lombok.Getter;
-import lombok.Setter;
-
 /**
  * Created by agutierrez on 17/12/15.
  */
@@ -24,13 +21,13 @@ public class SearchResultItem implements Serializable {
 
     static final int MAX_FIELDS = 3;
 
-    @Setter @Getter boolean recent = false;
-    @Getter Type type;
-    @Getter String name = null;
-    @Getter String description = null;
-    @Getter double latitude = 0;
-    @Getter double longitude = 0;
-    @Getter Company company = null;
+    boolean recent = false;
+    Type type;
+    String name = null;
+    String description = null;
+    double latitude = 0;
+    double longitude = 0;
+    Company company = null;
 
     public SearchResultItem(boolean recent, Address address) {
             this.recent = recent;
@@ -100,5 +97,33 @@ public class SearchResultItem implements Serializable {
             }
         }
         return false;
+    }
+
+    public Company getCompany() {
+        return company;
+    }
+
+    public boolean isRecent() {
+        return recent;
+    }
+
+    public Type getType() {
+        return type;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public double getLatitude() {
+        return latitude;
+    }
+
+    public double getLongitude() {
+        return longitude;
     }
 }

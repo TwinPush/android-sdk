@@ -2,16 +2,29 @@ package com.yellowpineapple.wakup.models;
 
 import java.io.Serializable;
 
-import lombok.Getter;
-
 /**
  * Created by agutierrez on 02/02/15.
  */
 public class RemoteImage implements Serializable {
 
-    @Getter int height;
-    @Getter int width;
-    @Getter String rgbColor;
-    @Getter String url;
+    int height;
+    int width;
+    String rgbColor;
+    String url;
 
+    public int getHeight() {
+        return height;
+    }
+
+    public int getWidth() {
+        return width;
+    }
+
+    public String getRgbColor() {
+        return rgbColor;
+    }
+
+    public String getUrl() {
+        return url;
+    }
 }

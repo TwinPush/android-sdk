@@ -27,14 +27,14 @@ import lombok.Setter;
 
 public class SearchResultAdapter extends BaseAdapter implements View.OnClickListener {
 
-    @Getter List<Company> companies = null;
-    @Getter List<Address> addresses = null;
-    @Getter Context context;
+    List<Company> companies = null;
+    List<Address> addresses = null;
+    Context context;
     Location currentLocation;
 
-    @Getter @Setter Listener listener;
-    @Setter List<SearchResultItem> recentSearches = new ArrayList<>();
-    @Getter List<SearchResultItem> resultItems = new ArrayList<>();
+    Listener listener;
+    List<SearchResultItem> recentSearches = new ArrayList<>();
+    List<SearchResultItem> resultItems = new ArrayList<>();
 
     public interface Listener {
         void onItemClick(SearchResultItem item, View view);
@@ -138,5 +138,25 @@ public class SearchResultAdapter extends BaseAdapter implements View.OnClickList
             SearchItemView view = (SearchItemView) v;
             if (listener != null) listener.onItemClick(view.getSearchItem(), view);
         }
+    }
+
+    public Context getContext() {
+        return context;
+    }
+
+    public Listener getListener() {
+        return listener;
+    }
+
+    public List<SearchResultItem> getResultItems() {
+        return resultItems;
+    }
+
+    public void setListener(Listener listener) {
+        this.listener = listener;
+    }
+
+    public void setRecentSearches(List<SearchResultItem> recentSearches) {
+        this.recentSearches = recentSearches;
     }
 }

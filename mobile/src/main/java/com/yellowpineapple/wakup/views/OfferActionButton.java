@@ -8,6 +8,7 @@ import android.graphics.PorterDuff;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.StateListDrawable;
+import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
 import android.util.TypedValue;
 import android.view.ViewGroup;
@@ -17,16 +18,9 @@ import android.widget.TextView;
 
 import com.yellowpineapple.wakup.R;
 
-import org.androidannotations.annotations.AfterViews;
-import org.androidannotations.annotations.EViewGroup;
-import org.androidannotations.annotations.ViewById;
-
-import lombok.Getter;
-
 /**
  * Created by agutierrez on 05/02/15.
  */
-@EViewGroup(resName="view_action_button")
 public class OfferActionButton extends FrameLayout {
 
     static final int[] SELECTED_STATE_SET = new int[] { android.R.attr.state_selected, android.R.attr.state_enabled };
@@ -34,14 +28,14 @@ public class OfferActionButton extends FrameLayout {
     static final int[] DISABLED_STATE_SET = new int[] { - android.R.attr.state_enabled };
     static final int[] DEFAULT_STATE_SET = new int[] { android.R.attr.state_enabled };
 
-    @Getter CharSequence text;
-    @Getter Drawable icon;
-    @Getter Float fontSize = 0f;
+    CharSequence text;
+    Drawable icon;
+    Float fontSize = 0f;
 
     /* Views */
-    @ViewById ViewGroup actionView;
-    @ViewById ImageView imgIcon;
-    @ViewById TextView txtAction;
+    ViewGroup actionView;
+    ImageView imgIcon;
+    TextView txtAction;
 
     /* Constructors */
     public OfferActionButton(Context context) {
@@ -70,10 +64,11 @@ public class OfferActionButton extends FrameLayout {
             }
             a.recycle();
         }
+        init();
     }
 
-    @AfterViews
-    void afterViews() {
+    private void init() {
+        injectViews();
         // Set text
         setText(text);
         // Set image
@@ -82,6 +77,13 @@ public class OfferActionButton extends FrameLayout {
         if (fontSize > 0) {
             txtAction.setTextSize(TypedValue.COMPLEX_UNIT_PX, fontSize);
         }
+    }
+
+    private void injectViews() {
+        inflate(getContext(), R.layout.view_action_button, this);
+        imgIcon = (ImageView) findViewById(R.id.imgIcon);
+        txtAction = (TextView) findViewById(R.id.txtAction);
+        actionView = (ViewGroup) findViewById(R.id.actionView);
     }
 
     public void setText(int textResId) {
@@ -100,15 +102,15 @@ public class OfferActionButton extends FrameLayout {
         if (imgIcon != null) {
             if (!isInEditMode()) {
                 Drawable defaultDrawable = icon.getCurrent();
-                defaultDrawable.setColorFilter(getResources().getColor(R.color.action_active), PorterDuff.Mode.MULTIPLY);
+                defaultDrawable.setColorFilter(ContextCompat.getColor(getContext(), R.color.action_active), PorterDuff.Mode.MULTIPLY);
                 defaultDrawable = drawableToBitmap(defaultDrawable);
 
                 Drawable pressedDrawable = icon.getCurrent();
-                pressedDrawable.setColorFilter(getResources().getColor(R.color.action_pressed), PorterDuff.Mode.MULTIPLY);
+                pressedDrawable.setColorFilter(ContextCompat.getColor(getContext(), R.color.action_pressed), PorterDuff.Mode.MULTIPLY);
                 pressedDrawable = drawableToBitmap(pressedDrawable);
 
                 Drawable disabledDrawable = icon.getCurrent();
-                disabledDrawable.setColorFilter(getResources().getColor(R.color.action_inactive), PorterDuff.Mode.MULTIPLY);
+                disabledDrawable.setColorFilter(ContextCompat.getColor(getContext(), R.color.action_inactive), PorterDuff.Mode.MULTIPLY);
                 disabledDrawable = drawableToBitmap(disabledDrawable);
 
                 StateListDrawable listDrawable = new StateListDrawable();
