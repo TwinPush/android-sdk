@@ -12,7 +12,7 @@ import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.Extra;
 import org.androidannotations.annotations.ViewById;
 
-@EActivity(R.layout.activity_offers_list)
+@EActivity(resName="activity_offers_list")
 public class StoreOffersActivity extends OfferListActivity {
 
     @Extra Offer offer;

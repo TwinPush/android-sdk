@@ -3,11 +3,11 @@ package com.yellowpineapple.wakup.communications;
 import android.content.Context;
 import android.os.Handler;
 
-import com.twincoders.twinpush.sdk.communications.asyhttp.AsyncHttpClient;
-import com.twincoders.twinpush.sdk.communications.asyhttp.PersistentCookieStore;
+import com.yellowpineapple.wakup.communications.asyhttp.AsyncHttpClient;
+import com.yellowpineapple.wakup.communications.asyhttp.AsyncHttpResponseHandler;
+import com.yellowpineapple.wakup.communications.asyhttp.PersistentCookieStore;
 import com.yellowpineapple.wakup.utils.Ln;
 
-import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -75,7 +75,7 @@ public class DefaultRequestLauncher implements RequestLauncher {
             asyncHttpClient.addHeader(header, request.getHeaders().get(header));
         }
         // Include response handler
-        com.twincoders.twinpush.sdk.communications.asyhttp.AsyncHttpResponseHandler responseHandler = new com.twincoders.twinpush.sdk.communications.asyhttp.AsyncHttpResponseHandler() {
+        AsyncHttpResponseHandler responseHandler = new AsyncHttpResponseHandler() {
             @Override
             public void onFailure(Throwable throwable, String response) {
                 boolean validResponse = false;
@@ -86,7 +86,7 @@ public class DefaultRequestLauncher implements RequestLauncher {
                 if (validResponse) {
                     this.onSuccess(response);
                 } else {
-                    com.twincoders.twinpush.sdk.logging.Ln.w(throwable, "Request failed. Response: %s", response);
+                    Ln.w(throwable, "Request failed. Response: %s", response);
                     requestEnded(request);
                     request.onRequestError(new Exception(throwable));
                 }
@@ -94,7 +94,7 @@ public class DefaultRequestLauncher implements RequestLauncher {
 
             @Override
             public void onSuccess(String response) {
-                com.twincoders.twinpush.sdk.logging.Ln.v("OUTPUT: %s", response);
+                Ln.v("OUTPUT: %s", response);
                 requestEnded(request);
                 request.onResponseProcess(response);
             }

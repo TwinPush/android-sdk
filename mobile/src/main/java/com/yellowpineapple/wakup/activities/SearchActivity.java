@@ -35,8 +35,8 @@ import org.androidannotations.annotations.ViewById;
 import java.util.ArrayList;
 import java.util.List;
 
-@OptionsMenu(R.menu.search_menu)
-@EActivity(R.layout.activity_search)
+@OptionsMenu(resName="search_menu")
+@EActivity(resName="activity_search")
 public class SearchActivity extends ParentActivity {
 
     final static private int REQUEST_DELAY = 200;

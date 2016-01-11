@@ -4,7 +4,6 @@ import android.content.Context;
 import android.util.AttributeSet;
 import android.widget.FrameLayout;
 
-import com.yellowpineapple.wakup.R;
 import com.yellowpineapple.wakup.models.Category;
 
 import org.androidannotations.annotations.Click;
@@ -14,7 +13,7 @@ import org.androidannotations.annotations.ViewById;
 import java.util.ArrayList;
 import java.util.List;
 
-@EViewGroup(R.layout.view_search_filters)
+@EViewGroup(resName="view_search_filters")
 public class SearchFiltersView extends FrameLayout {
 
     @ViewById OfferActionButton btnLeisure;

@@ -7,7 +7,6 @@ import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.yellowpineapple.wakup.R;
 import com.yellowpineapple.wakup.models.Offer;
 
 import org.androidannotations.annotations.EViewGroup;
@@ -16,7 +15,7 @@ import org.androidannotations.annotations.ViewById;
 /**
  * Created by agutierrez on 09/02/15.
  */
-@EViewGroup(R.layout.view_map_offer_info)
+@EViewGroup(resName="view_map_offer_info")
 public class OfferMapInfoView extends LinearLayout {
 
     Offer offer;

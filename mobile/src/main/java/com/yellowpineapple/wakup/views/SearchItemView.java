@@ -14,7 +14,7 @@ import org.androidannotations.annotations.ViewById;
 
 import lombok.Getter;
 
-@EViewGroup(R.layout.list_item_search)
+@EViewGroup(resName="list_item_search")
 public class SearchItemView extends FrameLayout {
 
     @Getter SearchResultItem searchItem;

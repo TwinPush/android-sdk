@@ -30,7 +30,6 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.nostra13.universalimageloader.core.assist.FailReason;
 import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListener;
-import com.twincoders.twinpush.sdk.TwinPushSDK;
 import com.yellowpineapple.wakup.R;
 import com.yellowpineapple.wakup.communications.RequestClient;
 import com.yellowpineapple.wakup.models.Offer;
@@ -193,7 +192,7 @@ public abstract class ParentActivity extends FragmentActivity {
         if (lastLocation != null) {
             listener.onLocationSuccess(lastLocation);
             // Notify location to TwinPush
-            TwinPushSDK.getInstance(this).setLocation(lastLocation);
+            //TwinPushSDK.getInstance(this).setLocation(lastLocation);
         } else {
             listener.onLocationError(new LocationException("Location is empty"));
         }
@@ -422,18 +421,5 @@ public abstract class ParentActivity extends FragmentActivity {
 
     public void setLoading(boolean loading) {
         setProgressBarIndeterminateVisibility(loading);
-    }
-
-    /* TwinPush Callbacks */
-    @Override
-    protected void onStart() {
-        TwinPushSDK.getInstance(this).activityStart(this);
-        super.onStart();
-    };
-
-    @Override
-    protected void onStop() {
-        TwinPushSDK.getInstance(this).activityStop(this);
-        super.onStop();
     }
 }

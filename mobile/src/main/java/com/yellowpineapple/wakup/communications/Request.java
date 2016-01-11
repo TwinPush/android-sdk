@@ -1,6 +1,6 @@
 package com.yellowpineapple.wakup.communications;
 
-import com.twincoders.twinpush.sdk.communications.asyhttp.AsyncHttpClient;
+import com.yellowpineapple.wakup.communications.asyhttp.AsyncHttpClient;
 
 import java.util.List;
 import java.util.Map;

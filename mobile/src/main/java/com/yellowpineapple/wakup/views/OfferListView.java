@@ -19,7 +19,7 @@ import org.androidannotations.annotations.ViewById;
 import lombok.Getter;
 import me.grantland.widget.AutofitTextView;
 
-@EViewGroup(R.layout.list_item_offer)
+@EViewGroup(resName="list_item_offer")
 public class OfferListView extends FrameLayout {
 
     @Getter Offer offer;

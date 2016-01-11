@@ -4,7 +4,6 @@ import android.location.Location;
 import android.view.View;
 
 import com.etsy.android.grid.StaggeredGridView;
-import com.yellowpineapple.wakup.R;
 import com.yellowpineapple.wakup.models.Category;
 import com.yellowpineapple.wakup.models.Offer;
 import com.yellowpineapple.wakup.models.SearchResultItem;
@@ -17,7 +16,7 @@ import org.androidannotations.annotations.ViewById;
 
 import java.util.List;
 
-@EActivity(R.layout.activity_search_results)
+@EActivity(resName="activity_search_results")
 public class SearchResultActivity extends OfferListActivity {
 
     @Extra SearchResultItem searchItem;

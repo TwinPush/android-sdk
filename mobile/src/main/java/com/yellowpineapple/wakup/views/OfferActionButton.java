@@ -26,7 +26,7 @@ import lombok.Getter;
 /**
  * Created by agutierrez on 05/02/15.
  */
-@EViewGroup(R.layout.view_action_button)
+@EViewGroup(resName="view_action_button")
 public class OfferActionButton extends FrameLayout {
 
     static final int[] SELECTED_STATE_SET = new int[] { android.R.attr.state_selected, android.R.attr.state_enabled };

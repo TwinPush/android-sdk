@@ -19,7 +19,7 @@ import lombok.Getter;
 /**
  * Created by agutierrez on 05/02/15.
  */
-@EViewGroup(R.layout.view_navbar_button)
+@EViewGroup(resName="view_navbar_button")
 public class NavBarButton extends FrameLayout {
 
     @Getter CharSequence text;

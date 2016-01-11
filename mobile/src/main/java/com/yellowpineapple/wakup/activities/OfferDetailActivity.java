@@ -3,7 +3,6 @@ package com.yellowpineapple.wakup.activities;
 import android.location.Location;
 
 import com.etsy.android.grid.StaggeredGridView;
-import com.yellowpineapple.wakup.R;
 import com.yellowpineapple.wakup.models.Offer;
 import com.yellowpineapple.wakup.utils.PersistenceHandler;
 import com.yellowpineapple.wakup.views.OfferDetailView;
@@ -16,7 +15,7 @@ import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.Extra;
 import org.androidannotations.annotations.ViewById;
 
-@EActivity(R.layout.activity_offers_list)
+@EActivity(resName="activity_offers_list")
 public class OfferDetailActivity extends OfferListActivity implements OfferDetailView.Listener {
 
     @Extra Offer offer;

@@ -40,7 +40,7 @@ import java.util.TimerTask;
 /**
  * Created by agutierrez on 11/02/15.
  */
-@EActivity(R.layout.activity_offers_map)
+@EActivity(resName="activity_offers_map")
 public class OfferMapActivity
         extends ParentActivity
         implements OnMapReadyCallback, GoogleMap.OnCameraChangeListener, GoogleMap.InfoWindowAdapter, GoogleMap.OnInfoWindowClickListener {
@@ -61,7 +61,7 @@ public class OfferMapActivity
     List<String> preloadedCompanies = new ArrayList<>();
 
     Location lastRequestLocation = null;
-    private static int NEW_REQUEST_DISTANCE_METERS = 500;
+    private final static int NEW_REQUEST_DISTANCE_METERS = 500;
 
     GoogleMap googleMap;
     Timer timer = new Timer();

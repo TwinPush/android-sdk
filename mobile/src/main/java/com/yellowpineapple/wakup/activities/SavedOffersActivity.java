@@ -4,7 +4,6 @@ import android.location.Location;
 import android.view.View;
 
 import com.etsy.android.grid.StaggeredGridView;
-import com.yellowpineapple.wakup.R;
 import com.yellowpineapple.wakup.models.Offer;
 import com.yellowpineapple.wakup.views.PullToRefreshLayout;
 
@@ -16,7 +15,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-@EActivity(R.layout.activity_my_offers)
+@EActivity(resName="activity_my_offers")
 public class SavedOffersActivity extends OfferListActivity {
 
     Date lastUpdate;

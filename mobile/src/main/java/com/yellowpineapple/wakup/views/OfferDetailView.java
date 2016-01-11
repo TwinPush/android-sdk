@@ -23,7 +23,7 @@ import lombok.Setter;
 /**
  * Created by agutierrez on 09/02/15.
  */
-@EViewGroup(R.layout.view_offer_detail)
+@EViewGroup(resName="view_offer_detail")
 public class OfferDetailView extends LinearLayout {
 
     public interface Listener {
@@ -112,12 +112,12 @@ public class OfferDetailView extends LinearLayout {
         btnSave.setSelected(saved);
     }
 
-    @Click(R.id.viewDescription)
+    @Click(resName="viewDescription")
     void onDescriptionClicked() {
         if (listener != null) listener.onDescriptionClicked(offer);
     }
 
-    @Click(R.id.storeView)
+    @Click(resName="storeView")
     void onAddressClicked() {
         if (listener != null) listener.onViewOnMapClicked(offer);
     }

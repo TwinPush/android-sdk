@@ -4,14 +4,12 @@ import android.content.Context;
 import android.util.AttributeSet;
 import android.widget.FrameLayout;
 
-import com.yellowpineapple.wakup.R;
-
 import org.androidannotations.annotations.EViewGroup;
 
 /**
  * Created by agutierrez on 20/02/15.
  */
-@EViewGroup(R.layout.view_related_offers_header)
+@EViewGroup(resName="view_related_offers_header")
 public class RelatedOffersHeader extends FrameLayout {
 
     public RelatedOffersHeader(Context context) {
