@@ -39,7 +39,7 @@ public class StoreOffersActivity extends OfferListActivity {
     }
 
     protected void showOfferDetail(Offer offer, Location currentLocation) {
-        OfferDetailActivity_.intent(this).offer(offer).location(currentLocation).fromStoreOffers(true).start();
+        OfferDetailActivity.intent(this).offer(offer).location(currentLocation).fromStoreOffers(true).start();
         slideInTransition();
     }
 }

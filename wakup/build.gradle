@@ -27,5 +27,5 @@ dependencies {
     compile 'com.twinpush.android:sdk:2.0.2'
     compile 'uk.co.chrisjenx:calligraphy:2.0.1'
 
-    compile project(':mobile')
+    //compile project(':mobile')
 }

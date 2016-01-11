@@ -17,4 +17,11 @@ public class IntentBuilder<T extends Activity> {
         context.startActivity(intent);
     }
 
+    public Intent getIntent() {
+        return intent;
+    }
+
+    public Context getContext() {
+        return context;
+    }
 }

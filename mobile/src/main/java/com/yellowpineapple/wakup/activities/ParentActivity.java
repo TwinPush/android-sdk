@@ -36,16 +36,11 @@ import com.yellowpineapple.wakup.models.Offer;
 import com.yellowpineapple.wakup.utils.PersistenceHandler;
 import com.yellowpineapple.wakup.utils.ShareManager;
 
-import org.androidannotations.annotations.EActivity;
-import org.androidannotations.annotations.OptionsItem;
-
 import java.io.IOException;
 
-import lombok.Getter;
 import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
-@EActivity
 public abstract class ParentActivity extends FragmentActivity {
 
     protected class LocationException extends Exception {
@@ -60,8 +55,8 @@ public abstract class ParentActivity extends FragmentActivity {
         void onLocationError(Exception exception);
     }
 
-    @Getter RequestClient requestClient = null;
-    @Getter GoogleApiClient googleApiClient = null;
+    RequestClient requestClient = null;
+    GoogleApiClient googleApiClient = null;
 
     // Request code to use when launching the resolution activity
     private static final int REQUEST_RESOLVE_ERROR = 1001;
@@ -70,7 +65,7 @@ public abstract class ParentActivity extends FragmentActivity {
     // Bool to track whether the app is already resolving an error
     private boolean mResolvingError = false;
 
-    @Getter private PersistenceHandler persistence;
+    private PersistenceHandler persistence;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -107,6 +102,18 @@ public abstract class ParentActivity extends FragmentActivity {
     @Override
     protected void attachBaseContext(Context newBase) {
         super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
+    }
+
+    public PersistenceHandler getPersistence() {
+        return persistence;
+    }
+
+    public RequestClient getRequestClient() {
+        return requestClient;
+    }
+
+    public GoogleApiClient getGoogleApiClient() {
+        return googleApiClient;
     }
 
     /**
@@ -348,7 +355,7 @@ public abstract class ParentActivity extends FragmentActivity {
     // Actions
 
     protected void showOfferDetail(Offer offer, Location currentLocation) {
-        OfferDetailActivity_.intent(this).offer(offer).location(currentLocation).start();
+        OfferDetailActivity.intent(this).offer(offer).location(currentLocation).start();
         slideInTransition();
     }
 

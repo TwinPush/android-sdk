@@ -1,11 +1,14 @@
 package com.yellowpineapple.wakup.activities;
 
+import android.content.Context;
+import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
 
 import com.etsy.android.grid.StaggeredGridView;
 import com.yellowpineapple.wakup.R;
 import com.yellowpineapple.wakup.models.Offer;
+import com.yellowpineapple.wakup.utils.IntentBuilder;
 import com.yellowpineapple.wakup.utils.PersistenceHandler;
 import com.yellowpineapple.wakup.views.OfferDetailView;
 import com.yellowpineapple.wakup.views.OfferDetailView_;
@@ -78,7 +81,7 @@ public class OfferDetailActivity extends OfferListActivity implements OfferDetai
 
     @Override
     public void onDescriptionClicked(Offer offer) {
-        ModalTextActivity_.intent(this).text(offer.getDescription()).start();
+        ModalTextActivity.intent(this, offer.getDescription()).start();
     }
 
     @Override
@@ -114,5 +117,34 @@ public class OfferDetailActivity extends OfferListActivity implements OfferDetai
             StoreOffersActivity_.intent(this).offer(offer).location(location).start();
             slideInTransition();
         }
+    }
+
+    // Builder
+
+    public static Builder intent(Context context) {
+        return new Builder(context);
+    }
+
+    public static class Builder extends IntentBuilder<OfferDetailActivity> {
+
+        public Builder(Context context) {
+            super(OfferDetailActivity.class, context);
+        }
+
+        public Builder offer(Offer offer) {
+            getIntent().putExtra(OFFER_EXTRA, offer);
+            return this;
+        }
+
+        public Builder location(Location location) {
+            getIntent().putExtra(LOCATION_EXTRA, location);
+            return this;
+        }
+
+        public Builder fromStoreOffers(boolean fromStoreOffers) {
+            getIntent().putExtra(FROM_STORE_OFFERS_EXTRA, fromStoreOffers);
+            return this;
+        }
+
     }
 }

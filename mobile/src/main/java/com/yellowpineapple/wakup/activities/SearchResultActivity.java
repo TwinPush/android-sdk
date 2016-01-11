@@ -60,7 +60,7 @@ public class SearchResultActivity extends OfferListActivity {
         // Check that there is no category filter selected
         boolean fromStoreOffers = searchItem.getType() == SearchResultItem.Type.COMPANY &&
                 (categories == null || categories.isEmpty());
-        OfferDetailActivity_.intent(this).offer(offer).location(currentLocation).fromStoreOffers(fromStoreOffers).start();
+        OfferDetailActivity.intent(this).offer(offer).location(currentLocation).fromStoreOffers(fromStoreOffers).start();
         slideInTransition();
     }
 }

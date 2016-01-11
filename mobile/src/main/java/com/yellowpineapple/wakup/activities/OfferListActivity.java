@@ -3,6 +3,8 @@ package com.yellowpineapple.wakup.activities;
 import android.app.ActionBar;
 import android.content.res.TypedArray;
 import android.location.Location;
+import android.os.Handler;
+import android.os.Looper;
 import android.view.ContextMenu;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -212,10 +214,9 @@ public abstract class OfferListActivity extends ParentActivity implements AbsLis
         setEmptyViewVisible(offers.size() == 0);
     }
 
-
-    @Background
     void showWearableOffers(List<Offer> offers) {
-        NotificationFactory.getInstance(OfferListActivity.this).showWearableOffers(offers, currentLocation);
+        // TODO Should be done in background
+        //NotificationFactory.getInstance(OfferListActivity.this).showWearableOffers(offers, currentLocation);
     }
 
     /* Empty view */
@@ -264,9 +265,13 @@ public abstract class OfferListActivity extends ParentActivity implements AbsLis
         }
     }
 
-    @UiThread(delay = 50)
-    void delayNavigationToggle(boolean visible, boolean animated, final AnimationListener listener) {
-        toggleNavigationBarVisibility(visible, animated, listener);
+    void delayNavigationToggle(final boolean visible, final boolean animated, final AnimationListener listener) {
+        new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                toggleNavigationBarVisibility(visible, animated, listener);
+            }
+        }, 50);
     }
 
     private void toggleNavigationBarVisibility(final boolean visible, boolean animated, final AnimationListener listener) {
