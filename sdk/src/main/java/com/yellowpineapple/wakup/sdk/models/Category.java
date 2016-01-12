@@ -1,0 +1,49 @@
+package com.yellowpineapple.wakup.sdk.models;
+
+import com.yellowpineapple.wakup.sdk.R;
+
+/**
+ * Created by agutierrez on 10/02/15.
+ */
+public enum Category {
+
+    UNKNOWN(null, R.string.category_unknown, R.drawable.ic_pin_unknown),
+    LEISURE("leisure", R.string.category_leisure, R.drawable.ic_pin_leisure),
+    RESTAURANTS("restaurants", R.string.category_restaurants, R.drawable.ic_pin_restaurant),
+    SERVICES("services", R.string.category_services, R.drawable.ic_pin_services),
+    SHOPPING("shopping", R.string.category_shopping, R.drawable.ic_pin_shopping);
+
+    String identifier;
+    int nameResId;
+    int iconResId;
+
+    private Category(String identifier, int nameResId, int iconResId) {
+        this.identifier = identifier;
+        this.nameResId = nameResId;
+        this.iconResId = iconResId;
+    }
+
+    public static Category fromIdentifier(String identifier) {
+        Category value = UNKNOWN;
+        for (Category category : Category.values()) {
+            if (category != UNKNOWN) {
+                if (category.getIdentifier().equals(identifier)) {
+                    value = category;
+                }
+            }
+        }
+        return value;
+    }
+
+    public String getIdentifier() {
+        return identifier;
+    }
+
+    public int getIconResId() {
+        return iconResId;
+    }
+
+    public int getNameResId() {
+        return nameResId;
+    }
+}

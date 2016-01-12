@@ -5,7 +5,7 @@ android {
     buildToolsVersion "23.0.1"
 
     defaultConfig {
-        applicationId "com.twincoders.wakup"
+        applicationId "com.yellowpineapple.wakup"
         minSdkVersion 16
         targetSdkVersion 23
         versionCode 1
@@ -27,5 +27,5 @@ dependencies {
     compile 'com.twinpush.android:sdk:2.0.2'
     compile 'uk.co.chrisjenx:calligraphy:2.0.1'
 
-    //compile project(':mobile')
+    compile project(':sdk')
 }

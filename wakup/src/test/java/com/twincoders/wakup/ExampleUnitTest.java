@@ -1,4 +1,4 @@
-package com.twincoders.wakup;
+package com.yellowpineapple.wakup;
 
 import org.junit.Test;
 

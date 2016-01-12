@@ -1,1 +1,1 @@
-include ':mobile', ':wakup'
+include ':sdk', ':wakup'

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="horizontal"
+    android:padding="5dp"
+    android:gravity="center"
+    android:background="@drawable/clickable_translucent_view">
+
+    <com.yellowpineapple.wakup.sdk.views.ColorImageView
+        android:id="@+id/imgIcon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        app:imageColor="@color/actionbar_text"
+        android:src="@drawable/ic_location"/>
+
+    <TextView
+        android:id="@+id/txtAction"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:textColor="@color/actionbar_text"
+        android:textAppearance="@style/WakupTheme.Text.Regular"
+        android:layout_marginLeft="8dp"
+        android:enabled="false"
+        android:text="Offer Action"/>
+
+</LinearLayout>

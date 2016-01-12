@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="5dp">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/related_offers"
+        style="@style/WakupTheme.Text.Bold"
+        android:textSize="@dimen/title_text"
+        android:gravity="center"
+        android:layout_marginTop="5dp"/>
+
+</FrameLayout>
