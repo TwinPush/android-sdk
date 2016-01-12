@@ -8,14 +8,11 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Toast;
 
 import com.etsy.android.grid.StaggeredGridView;
 import com.yellowpineapple.wakup.sdk.R;
 import com.yellowpineapple.wakup.sdk.utils.IntentBuilder;
 import com.yellowpineapple.wakup.sdk.views.PullToRefreshLayout;
-
-import java.util.Date;
 
 public class OffersActivity extends OfferListActivity {
 
@@ -23,8 +20,6 @@ public class OffersActivity extends OfferListActivity {
     View navigationView;
     PullToRefreshLayout ptrLayout;
     View emptyView;
-
-    Date backPressedTime = null;
 
     private static final String BIG_OFFER_URL = "http://app.wakup.net/offers/highlighted";
 
@@ -83,14 +78,7 @@ public class OffersActivity extends OfferListActivity {
 
     @Override
     public void onBackPressed() {
-        long diff = backPressedTime != null ? new Date().getTime() - backPressedTime.getTime(): Long.MAX_VALUE;
-        float secondsDiff = diff / 1000;
-        if (secondsDiff > 0.5 && secondsDiff < 3) {
-            finish();
-        } else {
-            backPressedTime = new Date();
-            Toast.makeText(this, R.string.back_button_once, Toast.LENGTH_SHORT).show();
-        }
+        finish();
     }
 
     void bigOfferPressed() {
