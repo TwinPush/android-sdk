@@ -52,7 +52,7 @@ public class SearchFiltersView extends FrameLayout {
         };
 
         OfferActionButton[] buttons = new OfferActionButton[] {
-                btnLeisure, btnLeisure, btnServices, btnShopping
+                btnRestaurants, btnLeisure, btnServices, btnShopping
         };
         for (OfferActionButton button : buttons) {
             button.setOnClickListener(onClickListener);
