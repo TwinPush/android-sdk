@@ -108,7 +108,7 @@
         android:orientation="horizontal"
         android:gravity="center"
         android:padding="5dp"
-        android:background="@drawable/clickable_green">
+        android:background="@drawable/store_offers_bg">
 
         <TextView
             android:id="@+id/txtStoreOffers"
@@ -116,8 +116,8 @@
             android:layout_height="30dp"
             android:padding="0dp"
             android:gravity="center"
-            android:background="@drawable/circle_white"
-            android:textColor="@color/clickable_green"
+            android:background="@drawable/store_offers_circle"
+            android:textColor="@color/store_offers_bg"
             android:textSize="@dimen/title_text"
             style="@style/WakupTheme.Text.Bold"
             android:text="22"/>
@@ -128,7 +128,7 @@
             android:layout_marginLeft="5dp"
             android:text="@string/store_offers"
             style="@style/WakupTheme.Text.Bold"
-            android:textColor="@color/white"/>
+            android:textColor="@color/store_offers"/>
 
     </LinearLayout>
 

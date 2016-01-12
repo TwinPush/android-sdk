@@ -10,17 +10,38 @@
     <color name="purple">#7B4C7D</color>
     <color name="light_purple">#A47BA6</color>
 
+    <!-- Activity -->
     <color name="background">#D5D5D5</color>
+
+    <!-- Action & Navigation Bar -->
     <color name="actionbar_bg">#3C1E3D</color>
+    <color name="navbar_bg">#3C1E3D</color>
     <color name="actionbar_text">@color/light_purple</color>
+
+    <!-- Text color -->
     <color name="main_text">#505050</color>
     <color name="bold_text">#393939</color>
     <color name="light_text">#8F8F8F</color>
 
-    <color name="offer_short_desc">@color/green</color>
-    <color name="search_header_bg">#F6F6F6</color>
+    <!-- Offer Item -->
+    <color name="offer_list_item_bg">@color/white</color>
+    <color name="offer_short_desc">@color/white</color>
+    <color name="offer_short_desc_bg">@color/green</color>
 
-    <!-- Action buttons -->
+    <!-- Offer Detail -->
+    <color name="store_offers">@color/white</color>
+    <color name="store_offers_bg">@color/green</color>
+    <color name="store_offers_bg_pressed">@color/dark_green</color>
+
+    <!-- No results view -->
+    <color name="no_results_text">#8F8F8F</color>
+
+    <!-- Search view -->
+    <color name="search_header_bg">#F6F6F6</color>
+    <color name="search_list_bg">@color/white</color>
+    <color name="search_icon">@color/light_text</color>
+
+    <!-- Action & Filter buttons -->
     <color name="action_active">@color/purple</color>
     <color name="action_pressed">@color/white</color>
     <color name="action_inactive">@color/light_text</color>
