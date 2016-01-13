@@ -1,32 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#3F51B5</color>
-    <color name="colorPrimaryDark">#303F9F</color>
-    <color name="colorAccent">#FF4081</color>
-
-    <color name="white">#FFF</color>
-    <color name="list_item_pressed">#1A000000</color>
-    <color name="translucent_white">#33FFFFFF</color>
-
-    <color name="light_gray">#DDD</color>
-    <color name="green">#809718</color>
-    <color name="dark_green">#617213</color>
-    <color name="purple">#7B4C7D</color>
-    <color name="light_purple">#A47BA6</color>
-
-    <color name="background">#D5D5D5</color>
-    <color name="actionbar_bg">#F00</color>
-    <color name="actionbar_text">#FFF</color>
-    <color name="main_text">#505050</color>
-    <color name="bold_text">#393939</color>
-    <color name="light_text">#8F8F8F</color>
-
-    <color name="offer_short_desc">#0AF</color>
-    <color name="search_header_bg">#F6F6F6</color>
-
-    <!-- Action buttons -->
-    <color name="action_active">@color/purple</color>
-    <color name="action_pressed">@color/white</color>
-    <color name="action_inactive">@color/light_text</color>
-
+    <!-- Customize pressed navigation buttons -->
+    <color name="navbar_pressed">@color/light_pressed_layer</color>
+    <!-- Customize action button color -->
+    <color name="action_active">@color/primary_pressed</color>
 </resources>

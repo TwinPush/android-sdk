@@ -121,7 +121,7 @@ public abstract class OfferListActivity extends ParentActivity implements AbsLis
                 reloadOffers();
             }
         });
-        pullToRefreshLayout.setColorSchemeResources(R.color.green, R.color.purple);
+        pullToRefreshLayout.setColorSchemeResources(R.color.secondary, R.color.primary);
         pullToRefreshLayout.setSwipeableChildren(gridView, emptyView);
     }
 

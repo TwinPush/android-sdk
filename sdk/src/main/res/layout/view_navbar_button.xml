@@ -7,7 +7,7 @@
     android:orientation="horizontal"
     android:padding="5dp"
     android:gravity="center"
-    android:background="@drawable/clickable_translucent_view">
+    android:background="@drawable/navbar_button">
 
     <com.yellowpineapple.wakup.sdk.views.ColorImageView
         android:id="@+id/imgIcon"
