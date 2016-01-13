@@ -19,8 +19,6 @@ public abstract class BaseRequest extends RESTJSONRequest {
 
     public BaseRequest() {
         super();
-        // TODO Export API-Token to a configurable parameter
-        addHeader("API-Token", "075f9656-6909-4e4e-a286-3ddc562a2513");
     }
 
     @Override

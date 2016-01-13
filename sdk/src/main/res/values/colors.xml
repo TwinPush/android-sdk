@@ -15,6 +15,9 @@
     <!-- Activity -->
     <color name="background">#D5D5D5</color>
 
+    <!-- Splash -->
+    <color name="splash_background">@color/primary_pressed</color>
+
     <!-- Action & Navigation Bar -->
     <color name="actionbar_bg">@color/primary</color>
     <color name="actionbar_text">@color/primary_reverse</color>

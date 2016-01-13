@@ -6,6 +6,7 @@ import android.content.SharedPreferences;
 import com.google.gson.Gson;
 import com.google.gson.JsonParser;
 import com.google.gson.reflect.TypeToken;
+import com.yellowpineapple.wakup.sdk.Wakup;
 import com.yellowpineapple.wakup.sdk.models.Offer;
 import com.yellowpineapple.wakup.sdk.models.SearchResultItem;
 
@@ -25,11 +26,13 @@ public class PersistenceHandler {
     private static final String PREFS_NAME = "101OffersPref";
     private static final String KEY_USER_OFFERS = "KEY_USER_OFFERS";
     private static final String KEY_RECENT_SEARCHES = "KEY_RECENT_SEARCHES";
+    private static final String KEY_SDK_OPTIONS = "KEY_SDK_OPTIONS";
     private static final int MAX_RECENT_SEARCHES = 10;
 
     private SharedPreferences preferences = null;
     private List<String> userOffers = null;
     private List<SearchResultItem> recentSearches = null;
+    private Wakup.Options options = null;
 
     Date savedOffersUpdatedAt = new Date();
 
@@ -138,5 +141,33 @@ public class PersistenceHandler {
             json = new Gson().toJson(new ArrayList<SearchResultItem>());
         }
         getPreferences().edit().putString(KEY_RECENT_SEARCHES, json).commit();
+    }
+
+    // Setup options
+    public void setOptions(Wakup.Options options) {
+        this.options = options;
+        if (options != null) {
+            String json = new Gson().toJson(options);
+            getPreferences().edit().putString(KEY_SDK_OPTIONS, json).commit();
+        } else {
+            getPreferences().edit().remove(KEY_SDK_OPTIONS).commit();
+        }
+    }
+
+    public Wakup.Options getOptions() {
+        if (options == null) {
+            try {
+                String json = getPreferences().getString(KEY_SDK_OPTIONS, null);
+                if (json != null) {
+                    options = new Gson().fromJson(json, Wakup.Options.class);
+                } else {
+                    options = new Wakup.Options();
+                }
+            } catch (Exception ex) {
+                Ln.e(ex, "Error while trying to load SDK options");
+                options = new Wakup.Options();
+            }
+        }
+        return options;
     }
 }

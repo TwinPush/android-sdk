@@ -32,6 +32,7 @@ import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.nostra13.universalimageloader.core.assist.FailReason;
 import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListener;
 import com.yellowpineapple.wakup.sdk.R;
+import com.yellowpineapple.wakup.sdk.Wakup;
 import com.yellowpineapple.wakup.sdk.communications.RequestClient;
 import com.yellowpineapple.wakup.sdk.models.Offer;
 import com.yellowpineapple.wakup.sdk.utils.PersistenceHandler;
@@ -66,6 +67,7 @@ public abstract class ParentActivity extends FragmentActivity {
     private boolean mResolvingError = false;
 
     private PersistenceHandler persistence;
+    private Wakup wakup;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,6 +75,7 @@ public abstract class ParentActivity extends FragmentActivity {
         buildGoogleApiClient();
         requestClient = RequestClient.getSharedInstance(this, RequestClient.Environment.PRODUCTION);
         persistence = PersistenceHandler.getSharedInstance(this);
+        wakup = Wakup.instance(this);
         super.onCreate(savedInstanceState);
         // Create global configuration and initialize ImageLoader with this config
         ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(this).build();
@@ -80,6 +83,8 @@ public abstract class ParentActivity extends FragmentActivity {
 
         ActionBar actionBar = getActionBar();
         if (actionBar != null) {
+            actionBar.setLogo(wakup.getOptions().actionBarLogo);
+            actionBar.setDisplayUseLogoEnabled(true);
             actionBar.setHomeButtonEnabled(true);
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
@@ -119,10 +124,6 @@ public abstract class ParentActivity extends FragmentActivity {
 
     public RequestClient getRequestClient() {
         return requestClient;
-    }
-
-    public GoogleApiClient getGoogleApiClient() {
-        return googleApiClient;
     }
 
     /**

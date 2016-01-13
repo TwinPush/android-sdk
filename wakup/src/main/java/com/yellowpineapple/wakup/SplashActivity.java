@@ -1,22 +1,21 @@
 package com.yellowpineapple.wakup;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 
 import com.twincoders.twinpush.sdk.TwinPushSDK;
 import com.twincoders.twinpush.sdk.activities.RichNotificationActivity;
 import com.twincoders.twinpush.sdk.entities.TwinPushOptions;
 import com.twincoders.twinpush.sdk.notifications.PushNotification;
 import com.twincoders.twinpush.sdk.services.NotificationIntentService;
-import com.yellowpineapple.wakup.sdk.activities.OffersActivity;
+import com.yellowpineapple.wakup.sdk.Wakup;
 
-public class MainActivity extends AppCompatActivity {
+public class SplashActivity extends Activity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
 
         /* TwinPush setup */
         TwinPushSDK twinPush = TwinPushSDK.getInstance(this);
@@ -26,14 +25,18 @@ public class MainActivity extends AppCompatActivity {
         options.twinPushApiKey =    "965aac21649e505ab3d1bc9e9402b8ff"; // - API Key
         options.gcmProjectNumber =  "614578197410";                     // - GCM Project Number
         options.subdomain =         TwinPushOptions.DEFAULT_SUBDOMAIN;  // - Application subdomain
-        //options.notificationIcon =  R.drawable.ic_action_logo;          // - Notification icon
+        options.notificationIcon =  R.drawable.ic_action_logo;          // - Notification icon
         twinPush.setup(options);                                        // Call setup
         twinPush.register();
 
         // Check push notification
         checkPushNotification(getIntent());
 
-        OffersActivity.intent(this).start();
+        // Wakup
+        Wakup.Options wakupOptions = new Wakup.Options();
+        wakupOptions.apiKey = "075f9656-6909-4e4e-a286-3ddc562a2513";
+        wakupOptions.actionBarLogo = R.drawable.ic_action_logo;
+        Wakup.instance(this).launch(wakupOptions);
     }
 
     // Push notifications
@@ -63,7 +66,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onStart() {
         TwinPushSDK.getInstance(this).activityStart(this);
         super.onStart();
-    };
+    }
 
     @Override
     protected void onStop() {

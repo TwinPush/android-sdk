@@ -3,6 +3,7 @@ package com.yellowpineapple.wakup.sdk.communications;
 import android.content.Context;
 import android.location.Location;
 
+import com.yellowpineapple.wakup.sdk.Wakup;
 import com.yellowpineapple.wakup.sdk.communications.requests.BaseRequest;
 import com.yellowpineapple.wakup.sdk.communications.requests.OfferListRequestListener;
 import com.yellowpineapple.wakup.sdk.communications.requests.offers.CompanyOffersRequest;
@@ -21,6 +22,8 @@ import java.util.List;
 public class RequestClient {
 
 	private static RequestClient sharedInstance = null;
+
+    private final static String API_KEY_HEADER = "API-Token";
 
     public enum Environment {
         PRODUCTION("http://app.wakup.net/", false);
@@ -97,6 +100,7 @@ public class RequestClient {
 
 	/* Private methods */
 	private Request launch(BaseRequest request) {
+        request.addHeader(API_KEY_HEADER, Wakup.instance(context).getOptions().apiKey);
         request.setRequestLauncher(requestLauncher);
         request.setEnvironment(environment);
         request.launch();
