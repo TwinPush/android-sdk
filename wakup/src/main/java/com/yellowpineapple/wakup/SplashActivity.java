@@ -29,6 +29,8 @@ public class SplashActivity extends Activity {
         twinPush.setup(options);                                        // Call setup
         twinPush.register();
 
+        twinPush.updateLocation();
+
         // Check push notification
         checkPushNotification(getIntent());
 
