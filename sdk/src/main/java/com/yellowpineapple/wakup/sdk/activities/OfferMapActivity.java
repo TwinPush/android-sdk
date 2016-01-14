@@ -73,7 +73,7 @@ public class OfferMapActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_offers_map);
+        setContentView(R.layout.wk_activity_offers_map);
         injectExtras();
         injectViews();
     }
@@ -165,7 +165,7 @@ public class OfferMapActivity
                     builder.include(new LatLng(location.getLatitude(), location.getLongitude()));
                     LatLngBounds bounds = builder.build();
                     // offset from edges of the map in pixels
-                    int padding = Math.round(getResources().getDimension(singleOffer ? R.dimen.map_padding : R.dimen.map_padding_multiple));
+                    int padding = Math.round(getResources().getDimension(singleOffer ? R.dimen.wk_map_padding : R.dimen.wk_map_padding_multiple));
                     CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(bounds, padding);
                     googleMap.animateCamera(cu, new GoogleMap.CancelableCallback() {
                         @Override

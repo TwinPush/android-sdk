@@ -26,7 +26,7 @@ public class OffersActivity extends OfferListActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_offers);
+        setContentView(R.layout.wk_activity_offers);
         ActionBar actionBar = getActionBar();
         if (actionBar != null) {
             actionBar.setHomeButtonEnabled(false);
@@ -82,7 +82,7 @@ public class OffersActivity extends OfferListActivity {
     }
 
     void bigOfferPressed() {
-        WebViewActivity.intent(this).url(BIG_OFFER_URL).titleId(R.string.big_offer).start();
+        WebViewActivity.intent(this).url(BIG_OFFER_URL).titleId(R.string.wk_big_offer).start();
         slideInTransition();
     }
 
@@ -109,7 +109,7 @@ public class OffersActivity extends OfferListActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater menuInflater = getMenuInflater();
-        menuInflater.inflate(R.menu.main_menu, menu);
+        menuInflater.inflate(R.menu.wk_main_menu, menu);
         return super.onCreateOptionsMenu(menu);
     }
 

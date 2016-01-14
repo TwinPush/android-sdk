@@ -43,7 +43,7 @@ public class OfferMapInfoView extends LinearLayout {
     }
 
     private void injectViews() {
-        inflate(getContext(), R.layout.view_map_offer_info, this);
+        inflate(getContext(), R.layout.wk_view_map_offer_info, this);
         txtDistance = ((TextView) findViewById(R.id.txtDistance));
         txtCompany = ((TextView) findViewById(R.id.txtCompany));
         txtAddress = ((TextView) findViewById(R.id.txtAddress));

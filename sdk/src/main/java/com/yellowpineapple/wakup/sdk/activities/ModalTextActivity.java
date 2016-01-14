@@ -23,7 +23,7 @@ public class ModalTextActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_modal_text);
+        setContentView(R.layout.wk_activity_modal_text);
 
         injectExtras();
         injectViews();

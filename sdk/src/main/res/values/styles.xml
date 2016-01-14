@@ -1,11 +1,11 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="ResourceName">
 
     <!-- Base application theme. -->
     <style name="WakupTheme" parent="@android:style/Theme.Holo.Light.DarkActionBar">
         <item name="android:actionBarStyle">@style/WakupTheme.ActionBar</item>
-        <item name="android:actionMenuTextColor">@color/actionbar_text</item>
-        <item name="android:windowBackground">@color/background</item>
-        <item name="android:textColor">@color/main_text</item>
+        <item name="android:actionMenuTextColor">@color/wk_actionbar_text</item>
+        <item name="android:windowBackground">@color/wk_background</item>
+        <item name="android:textColor">@color/wk_main_text</item>
         <item name="android:textAppearance">@style/WakupTheme.Text</item>
     </style>
 
@@ -40,28 +40,28 @@
 
     <!-- ActionBar styles -->
     <style name="WakupTheme.ActionBar" parent="@android:style/Widget.Holo.Light.ActionBar.Solid.Inverse">
-        <item name="android:background">@color/actionbar_bg</item>
+        <item name="android:background">@color/wk_actionbar_bg</item>
         <item name="android:titleTextStyle">@style/WakupTheme.ActionBar.Title</item>
-        <item name="android:icon">@drawable/ic_action_logo</item>
+        <!-- <item name="android:icon">@drawable/wk_ic_action_logo</item> -->
         <item name="android:displayOptions">showTitle|showHome</item>
     </style>
 
     <!-- ActionBar title text -->
     <style name="WakupTheme.ActionBar.Title"
         parent="@android:style/TextAppearance.Holo.Widget.ActionBar.Title">
-        <item name="android:textColor">@color/actionbar_text</item>
+        <item name="android:textColor">@color/wk_actionbar_text</item>
     </style>
 
     <style name="WakupTheme.Text" parent="@android:style/TextAppearance.Medium">
-        <item name="android:textSize">@dimen/medium_text</item>
-        <item name="android:textColor">@color/main_text</item>
+        <item name="android:textSize">@dimen/wk_medium_text</item>
+        <item name="android:textColor">@color/wk_main_text</item>
         <item name="fontPath">fonts/Aller_Lt.ttf</item>
     </style>
 
     <style name="WakupTheme.Text.Title">
-        <item name="android:textSize">@dimen/title_text</item>
+        <item name="android:textSize">@dimen/wk_title_text</item>
         <item name="fontPath">fonts/Aller_Bd.ttf</item>
-        <item name="android:color">@color/bold_text</item>
+        <item name="android:color">@color/wk_bold_text</item>
     </style>
 
     <style name="WakupTheme.Text.Italic">
@@ -78,9 +78,9 @@
 
     <style name="WakupTheme.Text.OfferShortDesc">
         <item name="android:padding">8dp</item>
-        <item name="android:textColor">@color/offer_short_desc</item>
-        <item name="android:background">@drawable/offer_short_desc_bg</item>
-        <item name="android:textSize">@dimen/title_text</item>
+        <item name="android:textColor">@color/wk_offer_short_desc</item>
+        <item name="android:background">@drawable/wk_offer_short_desc_bg</item>
+        <item name="android:textSize">@dimen/wk_title_text</item>
         <item name="fontPath">fonts/AllerDisplay.ttf</item>
     </style>
 
@@ -89,8 +89,8 @@
     </style>
 
     <style name="WakupTheme.Text.SearchDetail">
-        <item name="android:textSize">@dimen/small_text</item>
-        <item name="android:textColor">@color/light_text</item>
+        <item name="android:textSize">@dimen/wk_small_text</item>
+        <item name="android:textColor">@color/wk_light_text</item>
     </style>
 
 </resources>

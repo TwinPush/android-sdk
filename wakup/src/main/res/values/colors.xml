@@ -1,7 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- Customize pressed navigation buttons -->
-    <color name="navbar_pressed">@color/light_pressed_layer</color>
-    <!-- Customize action button color -->
-    <color name="action_active">@color/primary_pressed</color>
+
+    <!-- Customize Offers section -->
+    <!-- Pressed navigation buttons -->
+    <color name="wk_navbar_pressed">@color/wk_light_pressed_layer</color>
+    <!-- Action buttons color -->
+    <color name="wk_action_active">@color/wk_primary_pressed</color>
+
+    <!-- Splash -->
+    <color name="splash_background">@color/wk_primary_pressed</color>
+
 </resources>

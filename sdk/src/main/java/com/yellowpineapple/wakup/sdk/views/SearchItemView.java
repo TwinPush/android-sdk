@@ -38,7 +38,7 @@ public class SearchItemView extends FrameLayout {
     }
 
     private void injectViews() {
-        inflate(getContext(), R.layout.list_item_search, this);
+        inflate(getContext(), R.layout.wk_list_item_search, this);
         imgIcon = ((ImageView) findViewById(R.id.imgIcon));
         txtDescription = ((TextView) findViewById(R.id.txtDescription));
         txtName = ((TextView) findViewById(R.id.txtName));
@@ -52,13 +52,13 @@ public class SearchItemView extends FrameLayout {
             txtDescription.setVisibility(VISIBLE);
             switch (searchItem.getType()) {
                 case COMPANY:
-                    imgIcon.setImageResource(R.drawable.ic_search_brand);
+                    imgIcon.setImageResource(R.drawable.wk_ic_search_brand);
                     txtDescription.setVisibility(GONE);
                     break;
                 case NEAR_ME:
                     txtDescription.setVisibility(GONE);
                 case LOCATION:
-                    imgIcon.setImageResource(R.drawable.ic_search_geo);
+                    imgIcon.setImageResource(R.drawable.wk_ic_search_geo);
                     break;
             }
         } else {

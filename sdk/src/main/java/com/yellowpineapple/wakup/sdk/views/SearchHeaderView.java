@@ -32,7 +32,7 @@ public class SearchHeaderView extends FrameLayout {
     }
 
     private void injectViews() {
-        inflate(getContext(), R.layout.list_item_search_header, this);
+        inflate(getContext(), R.layout.wk_list_item_search_header, this);
         txtName = (TextView) findViewById(R.id.txtName);
     }
 

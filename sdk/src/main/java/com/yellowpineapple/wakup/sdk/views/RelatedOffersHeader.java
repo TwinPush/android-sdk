@@ -27,7 +27,7 @@ public class RelatedOffersHeader extends FrameLayout {
     }
 
     private void init() {
-        inflate(getContext(), R.layout.view_related_offers_header, this);
+        inflate(getContext(), R.layout.wk_view_related_offers_header, this);
     }
 
 }

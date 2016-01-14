@@ -38,7 +38,7 @@ public class SearchFiltersView extends FrameLayout {
     }
 
     private void injectViews() {
-        inflate(getContext(), R.layout.view_search_filters, this);
+        inflate(getContext(), R.layout.wk_view_search_filters, this);
         btnLeisure = ((OfferActionButton) findViewById(R.id.btnLeisure));
         btnServices = ((OfferActionButton) findViewById(R.id.btnServices));
         btnRestaurants = ((OfferActionButton) findViewById(R.id.btnRestaurants));

@@ -30,7 +30,7 @@ public class OfferDetailActivity extends OfferListActivity implements OfferDetai
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_offers_list);
+        setContentView(R.layout.wk_activity_offers_list);
         injectExtras();
         injectViews();
 

@@ -26,7 +26,7 @@ public class SavedOffersActivity extends OfferListActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_my_offers);
+        setContentView(R.layout.wk_activity_my_offers);
         injectViews();
     }
 

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <declare-styleable name="NavBarButton">
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <declare-styleable name="NavBarButton" tools:ignore="ResourceName">
         <attr name="navText" format="integer"/>
         <attr name="navIcon" format="integer"/>
     </declare-styleable>

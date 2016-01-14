@@ -54,7 +54,7 @@ public class SearchActivity extends ParentActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_search);
+        setContentView(R.layout.wk_activity_search);
         injectExtras();
         injectViews();
     }
@@ -76,7 +76,7 @@ public class SearchActivity extends ParentActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater menuInflater = getMenuInflater();
-        menuInflater.inflate(R.menu.search_menu, menu);
+        menuInflater.inflate(R.menu.wk_search_menu, menu);
 
         MenuItem searchMenuItem = menu.findItem(R.id.action_search);
         searchView = (SearchView) searchMenuItem.getActionView();
@@ -211,7 +211,7 @@ public class SearchActivity extends ParentActivity {
                     public void onError(Exception exception) {
                         searchRequest = null;
                         Ln.e(exception);
-                        Toast.makeText(SearchActivity.this, R.string.search_error, Toast.LENGTH_LONG).show();
+                        Toast.makeText(SearchActivity.this, R.string.wk_search_error, Toast.LENGTH_LONG).show();
                     }
                 });
                 // TODO Allow country setup for SDK

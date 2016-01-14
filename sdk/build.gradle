@@ -14,12 +14,15 @@ android {
     compileSdkVersion 23
     buildToolsVersion "23.0.1"
 
+    resourcePrefix 'wk_'
+
     defaultConfig {
         //applicationId "com.yellowpineapple.wakup"
         minSdkVersion 15
         targetSdkVersion 23
         versionCode 120
         versionName "1.2.0"
+
     }
     buildTypes {
         release {

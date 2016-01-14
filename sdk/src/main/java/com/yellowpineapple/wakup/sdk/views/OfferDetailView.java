@@ -112,12 +112,12 @@ public class OfferDetailView extends LinearLayout {
 
     void refreshSavedState() {
         boolean saved = PersistenceHandler.getSharedInstance(getContext()).isSavedOffer(offer);
-        btnSave.setText(saved ? R.string.action_offer_saved : R.string.action_offer_save);
+        btnSave.setText(saved ? R.string.wk_action_offer_saved : R.string.wk_action_offer_save);
         btnSave.setSelected(saved);
     }
 
     private void injectViews() {
-        inflate(getContext(), R.layout.view_offer_detail, this);
+        inflate(getContext(), R.layout.wk_view_offer_detail, this);
         btnShare = ((OfferActionButton) findViewById(R.id.btnShare));
         imgOffer = ((RemoteImageView) findViewById(R.id.imgOffer));
         txtExpiration = ((TextView) findViewById(R.id.txtExpiration));

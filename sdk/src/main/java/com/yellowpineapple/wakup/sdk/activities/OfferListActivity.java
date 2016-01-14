@@ -94,7 +94,7 @@ public abstract class OfferListActivity extends ParentActivity implements AbsLis
             if (getPullToRefreshLayout() != null) {
                 getPullToRefreshLayout().setProgressViewOffset(false,
                         Math.round(mActionBarHeight - actionBarHeight),
-                        Math.round(mActionBarHeight + getResources().getDimension(R.dimen.pulltorefresh_margin)));
+                        Math.round(mActionBarHeight + getResources().getDimension(R.dimen.wk_pulltorefresh_margin)));
             }
         }
 
@@ -121,7 +121,7 @@ public abstract class OfferListActivity extends ParentActivity implements AbsLis
                 reloadOffers();
             }
         });
-        pullToRefreshLayout.setColorSchemeResources(R.color.secondary, R.color.primary);
+        pullToRefreshLayout.setColorSchemeResources(R.color.wk_secondary, R.color.wk_primary);
         pullToRefreshLayout.setSwipeableChildren(gridView, emptyView);
     }
 
@@ -270,7 +270,7 @@ public abstract class OfferListActivity extends ParentActivity implements AbsLis
     private void toggleNavigationBarVisibility(final boolean visible, boolean animated, final AnimationListener listener) {
         if (navigationView != null) {
             if (animated) {
-                Animation a = AnimationUtils.loadAnimation(this, visible ? R.anim.slide_in_down : R.anim.slide_out_up);
+                Animation a = AnimationUtils.loadAnimation(this, visible ? R.anim.wk_slide_in_down : R.anim.wk_slide_out_up);
                 a.setAnimationListener(new Animation.AnimationListener() {
                     @Override
                     public void onAnimationStart(Animation animation) {
@@ -323,10 +323,10 @@ public abstract class OfferListActivity extends ParentActivity implements AbsLis
     // Context menu
 
     enum OfferMenuItem {
-        VIEW_IN_MAP(1, R.string.menu_map),
-        MY_OFFERS_SAVE(2, R.string.menu_my_offers_add),
-        MY_OFFERS_REMOVE(3, R.string.menu_my_offers_remove),
-        SHARE(4, R.string.menu_share);
+        VIEW_IN_MAP(1, R.string.wk_menu_map),
+        MY_OFFERS_SAVE(2, R.string.wk_menu_my_offers_add),
+        MY_OFFERS_REMOVE(3, R.string.wk_menu_my_offers_remove),
+        SHARE(4, R.string.wk_menu_share);
 
         int id;
         int textResId;

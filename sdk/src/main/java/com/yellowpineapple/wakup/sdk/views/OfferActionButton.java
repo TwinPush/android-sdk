@@ -80,7 +80,7 @@ public class OfferActionButton extends FrameLayout {
     }
 
     private void injectViews() {
-        inflate(getContext(), R.layout.view_action_button, this);
+        inflate(getContext(), R.layout.wk_view_action_button, this);
         imgIcon = (ImageView) findViewById(R.id.imgIcon);
         txtAction = (TextView) findViewById(R.id.txtAction);
         actionView = (ViewGroup) findViewById(R.id.actionView);
@@ -102,15 +102,15 @@ public class OfferActionButton extends FrameLayout {
         if (imgIcon != null) {
             if (!isInEditMode()) {
                 Drawable defaultDrawable = icon.getCurrent();
-                defaultDrawable.setColorFilter(ContextCompat.getColor(getContext(), R.color.action_active), PorterDuff.Mode.MULTIPLY);
+                defaultDrawable.setColorFilter(ContextCompat.getColor(getContext(), R.color.wk_action_active), PorterDuff.Mode.MULTIPLY);
                 defaultDrawable = drawableToBitmap(defaultDrawable);
 
                 Drawable pressedDrawable = icon.getCurrent();
-                pressedDrawable.setColorFilter(ContextCompat.getColor(getContext(), R.color.action_pressed), PorterDuff.Mode.MULTIPLY);
+                pressedDrawable.setColorFilter(ContextCompat.getColor(getContext(), R.color.wk_action_pressed), PorterDuff.Mode.MULTIPLY);
                 pressedDrawable = drawableToBitmap(pressedDrawable);
 
                 Drawable disabledDrawable = icon.getCurrent();
-                disabledDrawable.setColorFilter(ContextCompat.getColor(getContext(), R.color.action_inactive), PorterDuff.Mode.MULTIPLY);
+                disabledDrawable.setColorFilter(ContextCompat.getColor(getContext(), R.color.wk_action_inactive), PorterDuff.Mode.MULTIPLY);
                 disabledDrawable = drawableToBitmap(disabledDrawable);
 
                 StateListDrawable listDrawable = new StateListDrawable();
@@ -120,7 +120,7 @@ public class OfferActionButton extends FrameLayout {
                 listDrawable.addState(DEFAULT_STATE_SET, defaultDrawable);
                 imgIcon.setImageDrawable(listDrawable);
             } else {
-                imgIcon.setColorFilter(getResources().getColor(R.color.action_active));
+                imgIcon.setColorFilter(getResources().getColor(R.color.wk_action_active));
                 imgIcon.setImageDrawable(icon);
             }
         }

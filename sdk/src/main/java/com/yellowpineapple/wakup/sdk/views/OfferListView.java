@@ -47,7 +47,7 @@ public class OfferListView extends FrameLayout {
     }
 
     private void injectViews() {
-        inflate(getContext(), R.layout.list_item_offer, this);
+        inflate(getContext(), R.layout.wk_list_item_offer, this);
         txtDistance = ((TextView) findViewById(R.id.txtDistance));
         viewShortOffer = ((RelativeLayout) findViewById(R.id.viewShortOffer));
         txtExpiration = ((TextView) findViewById(R.id.txtExpiration));
@@ -69,10 +69,10 @@ public class OfferListView extends FrameLayout {
     private void createShortOfferLabel(Offer offer) {
         viewShortOffer.removeAllViews();
 
-        float maxSize = getContext().getResources().getDimension(R.dimen.title_text);
-        float minSize = getContext().getResources().getDimension(R.dimen.small_text);
+        float maxSize = getContext().getResources().getDimension(R.dimen.wk_title_text);
+        float minSize = getContext().getResources().getDimension(R.dimen.wk_small_text);
 
-        AutofitTextView txtShortOffer = (AutofitTextView) ((Activity) getContext()).getLayoutInflater().inflate(R.layout.textview_shortoffer, null);
+        AutofitTextView txtShortOffer = (AutofitTextView) ((Activity) getContext()).getLayoutInflater().inflate(R.layout.wk_textview_shortoffer, null);
         txtShortOffer.setMaxTextSize(TypedValue.COMPLEX_UNIT_PX, maxSize);
         txtShortOffer.setMinTextSize(TypedValue.COMPLEX_UNIT_PX, minSize);
         txtShortOffer.setText(offer.getShortOffer());

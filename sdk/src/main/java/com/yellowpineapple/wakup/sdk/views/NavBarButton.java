@@ -58,7 +58,7 @@ public class NavBarButton extends FrameLayout {
     }
 
     private void injectViews() {
-        inflate(getContext(), R.layout.view_navbar_button, this);
+        inflate(getContext(), R.layout.wk_view_navbar_button, this);
         imgIcon = (ImageView) findViewById(R.id.imgIcon);
         txtAction = (TextView) findViewById(R.id.txtAction);
     }

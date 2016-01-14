@@ -43,7 +43,7 @@ public class Wakup {
         public String apiKey = null;
 
         // Action bar
-        public int actionBarLogo = R.drawable.ic_cast_dark;
+        public Integer actionBarLogo = null;
 
         public Options() {
             super();

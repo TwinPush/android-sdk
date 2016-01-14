@@ -1,4 +1,7 @@
 <resources>
     <string name="app_name">Wakup</string>
-    <string name="title_activity_maps">Map</string>
+
+    <!-- Customize offers section -->
+    <string name="wk_app_name">@string/app_name</string>
+
 </resources>

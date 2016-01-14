@@ -29,7 +29,7 @@ public class ShareManager {
             // Launch sharing dialog for image
             context.startActivity(Intent.createChooser(shareIntent, shareDialogTitle));
         } else {
-            context.displayErrorDialog(context.getString(R.string.share_offer_error));
+            context.displayErrorDialog(context.getString(R.string.wk_share_offer_error));
         }
     }
 

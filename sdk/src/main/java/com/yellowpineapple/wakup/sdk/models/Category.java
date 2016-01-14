@@ -7,11 +7,11 @@ import com.yellowpineapple.wakup.sdk.R;
  */
 public enum Category {
 
-    UNKNOWN(null, R.string.category_unknown, R.drawable.ic_pin_unknown),
-    LEISURE("leisure", R.string.category_leisure, R.drawable.ic_pin_leisure),
-    RESTAURANTS("restaurants", R.string.category_restaurants, R.drawable.ic_pin_restaurant),
-    SERVICES("services", R.string.category_services, R.drawable.ic_pin_services),
-    SHOPPING("shopping", R.string.category_shopping, R.drawable.ic_pin_shopping);
+    UNKNOWN(null, R.string.wk_category_unknown, R.drawable.wk_ic_pin_unknown),
+    LEISURE("leisure", R.string.wk_category_leisure, R.drawable.wk_ic_pin_leisure),
+    RESTAURANTS("restaurants", R.string.wk_category_restaurants, R.drawable.wk_ic_pin_restaurant),
+    SERVICES("services", R.string.wk_category_services, R.drawable.wk_ic_pin_services),
+    SHOPPING("shopping", R.string.wk_category_shopping, R.drawable.wk_ic_pin_shopping);
 
     String identifier;
     int nameResId;

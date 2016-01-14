@@ -24,7 +24,7 @@ public class StoreOffersActivity extends OfferListActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_offers_list);
+        setContentView(R.layout.wk_activity_offers_list);
         injectExtras();
         injectViews();
     }
@@ -48,7 +48,7 @@ public class StoreOffersActivity extends OfferListActivity {
     }
 
     void afterViews() {
-        setTitle(String.format(getString(R.string.store_offers_title), offer.getCompany().getName()));
+        setTitle(String.format(getString(R.string.wk_store_offers_title), offer.getCompany().getName()));
         setupOffersGrid(gridView, null, true);
     }
 

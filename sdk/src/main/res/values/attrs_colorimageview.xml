@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <declare-styleable name="ColorImageView">
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <declare-styleable name="ColorImageView" tools:ignore="ResourceName">
         <attr name="imageColor" format="color"/>
     </declare-styleable>
 </resources>

@@ -31,7 +31,7 @@ public class ColorImageView extends ImageView {
         if (attrs != null) {
             TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.ColorImageView);
             if (a.hasValue(R.styleable.ColorImageView_imageColor)) {
-                int color = a.getColor(R.styleable.ColorImageView_imageColor, getResources().getColor(R.color.white));
+                int color = a.getColor(R.styleable.ColorImageView_imageColor, getResources().getColor(R.color.wk_white));
                 if (!isInEditMode()) {
                     setColorFilter(color, PorterDuff.Mode.MULTIPLY);
                 } else {

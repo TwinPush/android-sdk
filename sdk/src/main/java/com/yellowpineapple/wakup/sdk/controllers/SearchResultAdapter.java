@@ -57,22 +57,22 @@ public class SearchResultAdapter extends BaseAdapter implements View.OnClickList
     private void refreshResultItems() {
         List<SearchResultItem> items = new ArrayList<>();
         if (companies != null && !companies.isEmpty()) {
-            items.add(new SearchResultItem(context.getString(R.string.search_brands)));
+            items.add(new SearchResultItem(context.getString(R.string.wk_search_brands)));
             for (Company company : companies) {
                 items.add(new SearchResultItem(false, company));
             }
         }
         if (addresses != null && !addresses.isEmpty()) {
-            items.add(new SearchResultItem(context.getString(R.string.search_locations)));
+            items.add(new SearchResultItem(context.getString(R.string.wk_search_locations)));
             for (Address address : addresses) {
                 items.add(new SearchResultItem(false, address));
             }
         }
         if (items.isEmpty() && currentLocation != null) {
-            items.add(new SearchResultItem(context.getString(R.string.near_me), currentLocation));
+            items.add(new SearchResultItem(context.getString(R.string.wk_near_me), currentLocation));
         }
         if (!recentSearches.isEmpty()) {
-            items.add(new SearchResultItem(context.getString(R.string.search_recent)));
+            items.add(new SearchResultItem(context.getString(R.string.wk_search_recent)));
             items.addAll(recentSearches);
         }
         this.resultItems = items;

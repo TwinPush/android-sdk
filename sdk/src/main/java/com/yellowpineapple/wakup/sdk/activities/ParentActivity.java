@@ -83,7 +83,8 @@ public abstract class ParentActivity extends FragmentActivity {
 
         ActionBar actionBar = getActionBar();
         if (actionBar != null) {
-            actionBar.setLogo(wakup.getOptions().actionBarLogo);
+            Integer abLogo = wakup.getOptions().actionBarLogo;
+            if (abLogo != null) actionBar.setLogo(abLogo);
             actionBar.setDisplayUseLogoEnabled(true);
             actionBar.setHomeButtonEnabled(true);
             actionBar.setDisplayHomeAsUpEnabled(true);
@@ -255,7 +256,7 @@ public abstract class ParentActivity extends FragmentActivity {
     AlertDialog alert = null;
 
     public void displayLoadingDialog() {
-        displayLoadingDialog(getString(R.string.loading_default));
+        displayLoadingDialog(getString(R.string.wk_loading_default));
     }
 
     public void displayLoadingDialog(int textId) {
@@ -297,7 +298,7 @@ public abstract class ParentActivity extends FragmentActivity {
 
     public void displayErrorDialog(Throwable throwable) {
         if (throwable instanceof IOException) {
-            this.displayErrorDialog(getString(R.string.connection_error_message));
+            this.displayErrorDialog(getString(R.string.wk_connection_error_message));
         } else {
             this.displayErrorDialog(throwable.getLocalizedMessage());
         }
@@ -306,9 +307,9 @@ public abstract class ParentActivity extends FragmentActivity {
     public void displayErrorDialog(String message) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setMessage(message)
-                .setTitle(R.string.error_message_title)
+                .setTitle(R.string.wk_error_message_title)
                 .setCancelable(true)
-                .setPositiveButton(R.string.error_message_button, null);
+                .setPositiveButton(R.string.wk_error_message_button, null);
         displayDialog(builder);
     }
 
@@ -398,11 +399,11 @@ public abstract class ParentActivity extends FragmentActivity {
     /* Activity transitions */
 
     protected void slideInTransition() {
-        overridePendingTransition(R.anim.slide_in_right, R.anim.fade_back);
+        overridePendingTransition(R.anim.wk_slide_in_right, R.anim.wk_fade_back);
     }
 
     protected void slideOutTransition() {
-        overridePendingTransition(R.anim.fade_forward, R.anim.slide_out_right);
+        overridePendingTransition(R.anim.wk_fade_forward, R.anim.wk_slide_out_right);
     }
 
     /* Offer sharing */
@@ -417,14 +418,14 @@ public abstract class ParentActivity extends FragmentActivity {
                     @Override
                     public void onLoadingFailed(String imageUri, View view, FailReason failReason) {
                         setProgressBarIndeterminateVisibility(false);
-                        displayErrorDialog(getString(R.string.share_offer_error));
+                        displayErrorDialog(getString(R.string.wk_share_offer_error));
                     }
 
                     @Override
                     public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
                         setProgressBarIndeterminateVisibility(false);
-                        String shareTitle = getString(R.string.share_offer_title);
-                        String text = String.format(getString(R.string.share_offer_subject), offer.getCompany().getName(), offer.getShortDescription());
+                        String shareTitle = getString(R.string.wk_share_offer_title);
+                        String text = String.format(getString(R.string.wk_share_offer_subject), offer.getCompany().getName(), offer.getShortDescription());
                         String fileName = String.format("101_offer_%d.png", offer.getId());
                         ShareManager.shareImage(ParentActivity.this, loadedImage, fileName, shareTitle, text);
                     }

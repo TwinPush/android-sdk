@@ -6,19 +6,19 @@
 
         <activity
             android:name=".activities.OffersActivity"
-            android:label="@string/app_name"
+            android:label="@string/wk_app_name"
             android:theme="@style/WakupTheme.ActionBarOverlay.NoShadow">
         </activity>
 
         <activity
             android:name=".activities.OfferDetailActivity"
-            android:label="@string/app_name"
+            android:label="@string/wk_app_name"
             android:theme="@style/WakupTheme.ActionBarOverlay">
         </activity>
 
         <activity
             android:name=".activities.SavedOffersActivity"
-            android:label="@string/my_offers"
+            android:label="@string/wk_my_offers"
             android:theme="@style/WakupTheme.ActionBarOverlay">
         </activity>
 
@@ -32,7 +32,7 @@
         <activity
             android:name=".activities.OfferMapActivity"
             android:theme="@style/WakupTheme"
-            android:label="@string/app_name">
+            android:label="@string/wk_app_name">
         </activity>
 
         <activity
@@ -43,7 +43,7 @@
         <activity
             android:name=".activities.WebViewActivity"
             android:theme="@style/WakupTheme"
-            android:label="@string/app_name">
+            android:label="@string/wk_app_name">
         </activity>
 
         <activity
