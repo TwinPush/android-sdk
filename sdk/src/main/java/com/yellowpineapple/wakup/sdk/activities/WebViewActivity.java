@@ -15,9 +15,9 @@ import com.yellowpineapple.wakup.sdk.utils.IntentBuilder;
  */
 public class WebViewActivity extends ParentActivity {
 
-    public final static String TITLE_ID_EXTRA = "titleId";
+    public final static String TITLE_EXTRA = "title";
     public final static String URL_EXTRA = "url";
-    int titleId = 0;
+    String title = null;
     String url = null;
 
     @SuppressLint("SetJavaScriptEnabled")
@@ -54,15 +54,15 @@ public class WebViewActivity extends ParentActivity {
         // Get notification
         setLoading(true);
         if (url != null) webView.loadUrl(url);
-        if (titleId != 0) setTitle(getString(titleId));
+        if (title != null) setTitle(title);
         setContentView(webView);
     }
 
     private void injectExtras() {
         Bundle extras = getIntent().getExtras();
         if (extras!= null) {
-            if (extras.containsKey(TITLE_ID_EXTRA)) {
-                titleId = extras.getInt(TITLE_ID_EXTRA);
+            if (extras.containsKey(TITLE_EXTRA)) {
+                title = extras.getString(TITLE_EXTRA);
             }
             if (extras.containsKey(URL_EXTRA)) {
                 url = extras.getString(URL_EXTRA);
@@ -82,8 +82,8 @@ public class WebViewActivity extends ParentActivity {
             super(WebViewActivity.class, context);
         }
 
-        public Builder titleId(int titleResId) {
-            getIntent().putExtra(TITLE_ID_EXTRA, titleResId);
+        public Builder title(String title) {
+            getIntent().putExtra(TITLE_EXTRA, title);
             return this;
         }
 

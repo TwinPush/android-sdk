@@ -23,6 +23,7 @@ public class Offer implements Serializable {
     String description;
     String shortDescription;
     String shortOffer;
+    String link;
     Date expirationDate;
     RemoteImage image;
     RemoteImage thumbnail;
@@ -154,5 +155,9 @@ public class Offer implements Serializable {
 
     public void setStore(Store store) {
         this.store = store;
+    }
+
+    public String getLink() {
+        return link;
     }
 }

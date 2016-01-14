@@ -82,7 +82,7 @@ public class OffersActivity extends OfferListActivity {
     }
 
     void bigOfferPressed() {
-        WebViewActivity.intent(this).url(BIG_OFFER_URL).titleId(R.string.wk_big_offer).start();
+        WebViewActivity.intent(this).url(BIG_OFFER_URL).title(getString(R.string.wk_big_offer)).start();
         slideInTransition();
     }
 

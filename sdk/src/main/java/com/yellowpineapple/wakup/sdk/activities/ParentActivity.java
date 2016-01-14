@@ -7,10 +7,12 @@ import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.IntentSender;
 import android.content.pm.ActivityInfo;
 import android.graphics.Bitmap;
 import android.location.Location;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -72,23 +74,23 @@ public abstract class ParentActivity extends FragmentActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
-        buildGoogleApiClient();
-        requestClient = RequestClient.getSharedInstance(this, RequestClient.Environment.PRODUCTION);
-        persistence = PersistenceHandler.getSharedInstance(this);
-        wakup = Wakup.instance(this);
         super.onCreate(savedInstanceState);
-        // Create global configuration and initialize ImageLoader with this config
-        ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(this).build();
-        ImageLoader.getInstance().init(config);
 
+        wakup = Wakup.instance(this);
         ActionBar actionBar = getActionBar();
         if (actionBar != null) {
-            Integer abLogo = wakup.getOptions().actionBarLogo;
-            if (abLogo != null) actionBar.setLogo(abLogo);
             actionBar.setDisplayUseLogoEnabled(true);
             actionBar.setHomeButtonEnabled(true);
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
+
+        buildGoogleApiClient();
+        requestClient = RequestClient.getSharedInstance(this, RequestClient.Environment.PRODUCTION);
+        persistence = PersistenceHandler.getSharedInstance(this);
+
+        // Create global configuration and initialize ImageLoader with this config
+        ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(this).build();
+        ImageLoader.getInstance().init(config);
 
         // Fix portrait orientation
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
@@ -392,7 +394,11 @@ public abstract class ParentActivity extends FragmentActivity {
 
     protected void openOfferLink(Offer offer) {
         if (offer.isOnline()) {
-            //TODO open online link
+            Uri url = Uri.parse(offer.getLink());
+            Intent intent = new Intent(Intent.ACTION_VIEW, url);
+            if (intent.resolveActivity(getPackageManager()) != null) {
+                startActivity(intent);
+            }
         }
     }
 
