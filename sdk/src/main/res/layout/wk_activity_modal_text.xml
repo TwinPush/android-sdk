@@ -25,6 +25,7 @@
                 android:layout_height="match_parent"
                 android:text="New text"
                 android:background="@drawable/wk_clickable_view"
+                android:autoLink="web"
                 android:id="@+id/textView"/>
 
         </ScrollView>

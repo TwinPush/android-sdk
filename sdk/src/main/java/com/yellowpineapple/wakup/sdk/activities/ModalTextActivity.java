@@ -3,6 +3,7 @@ package com.yellowpineapple.wakup.sdk.activities;
 import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
+import android.text.method.LinkMovementMethod;
 import android.view.View;
 import android.widget.TextView;
 
@@ -12,7 +13,6 @@ import com.yellowpineapple.wakup.sdk.utils.IntentBuilder;
 public class ModalTextActivity extends Activity {
 
     public final static String TEXT_EXTRA = "text";
-    private static Context context;
 
     // Properties
     String text;
@@ -42,6 +42,7 @@ public class ModalTextActivity extends Activity {
 
     private void injectViews() {
         textView = (TextView) findViewById(R.id.textView);
+        textView.setMovementMethod(LinkMovementMethod.getInstance());
 
         View.OnClickListener closeOnClickListener = new View.OnClickListener() {
             @Override
