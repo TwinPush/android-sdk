@@ -11,8 +11,12 @@ import android.view.View;
 
 import com.etsy.android.grid.StaggeredGridView;
 import com.yellowpineapple.wakup.sdk.R;
+import com.yellowpineapple.wakup.sdk.models.Offer;
 import com.yellowpineapple.wakup.sdk.utils.IntentBuilder;
 import com.yellowpineapple.wakup.sdk.views.PullToRefreshLayout;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class OffersActivity extends OfferListActivity {
 
@@ -87,7 +91,9 @@ public class OffersActivity extends OfferListActivity {
     }
 
     void mapButtonPressed() {
-        OfferMapActivity.intent(this).offers(offers).location(currentLocation).start();
+        int MAX_MAP_OFFERS = 20;
+        List<Offer> mapOffers = new ArrayList<>(offers.subList(0, Math.min(MAX_MAP_OFFERS, offers.size())));
+        OfferMapActivity.intent(this).offers(mapOffers).location(currentLocation).start();
         slideInTransition();
     }
 

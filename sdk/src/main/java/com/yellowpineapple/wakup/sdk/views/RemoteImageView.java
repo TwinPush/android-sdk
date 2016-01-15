@@ -11,11 +11,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
-import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.display.FadeInBitmapDisplayer;
 import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListener;
 import com.yellowpineapple.wakup.sdk.models.RemoteImage;
+import com.yellowpineapple.wakup.sdk.utils.ImageOptions;
 
 /**
  * Created by agutierrez on 04/02/15.
@@ -61,10 +61,7 @@ public class RemoteImageView extends AspectKeepFrameLayout {
                 this.setVirtualSize(image.getHeight(), image.getWidth());
                 int color = Color.parseColor(String.format("#%s", image.getRgbColor()));
                 Drawable placeholder = new ColorDrawable(color);
-                Bitmap bitmap = ImageLoader.getInstance().loadImageSync(image.getUrl(), new DisplayImageOptions.Builder()
-                        .cacheInMemory(true)
-                        .cacheOnDisk(true)
-                        .considerExifParams(true).build());
+                Bitmap bitmap = ImageLoader.getInstance().loadImageSync(image.getUrl(), ImageOptions.get());
                 if (bitmap != null) {
                     imageView.setImageBitmap(bitmap);
                 } else {
@@ -114,10 +111,8 @@ public class RemoteImageView extends AspectKeepFrameLayout {
             }
         };
         backImageView.setImageDrawable(placeholder);
-        imageLoader.displayImage(image.getUrl(), imageView, new DisplayImageOptions.Builder()
-                .cacheInMemory(true)
-                .cacheOnDisk(true)
-                .considerExifParams(true)
+        imageLoader.displayImage(image.getUrl(), imageView,
+                ImageOptions.builder()
                 .showImageOnLoading(placeholder)
                 .showImageOnFail(placeholder)
                 .displayer(new FadeInBitmapDisplayer(300, true, true, false))

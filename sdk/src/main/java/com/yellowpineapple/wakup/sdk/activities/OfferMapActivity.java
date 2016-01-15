@@ -18,13 +18,13 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListener;
 import com.yellowpineapple.wakup.sdk.R;
 import com.yellowpineapple.wakup.sdk.communications.requests.OfferListRequestListener;
 import com.yellowpineapple.wakup.sdk.models.Offer;
 import com.yellowpineapple.wakup.sdk.models.Store;
+import com.yellowpineapple.wakup.sdk.utils.ImageOptions;
 import com.yellowpineapple.wakup.sdk.utils.IntentBuilder;
 import com.yellowpineapple.wakup.sdk.views.OfferMapInfoView;
 
@@ -91,14 +91,10 @@ public class OfferMapActivity
 
     void preloadCompanyLogos(List<Offer> offers) {
         ImageLoader imageLoader = ImageLoader.getInstance();
-        DisplayImageOptions displayImageOptions = new DisplayImageOptions.Builder()
-                .cacheInMemory(true)
-                .cacheOnDisk(true)
-                .considerExifParams(true).build();
         for (Offer offer : offers) {
             String logoURL = offer.getCompany().getLogo().getUrl();
             if (!preloadedCompanies.contains(logoURL)) {
-                imageLoader.loadImage(offer.getCompany().getLogo().getUrl(), displayImageOptions, new SimpleImageLoadingListener());
+                imageLoader.loadImage(offer.getCompany().getLogo().getUrl(), ImageOptions.get(), new SimpleImageLoadingListener());
                 preloadedCompanies.add(logoURL);
             }
         }

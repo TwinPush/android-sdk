@@ -14,8 +14,6 @@ import android.graphics.Bitmap;
 import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentActivity;
 import android.view.MenuItem;
@@ -28,17 +26,17 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationServices;
-import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.nostra13.universalimageloader.core.assist.FailReason;
 import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListener;
 import com.yellowpineapple.wakup.sdk.R;
-import com.yellowpineapple.wakup.sdk.Wakup;
 import com.yellowpineapple.wakup.sdk.communications.RequestClient;
 import com.yellowpineapple.wakup.sdk.models.Offer;
+import com.yellowpineapple.wakup.sdk.utils.ImageOptions;
 import com.yellowpineapple.wakup.sdk.utils.PersistenceHandler;
 import com.yellowpineapple.wakup.sdk.utils.ShareManager;
+import com.yellowpineapple.wakup.sdk.utils.Strings;
 
 import java.io.IOException;
 
@@ -69,14 +67,12 @@ public abstract class ParentActivity extends FragmentActivity {
     private boolean mResolvingError = false;
 
     private PersistenceHandler persistence;
-    private Wakup wakup;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
         super.onCreate(savedInstanceState);
 
-        wakup = Wakup.instance(this);
         ActionBar actionBar = getActionBar();
         if (actionBar != null) {
             actionBar.setDisplayUseLogoEnabled(true);
@@ -88,8 +84,11 @@ public abstract class ParentActivity extends FragmentActivity {
         requestClient = RequestClient.getSharedInstance(this, RequestClient.Environment.PRODUCTION);
         persistence = PersistenceHandler.getSharedInstance(this);
 
+
         // Create global configuration and initialize ImageLoader with this config
-        ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(this).build();
+        ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(this).
+                defaultDisplayImageOptions(ImageOptions.get()).
+                build();
         ImageLoader.getInstance().init(config);
 
         // Fix portrait orientation
@@ -134,20 +133,18 @@ public abstract class ParentActivity extends FragmentActivity {
      */
     @Override
     public void setTitle(final CharSequence title) {
-        new Handler(Looper.getMainLooper()).post(new Runnable() {
-            @Override
-            public void run() {
-                Activity activity = ParentActivity.this;
-                ActionBar ab = activity.getActionBar();
-                if (ab != null) {
-                    ab.setDisplayShowTitleEnabled(false);
-                    ParentActivity.super.setTitle(title);
-                    ab.setDisplayShowTitleEnabled(true);
-                } else {
-                    ParentActivity.super.setTitle(title);
-                }
+        Activity activity = ParentActivity.this;
+        ActionBar ab = activity.getActionBar();
+        if (ab != null) {
+            if (Strings.notEmpty(ab.getTitle())) {
+                ab.setTitle(title);
+            } else {
+                ab.setSubtitle(title);
             }
-        });
+            ab.setDisplayShowTitleEnabled(true);
+        } else {
+            ParentActivity.super.setTitle(title);
+        }
     }
 
     /* Google API Service */
@@ -416,10 +413,7 @@ public abstract class ParentActivity extends FragmentActivity {
 
     void shareOffer(final Offer offer) {
         setProgressBarIndeterminateVisibility(true);
-        ImageLoader.getInstance().loadImage(offer.getImage().getUrl(), new DisplayImageOptions.Builder()
-                        .cacheInMemory(true)
-                        .cacheOnDisk(true)
-                        .considerExifParams(true).build(),
+        ImageLoader.getInstance().loadImage(offer.getImage().getUrl(), ImageOptions.get(),
                 new SimpleImageLoadingListener() {
                     @Override
                     public void onLoadingFailed(String imageUri, View view, FailReason failReason) {
