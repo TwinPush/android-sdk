@@ -18,6 +18,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.yellowpineapple.wakup.sdk.R;
+import com.yellowpineapple.wakup.sdk.Wakup;
+import com.yellowpineapple.wakup.sdk.WakupOptions;
 import com.yellowpineapple.wakup.sdk.communications.Request;
 import com.yellowpineapple.wakup.sdk.communications.requests.search.SearchRequest;
 import com.yellowpineapple.wakup.sdk.controllers.SearchResultAdapter;
@@ -157,20 +159,24 @@ public class SearchActivity extends ParentActivity {
         });
     }
 
-    void geoSearch(final String query, final String country, final String countryCode) {
+    void geoSearch(final String query) {
         geoSearchHandler.post(
                 new Runnable() {
                     @Override
                     public void run() {
                         if (Geocoder.isPresent()) {
 
+                            WakupOptions options = Wakup.instance(SearchActivity.this).getOptions();
+
                             Geocoder geocoder = new Geocoder(SearchActivity.this);
                             try {
-                                List<Address> addresses = geocoder.getFromLocationName(String.format("%s, %s", query, country), MAX_GEO_RESULTS);
+                                List<Address> addresses = geocoder.getFromLocationName(
+                                        String.format("%s, %s", query, options.getCountryName()),
+                                        MAX_GEO_RESULTS);
                                 List<Address> validAddresses = new ArrayList<>();
                                 for (Address address : addresses) {
                                     // Only include addresses from selected country
-                                    if (Strings.equals(countryCode, address.getCountryCode())) {
+                                    if (Strings.equals(options.getCountryCode(), address.getCountryCode())) {
                                         validAddresses.add(address);
                                     }
                                 }
@@ -214,8 +220,7 @@ public class SearchActivity extends ParentActivity {
                         Toast.makeText(SearchActivity.this, R.string.wk_search_error, Toast.LENGTH_LONG).show();
                     }
                 });
-                // TODO Allow country setup for SDK
-                geoSearch(query.trim(), "Spain", "ES");
+                geoSearch(query.trim());
             } else {
                 listAdapter.setCompanies(null);
                 listAdapter.setAddresses(null);

@@ -6,7 +6,7 @@ import android.content.SharedPreferences;
 import com.google.gson.Gson;
 import com.google.gson.JsonParser;
 import com.google.gson.reflect.TypeToken;
-import com.yellowpineapple.wakup.sdk.Wakup;
+import com.yellowpineapple.wakup.sdk.WakupOptions;
 import com.yellowpineapple.wakup.sdk.models.Offer;
 import com.yellowpineapple.wakup.sdk.models.SearchResultItem;
 
@@ -32,7 +32,8 @@ public class PersistenceHandler {
     private SharedPreferences preferences = null;
     private List<String> userOffers = null;
     private List<SearchResultItem> recentSearches = null;
-    private Wakup.Options options = null;
+    private WakupOptions options = null;
+    private boolean locationAsked = false;
 
     Date savedOffersUpdatedAt = new Date();
 
@@ -143,8 +144,16 @@ public class PersistenceHandler {
         getPreferences().edit().putString(KEY_RECENT_SEARCHES, json).commit();
     }
 
+    public boolean isLocationAsked() {
+        return locationAsked;
+    }
+
+    public void setLocationAsked(boolean locationAsked) {
+        this.locationAsked = locationAsked;
+    }
+
     // Setup options
-    public void setOptions(Wakup.Options options) {
+    public void setOptions(WakupOptions options) {
         this.options = options;
         if (options != null) {
             String json = new Gson().toJson(options);
@@ -154,18 +163,18 @@ public class PersistenceHandler {
         }
     }
 
-    public Wakup.Options getOptions() {
+    public WakupOptions getOptions() {
         if (options == null) {
             try {
                 String json = getPreferences().getString(KEY_SDK_OPTIONS, null);
                 if (json != null) {
-                    options = new Gson().fromJson(json, Wakup.Options.class);
+                    options = new Gson().fromJson(json, WakupOptions.class);
                 } else {
-                    options = new Wakup.Options();
+                    options = new WakupOptions(null);
                 }
             } catch (Exception ex) {
                 Ln.e(ex, "Error while trying to load SDK options");
-                options = new Wakup.Options();
+                options = new WakupOptions(null);
             }
         }
         return options;

@@ -5,6 +5,14 @@
     <string name="wk_error_message_title">Error</string>
     <string name="wk_error_message_button">Aceptar</string>
 
+    <string name="wk_activity_offers">Ofertas</string>
+    <string name="wk_activity_my_offers">Mis ofertas</string>
+    <string name="wk_activity_offer_detail">Oferta</string>
+    <string name="wk_activity_store_offers">Ofertas de marca</string>
+    <string name="wk_activity_search_result">Resultados</string>
+    <string name="wk_activity_big_offer">Ofertón</string>
+    <string name="wk_activity_map">Mapa</string>
+
     <!-- Connection error -->
     <string name="wk_connection_error_message">Se produjo un error de comunicación. Compruebe su conexión a internet e inténtelo de nuevo</string>
 
@@ -18,6 +26,7 @@
     <string name="wk_no_results">No se han encontrado resultados</string>
     <string name="wk_no_saved_offers">Guarda en tus favoritos aquellas ofertas que quieras tener siempre a mano.</string>
     <string name="wk_no_search_results">La búsqueda no ha obtenido ninguna oferta. Comprueba los criterios de búsqueda y vuelve a intentarlo</string>
+    <string name="wk_disabled_location">La ubicación se encuentra desactivada. Se mostrarán resultados de una ubicación por defecto</string>
     <string name="wk_search_action">Buscar</string>
 
     <!-- Context Menu -->
@@ -40,9 +49,6 @@
     <string name="wk_share_offer_error">Ocurrió un error al tratar de compartir la oferta</string>
     <string name="wk_share_offer_subject" formatted="false">Wakup - %s: %s</string>
     <string name="wk_store_offers">ofertas en este comercio</string>
-
-    <!-- Store Offers Activity -->
-    <string name="wk_store_offers_title">Ofertas de %s</string>
 
     <!-- Expiration -->
     <string name="wk_offer_expired">caducado</string>

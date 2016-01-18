@@ -25,8 +25,6 @@ public class OffersActivity extends OfferListActivity {
     PullToRefreshLayout ptrLayout;
     View emptyView;
 
-    private static final String BIG_OFFER_URL = "http://app.wakup.net/offers/highlighted";
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -86,7 +84,8 @@ public class OffersActivity extends OfferListActivity {
     }
 
     void bigOfferPressed() {
-        WebViewActivity.intent(this).url(BIG_OFFER_URL).title(getString(R.string.wk_big_offer)).start();
+        String bigOfferUrl = getWakup().getBigOffer();
+        WebViewActivity.intent(this).url(bigOfferUrl).start();
         slideInTransition();
     }
 

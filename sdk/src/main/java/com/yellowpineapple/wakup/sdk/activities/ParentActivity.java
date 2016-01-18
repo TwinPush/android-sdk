@@ -25,12 +25,20 @@ import android.widget.Toast;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.PendingResult;
+import com.google.android.gms.common.api.ResultCallback;
+import com.google.android.gms.common.api.Status;
+import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.location.LocationSettingsRequest;
+import com.google.android.gms.location.LocationSettingsResult;
+import com.google.android.gms.location.LocationSettingsStatusCodes;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.nostra13.universalimageloader.core.assist.FailReason;
 import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListener;
 import com.yellowpineapple.wakup.sdk.R;
+import com.yellowpineapple.wakup.sdk.Wakup;
 import com.yellowpineapple.wakup.sdk.communications.RequestClient;
 import com.yellowpineapple.wakup.sdk.models.Offer;
 import com.yellowpineapple.wakup.sdk.utils.ImageOptions;
@@ -58,6 +66,7 @@ public abstract class ParentActivity extends FragmentActivity {
 
     RequestClient requestClient = null;
     GoogleApiClient googleApiClient = null;
+    Wakup wakup = null;
 
     // Request code to use when launching the resolution activity
     private static final int REQUEST_RESOLVE_ERROR = 1001;
@@ -83,6 +92,7 @@ public abstract class ParentActivity extends FragmentActivity {
         buildGoogleApiClient();
         requestClient = RequestClient.getSharedInstance(this, RequestClient.Environment.PRODUCTION);
         persistence = PersistenceHandler.getSharedInstance(this);
+        wakup = Wakup.instance(this);
 
 
         // Create global configuration and initialize ImageLoader with this config
@@ -128,6 +138,10 @@ public abstract class ParentActivity extends FragmentActivity {
         return requestClient;
     }
 
+    public Wakup getWakup() {
+        return wakup;
+    }
+
     /**
      * Override setTitle method to avoid text ellispis even thouth there is room for all text
      */
@@ -156,14 +170,16 @@ public abstract class ParentActivity extends FragmentActivity {
         googleApiClient.connect();
     }
 
+
+    private LocationListener locationListener = null;
     protected void getLastKnownLocation(final LocationListener listener) {
         if (googleApiClient.isConnected()) {
-            loadLocation(googleApiClient, listener);
+            checkLocationSettings(listener);
         } else {
             googleApiClient.registerConnectionCallbacks(new GoogleApiClient.ConnectionCallbacks() {
                 @Override
                 public void onConnected(Bundle bundle) {
-                    loadLocation(googleApiClient, listener);
+                    checkLocationSettings(listener);
                 }
 
                 @Override
@@ -199,14 +215,90 @@ public abstract class ParentActivity extends FragmentActivity {
         }
     }
 
-    private void loadLocation(GoogleApiClient googleApiClient, LocationListener listener) {
+    protected static final int REQUEST_CHECK_SETTINGS = 0x1;
+    /**
+     * Checks current device location settings and opens a dialog to request enabling location
+     * when needed
+     */
+    private void checkLocationSettings(final LocationListener locationListener) {
+        this.locationListener = locationListener;
+
+        LocationRequest locationRequest = LocationRequest.create();
+        locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+        locationRequest.setInterval(30 * 1000);
+        locationRequest.setFastestInterval(5 * 1000);
+
+        LocationSettingsRequest.Builder builder = new LocationSettingsRequest.Builder()
+                .addLocationRequest(locationRequest).setAlwaysShow(true);
+        PendingResult<LocationSettingsResult> result =
+                LocationServices.SettingsApi.checkLocationSettings(googleApiClient, builder.build());
+        result.setResultCallback(new ResultCallback<LocationSettingsResult>() {
+            @Override
+            public void onResult(LocationSettingsResult result) {
+                final Status status = result.getStatus();
+                switch (status.getStatusCode()) {
+                    case LocationSettingsStatusCodes.SUCCESS:
+                        // All location settings are satisfied. The client can initialize location
+                        // requests here.
+                        loadLocation(googleApiClient, locationListener);
+                        break;
+                    case LocationSettingsStatusCodes.RESOLUTION_REQUIRED:
+                        // Location settings are not satisfied. But could be fixed by showing the user
+                        // a dialog.
+                        try {
+                            // Check if it has been already asked
+                            if (getPersistence().isLocationAsked()) {
+                                locationListener.onLocationError(new LocationException("Location disabled"));
+                            } else {
+                                // Show the dialog by calling startResolutionForResult(),
+                                // and check the result in onActivityResult().
+                                status.startResolutionForResult(ParentActivity.this, REQUEST_CHECK_SETTINGS);
+                            }
+                        } catch (IntentSender.SendIntentException e) {
+                            // Ignore the error.
+                        }
+                        break;
+                    case LocationSettingsStatusCodes.SETTINGS_CHANGE_UNAVAILABLE:
+                        // Location settings are not satisfied. However, we have no way to fix the
+                        // settings so we won't show the dialog.
+                        locationListener.onLocationError(new LocationException("Location disabled"));
+                        break;
+                }
+            }
+        });
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        switch (requestCode) {
+            // Check for the integer request code originally supplied to startResolutionForResult().
+            case REQUEST_CHECK_SETTINGS:
+                switch (resultCode) {
+                    case Activity.RESULT_OK:
+                        loadLocation(googleApiClient, locationListener);
+                        break;
+                    case Activity.RESULT_CANCELED:
+                        locationListener.onLocationError(new LocationException("Location disabled"));
+                        break;
+                }
+                locationListener = null;
+                break;
+        }
+    }
+
+    private void loadLocation(final GoogleApiClient googleApiClient, final LocationListener listener) {
         Location lastLocation = LocationServices.FusedLocationApi.getLastLocation(googleApiClient);
         if (lastLocation != null) {
             listener.onLocationSuccess(lastLocation);
-            // Notify location to TwinPush
-            //TwinPushSDK.getInstance(this).setLocation(lastLocation);
         } else {
-            listener.onLocationError(new LocationException("Location is empty"));
+            // If we don't have a last location yet, request location updates
+            LocationServices.FusedLocationApi.requestLocationUpdates(googleApiClient, LocationRequest.create(), new com.google.android.gms.location.LocationListener() {
+                @Override
+                public void onLocationChanged(Location location) {
+                    LocationServices.FusedLocationApi.removeLocationUpdates(googleApiClient, this);
+                    listener.onLocationSuccess(location);
+                }
+            });
         }
     }
 

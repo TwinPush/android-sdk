@@ -15,6 +15,8 @@ public class Wakup {
 
     private PersistenceHandler persistence;
 
+    private static final String BIG_OFFER_URL = "https://app.wakup.net/offers/highlighted/%s";
+
     private Wakup(Context context) {
         super();
         this.context = context;
@@ -28,27 +30,17 @@ public class Wakup {
         return sharedInstance;
     }
 
-    public void launch(Options options) {
+    public void launch(WakupOptions options) {
         persistence.setOptions(options);
         OffersActivity.intent(context).start();
     }
 
-    public Options getOptions() {
+    public WakupOptions getOptions() {
         return persistence.getOptions();
     }
 
-    public static class Options {
-
-        /* Wakup Client API Key */
-        public String apiKey = null;
-
-        // Action bar
-        public Integer actionBarLogo = null;
-
-        public Options() {
-            super();
-        }
-
+    public String getBigOffer() {
+        return String.format(BIG_OFFER_URL, getOptions().getApiKey());
     }
 
 }

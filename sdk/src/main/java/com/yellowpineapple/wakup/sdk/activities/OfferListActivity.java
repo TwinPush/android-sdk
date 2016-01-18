@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.AbsListView;
+import android.widget.Toast;
 
 import com.etsy.android.grid.StaggeredGridView;
 import com.yellowpineapple.wakup.sdk.R;
@@ -146,9 +147,12 @@ public abstract class OfferListActivity extends ParentActivity implements AbsLis
 
             @Override
             public void onLocationError(Exception exception) {
-                mHasRequestedMore = false;
-                setLoading(false);
-                displayErrorDialog(exception);
+                currentLocation = getWakup().getOptions().getDefaultLocation();
+                onRequestOffers(page, currentLocation);
+                if (!getPersistence().isLocationAsked()) {
+                    Toast.makeText(OfferListActivity.this, R.string.wk_disabled_location, Toast.LENGTH_LONG).show();
+                    getPersistence().setLocationAsked(true);
+                }
             }
         });
     }

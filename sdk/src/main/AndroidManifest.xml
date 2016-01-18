@@ -6,19 +6,19 @@
 
         <activity
             android:name=".activities.OffersActivity"
-            android:label="@string/wk_app_name"
+            android:label="@string/wk_activity_offers"
             android:theme="@style/WakupTheme.ActionBarOverlay.NoShadow">
         </activity>
 
         <activity
             android:name=".activities.OfferDetailActivity"
-            android:label="@string/wk_app_name"
+            android:label="@string/wk_activity_offer_detail"
             android:theme="@style/WakupTheme.ActionBarOverlay">
         </activity>
 
         <activity
             android:name=".activities.SavedOffersActivity"
-            android:label="@string/wk_my_offers"
+            android:label="@string/wk_activity_my_offers"
             android:theme="@style/WakupTheme.ActionBarOverlay">
         </activity>
 
@@ -32,18 +32,19 @@
         <activity
             android:name=".activities.OfferMapActivity"
             android:theme="@style/WakupTheme"
-            android:label="@string/wk_app_name">
+            android:label="@string/wk_activity_map">
         </activity>
 
         <activity
             android:name=".activities.StoreOffersActivity"
-            android:theme="@style/WakupTheme.ActionBarOverlay">
+            android:theme="@style/WakupTheme.ActionBarOverlay"
+            android:label="@string/wk_activity_store_offers">
         </activity>
 
         <activity
             android:name=".activities.WebViewActivity"
             android:theme="@style/WakupTheme"
-            android:label="@string/wk_app_name">
+            android:label="@string/wk_activity_big_offer">
         </activity>
 
         <activity
@@ -55,7 +56,8 @@
         <activity
             android:name=".activities.SearchResultActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/WakupTheme.ActionBarOverlay">
+            android:theme="@style/WakupTheme.ActionBarOverlay"
+            android:label="@string/wk_activity_search_result">
         </activity>
 
         <meta-data android:name="com.google.android.gms.version"

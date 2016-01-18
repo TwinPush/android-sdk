@@ -49,7 +49,7 @@ public class RequestClient {
 	RequestLauncher requestLauncher;
     Environment environment;
     Context context;
-	String token = null;
+	String apiKey = null;
 	
 	public static RequestClient getSharedInstance(Context context, Environment environment) {
 		if (sharedInstance == null) {
@@ -62,6 +62,7 @@ public class RequestClient {
 		requestLauncher = new DefaultRequestLauncher(context);
         this.context = context;
         this.environment = environment;
+        apiKey = Wakup.instance(context).getOptions().getApiKey();
 	}
 
     /* Public methods */
@@ -100,7 +101,7 @@ public class RequestClient {
 
 	/* Private methods */
 	private Request launch(BaseRequest request) {
-        request.addHeader(API_KEY_HEADER, Wakup.instance(context).getOptions().apiKey);
+        request.addHeader(API_KEY_HEADER, apiKey);
         request.setRequestLauncher(requestLauncher);
         request.setEnvironment(environment);
         request.launch();
