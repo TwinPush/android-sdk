@@ -14,7 +14,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
-        app:imageColor="@color/wk_actionbar_text"
+        app:imageColor="@color/wk_navbar_text"
         android:src="@drawable/wk_ic_location"/>
 
     <TextView
@@ -22,7 +22,7 @@
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:gravity="center"
-        android:textColor="@color/wk_actionbar_text"
+        android:textColor="@color/wk_navbar_text"
         android:textAppearance="@style/WakupTheme.Text.Regular"
         android:layout_marginLeft="8dp"
         android:enabled="false"

@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-
-    <!-- Splash -->
-    <color name="splash_background">@color/wk_primary_pressed</color>
-
-</resources>

@@ -5,6 +5,7 @@
     <color name="wk_dark_pressed_layer">#1A000000</color>
     <color name="wk_light_pressed_layer">#33FFFFFF</color>
 
+    <!-- Main customization colors -->
     <color name="wk_primary">#3C1E3D</color>
     <color name="wk_primary_pressed">#7B4C7D</color>
     <color name="wk_primary_reverse">#A47BA6</color>
@@ -22,6 +23,7 @@
     <color name="wk_navbar_bg">@color/wk_primary</color>
     <color name="wk_navbar_pressed">@color/wk_primary_pressed</color>
     <color name="wk_navbar_text">@color/wk_primary_reverse</color>
+    <color name="wk_navbar_divider">@color/wk_primary_reverse</color>
 
     <!-- Text color -->
     <color name="wk_main_text">#505050</color>
