@@ -41,7 +41,7 @@ public class SplashActivity extends Activity {
         {
             Wakup.instance(this).launch(
                     new WakupOptions("075f9656-6909-4e4e-a286-3ddc562a2513").
-                            country("US").
+                            country("ES").
                             defaultLocation(41.38506, 2.17340)
             );
         }

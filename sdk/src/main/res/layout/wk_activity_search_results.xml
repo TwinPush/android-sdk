@@ -38,7 +38,7 @@
                     <com.yellowpineapple.wakup.sdk.views.ColorImageView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:src="@drawable/wk_ic_warning"
+                        android:src="@drawable/wk_empty_offers"
                         app:imageColor="@color/wk_no_results_text"/>
 
                     <TextView

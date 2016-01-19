@@ -52,13 +52,13 @@ public class SearchItemView extends FrameLayout {
             txtDescription.setVisibility(VISIBLE);
             switch (searchItem.getType()) {
                 case COMPANY:
-                    imgIcon.setImageResource(R.drawable.wk_ic_search_brand);
+                    imgIcon.setImageResource(R.drawable.wk_search_brand);
                     txtDescription.setVisibility(GONE);
                     break;
                 case NEAR_ME:
                     txtDescription.setVisibility(GONE);
                 case LOCATION:
-                    imgIcon.setImageResource(R.drawable.wk_ic_search_geo);
+                    imgIcon.setImageResource(R.drawable.wk_search_geo);
                     break;
             }
         } else {

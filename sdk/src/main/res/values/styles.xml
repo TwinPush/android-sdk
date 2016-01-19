@@ -42,6 +42,7 @@
     <style name="WakupTheme.ActionBar" parent="@android:style/Widget.Holo.Light.ActionBar.Solid.Inverse">
         <item name="android:background">@color/wk_actionbar_bg</item>
         <item name="android:titleTextStyle">@style/WakupTheme.ActionBar.Title</item>
+        <item name="android:subtitleTextStyle">@style/WakupTheme.ActionBar.Subtitle</item>
         <item name="android:logo">@drawable/wk_actionbar_logo</item>
         <item name="android:displayOptions">showTitle|showHome</item>
     </style>
@@ -50,6 +51,11 @@
     <style name="WakupTheme.ActionBar.Title"
         parent="@android:style/TextAppearance.Holo.Widget.ActionBar.Title">
         <item name="android:textColor">@color/wk_actionbar_text</item>
+    </style>
+
+    <style name="WakupTheme.ActionBar.Subtitle"
+        parent="@android:style/TextAppearance.Holo.Widget.ActionBar.Subtitle">
+        <item name="android:textColor">@color/wk_actionbar_subtitle</item>
     </style>
 
     <style name="WakupTheme.Text" parent="@android:style/TextAppearance.Medium">

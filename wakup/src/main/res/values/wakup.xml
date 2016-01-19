@@ -10,4 +10,10 @@
     <!-- ActionBar Logo -->
     <drawable name="wk_actionbar_logo">@drawable/ic_action_logo</drawable>
 
+    <!-- Category icons -->
+    <drawable name="wk_cat_leisure">@drawable/wk_ic_btn_leisure</drawable>
+    <drawable name="wk_cat_restaurants">@drawable/wk_ic_btn_restaurants</drawable>
+    <drawable name="wk_cat_services">@drawable/wk_ic_btn_services</drawable>
+    <drawable name="wk_cat_shopping">@drawable/wk_ic_btn_shopping</drawable>
+
 </resources>

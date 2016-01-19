@@ -18,6 +18,7 @@
     <!-- Action & Navigation Bar -->
     <color name="wk_actionbar_bg">@color/wk_primary</color>
     <color name="wk_actionbar_text">@color/wk_primary_reverse</color>
+    <color name="wk_actionbar_subtitle">#AFFF</color>
     <color name="wk_navbar_bg">@color/wk_primary</color>
     <color name="wk_navbar_pressed">@color/wk_primary_pressed</color>
     <color name="wk_navbar_text">@color/wk_primary_reverse</color>

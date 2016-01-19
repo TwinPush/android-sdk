@@ -38,7 +38,7 @@
                     <com.yellowpineapple.wakup.sdk.views.ColorImageView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:src="@drawable/wk_ic_warning"
+                        android:src="@drawable/wk_empty_offers"
                         app:imageColor="@color/wk_no_results_text"/>
 
                     <TextView
@@ -77,7 +77,7 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 app:navText="@string/wk_big_offer"
-                app:navIcon="@drawable/wk_ic_nav_big_offer"/>
+                app:navIcon="@drawable/wk_nav_big_offer"/>
 
             <View
                 android:layout_width="1dp"
@@ -92,7 +92,7 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 app:navText="@string/wk_offers_map"
-                app:navIcon="@drawable/wk_ic_nav_map"/>
+                app:navIcon="@drawable/wk_nav_map"/>
 
             <View
                 android:layout_width="1dp"
@@ -107,7 +107,7 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 app:navText="@string/wk_my_offers"
-                app:navIcon="@drawable/wk_ic_nav_my_offers"/>
+                app:navIcon="@drawable/wk_nav_my_offers"/>
 
         </LinearLayout>
 

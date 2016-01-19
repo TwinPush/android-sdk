@@ -67,7 +67,7 @@
                         android:layout_alignParentLeft="true"
                         android:layout_centerVertical="true"
                         app:imageColor="@color/wk_light_text"
-                        android:src="@drawable/wk_ic_location"/>
+                        android:src="@drawable/wk_offer_location"/>
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -95,7 +95,7 @@
                         android:layout_alignParentLeft="true"
                         android:layout_centerVertical="true"
                         app:imageColor="@color/wk_light_text"
-                        android:src="@drawable/wk_ic_expiration"/>
+                        android:src="@drawable/wk_offer_expiration"/>
 
                     <TextView
                         android:layout_width="wrap_content"

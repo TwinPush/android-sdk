@@ -20,7 +20,7 @@
             android:layout_weight="1"
             android:layout_margin="5dp"
             app:buttonText="@string/wk_category_restaurants"
-            app:buttonIcon="@drawable/wk_ic_btn_restaurants"
+            app:buttonIcon="@drawable/wk_cat_restaurants"
             app:buttonFontSize="@dimen/wk_small_text"/>
 
         <com.yellowpineapple.wakup.sdk.views.OfferActionButton
@@ -30,7 +30,7 @@
             android:layout_weight="1"
             android:layout_margin="5dp"
             app:buttonText="@string/wk_category_shopping"
-            app:buttonIcon="@drawable/wk_ic_btn_shopping"
+            app:buttonIcon="@drawable/wk_cat_shopping"
             app:buttonFontSize="@dimen/wk_small_text"/>
 
         <com.yellowpineapple.wakup.sdk.views.OfferActionButton
@@ -40,7 +40,7 @@
             android:layout_weight="1"
             android:layout_margin="5dp"
             app:buttonText="@string/wk_category_leisure"
-            app:buttonIcon="@drawable/wk_ic_btn_leisure"
+            app:buttonIcon="@drawable/wk_cat_leisure"
             app:buttonFontSize="@dimen/wk_small_text"/>
 
         <com.yellowpineapple.wakup.sdk.views.OfferActionButton
@@ -50,7 +50,7 @@
             android:layout_weight="1"
             android:layout_margin="5dp"
             app:buttonText="@string/wk_category_services"
-            app:buttonIcon="@drawable/wk_ic_btn_services"
+            app:buttonIcon="@drawable/wk_cat_services"
             app:buttonFontSize="@dimen/wk_small_text"/>
 
     </LinearLayout>

@@ -259,7 +259,7 @@
             android:visibility="gone"
             android:layout_margin="5dp"
             app:buttonText="@string/wk_action_offer_website"
-            app:buttonIcon="@drawable/wk_ic_btn_website"/>
+            app:buttonIcon="@drawable/wk_action_web"/>
 
         <com.yellowpineapple.wakup.sdk.views.OfferActionButton
             android:id="@+id/btnMap"
@@ -268,7 +268,7 @@
             android:layout_weight="1"
             android:layout_margin="5dp"
             app:buttonText="@string/wk_action_offer_map"
-            app:buttonIcon="@drawable/wk_ic_btn_location"/>
+            app:buttonIcon="@drawable/wk_action_locate"/>
 
         <com.yellowpineapple.wakup.sdk.views.OfferActionButton
             android:id="@+id/btnSave"
@@ -277,7 +277,7 @@
             android:layout_weight="1"
             android:layout_margin="5dp"
             app:buttonText="@string/wk_action_offer_save"
-            app:buttonIcon="@drawable/wk_ic_btn_save"/>
+            app:buttonIcon="@drawable/wk_action_save"/>
 
         <com.yellowpineapple.wakup.sdk.views.OfferActionButton
             android:id="@+id/btnShare"
@@ -286,7 +286,7 @@
             android:layout_weight="1"
             android:layout_margin="5dp"
             app:buttonText="@string/wk_action_offer_share"
-            app:buttonIcon="@drawable/wk_ic_btn_share"/>
+            app:buttonIcon="@drawable/wk_action_share"/>
 
     </LinearLayout>
 
