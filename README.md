@@ -208,7 +208,7 @@ Following are described the different views of the application that can be custo
 
 #### Offers map
 
-![](http://i.imgur.com/0bCSGkslm.png)
+![](http://i.imgur.com/0bCSGksm.png)
 
 ```xml
 <!-- Icons (colored) -->
