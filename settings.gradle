@@ -1,1 +1,1 @@
-include ':sdk', ':wakup'
+include ':wakup'

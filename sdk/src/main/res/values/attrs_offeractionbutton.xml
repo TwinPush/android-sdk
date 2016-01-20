@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources xmlns:tools="http://schemas.android.com/tools">
-    <declare-styleable name="OfferActionButton" tools:ignore="ResourceName">
-        <attr name="buttonText" format="integer"/>
-        <attr name="buttonIcon" format="integer"/>
-        <attr name="buttonFontSize" format="float"/>
-    </declare-styleable>
-</resources>

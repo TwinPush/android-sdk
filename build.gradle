@@ -19,5 +19,8 @@ allprojects {
             //url "${System.env.HOME}/.m2/repository"
             url  "http://dl.bintray.com/twinpush/sdk"
         }
+        maven {
+            url  "http://dl.bintray.com/wakup/sdk"
+        }
     }
 }
