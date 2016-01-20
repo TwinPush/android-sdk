@@ -1,10 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="wk_app_name">Ofertas</string>
-    <string name="wk_error_message_title">Error</string>
-    <string name="wk_error_message_button">Aceptar</string>
-
+    <!-- Activity titles -->
     <string name="wk_activity_offers">Ofertas</string>
     <string name="wk_activity_my_offers">Mis ofertas</string>
     <string name="wk_activity_offer_detail">Oferta</string>
@@ -12,6 +9,10 @@
     <string name="wk_activity_search_result">Resultados</string>
     <string name="wk_activity_big_offer">Ofertón</string>
     <string name="wk_activity_map">Mapa</string>
+
+    <!-- Generic error message -->
+    <string name="wk_error_message_title">Error</string>
+    <string name="wk_error_message_button">Aceptar</string>
 
     <!-- Connection error -->
     <string name="wk_connection_error_message">Se produjo un error de comunicación. Compruebe su conexión a internet e inténtelo de nuevo</string>

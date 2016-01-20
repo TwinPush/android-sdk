@@ -61,11 +61,43 @@ The application appearance can be customized by overriding the resources used by
 
 The elements that are not customized will be displayed will the default look & feel.
 
+We suggest to create a resources XML file called `wakup.xml` in your `res/values` folder that will contain all the customized resources.
+
+### Strings
+
+Wakup uses I18n string resources for the all the texts displayed in the application, so it can be overriden to customize the messages shown.
+
+For example, to change the title of the Wakup activities, include and change this resource strings in your `wakup.xml' file:
+
+```xml
+<!-- Activity titles -->
+<string name="wk_activity_offers">Ofertas</string>
+<string name="wk_activity_my_offers">Mis ofertas</string>
+<string name="wk_activity_offer_detail">Oferta</string>
+<string name="wk_activity_store_offers">Ofertas de marca</string>
+<string name="wk_activity_search_result">Resultados</string>
+<string name="wk_activity_big_offer">Ofertón</string>
+<string name="wk_activity_map">Mapa</string>
+```
+
+### Icons
+
+Wakup SDK uses icons referenced by drawable resources that can be easily overriden with references to different icons.
+
+For example, to set the action bar logo for the entire Wakup offers section, include this drawable resource in your `wakup.xml` file:
+
+```xml
+<!-- ActionBar logo -->
+<drawable name="wk_actionbar_logo">@drawable/ic_action_logo</drawable>
+```
+
+**Note:** All the icons except the map pins and ActionBar logo **must be white colored**, since they will be tinted later depending on the selected colors applying a filter.
+
 ### Colors
 
 Main application Look & Feel will be customized by overriding the default colors used by the Wakup SDK layout.
 
-To do so, create a file named `wakup.xml` in your project module and copy the primary colors:
+To do so, copy and alter the primary colors on your `wakup.xml` file:
 
 ```xml
 <!-- Primary customization colors -->
@@ -81,9 +113,125 @@ This main colors are used as a reference of the entire Offers section and will d
 
 By changing this resources, you will override, **at compile time** the color used by the Wakup section.
 
-#### Deep customization
+### Deep customization
 
-If a more thorough customization is required, you can also override the secondary colors (that are mostly based in previously defined primary colors) that will allow to set colors to every section more precisely:
+If a more thorough customization is required, you can also override the secondary colors (that are mostly based in previously defined primary colors) that will allow to set colors to every section more precisely.
+
+Following are described the different views of the application that can be customized, including the associated resources:
+
+#### Action bar
+
+![](http://i.imgur.com/CnMLZfSm.png)
+
+![](http://i.imgur.com/Fr8hiWYm.png)
+
+```xml
+<!-- Colors -->
+<color name="wk_actionbar_bg">@color/wk_primary</color>
+<color name="wk_actionbar_text">@color/wk_primary_reverse</color>
+<color name="wk_actionbar_subtitle">#AFFF</color>
+<!-- Icons -->
+<drawable name="wk_actionbar_logo">@drawable/ic_action_logo</drawable>
+```
+#### Navigation bar
+
+![](http://i.imgur.com/KXusEEkm.png)
+
+```xml
+<!-- Colors -->
+<color name="wk_navbar_bg">@color/wk_primary</color>
+<color name="wk_navbar_pressed">@color/wk_primary_pressed</color>
+<color name="wk_navbar_text">@color/wk_primary_reverse</color>
+<color name="wk_navbar_divider">@color/wk_primary_reverse</color>
+<!-- Icons -->
+<drawable name="wk_nav_big_offer">@drawable/wk_ic_nav_big_offer</drawable>
+<drawable name="wk_nav_map">@drawable/wk_ic_nav_map</drawable>
+<drawable name="wk_nav_my_offers">@drawable/wk_ic_nav_my_offers</drawable>
+```
+
+#### Offer item
+
+![](http://i.imgur.com/HbfrxvAm.png)
+
+```xml
+<!-- Offer Item -->
+<color name="wk_offer_list_item_bg">@color/wk_white</color>
+<color name="wk_offer_short_desc">@color/wk_secondary_reverse</color>
+<color name="wk_offer_short_desc_bg">@color/wk_secondary</color>
+<!-- Icons -->
+<drawable name="wk_offer_expiration">@drawable/wk_ic_expiration</drawable>
+<drawable name="wk_offer_location">@drawable/wk_ic_location</drawable>
+```
+#### Offer detail
+
+![](http://i.imgur.com/sDpRiiwm.png?1)
+
+```xml
+<!-- Colors -->
+<color name="wk_store_offers">@color/wk_secondary_reverse</color>
+<color name="wk_store_offers_bg">@color/wk_secondary</color>
+<color name="wk_store_offers_bg_pressed">@color/wk_secondary_pressed</color>
+```
+#### Offer actions
+
+![](http://i.imgur.com/cGItnT0m.png)
+
+```xml
+<!-- Colors -->
+<color name="wk_action_active">@color/wk_primary</color>
+<color name="wk_action_pressed">@color/wk_white</color>
+<color name="wk_action_inactive">@color/wk_light_text</color>
+<!-- Icons -->
+<drawable name="wk_action_save">@drawable/wk_ic_btn_save</drawable>
+<drawable name="wk_action_share">@drawable/wk_ic_btn_share</drawable>
+<drawable name="wk_action_web">@drawable/wk_ic_btn_website</drawable>
+<drawable name="wk_action_locate">@drawable/wk_ic_btn_location</drawable>
+```
+#### Search view
+
+![](http://i.imgur.com/sMJl5z0m.png)
+
+```xml
+<!-- Colors -->
+<color name="wk_search_header_bg">#F6F6F6</color>
+<color name="wk_search_list_bg">@color/wk_white</color>
+<color name="wk_search_icon">@color/wk_light_text</color>
+<!-- Category icons -->
+<drawable name="wk_cat_leisure">@drawable/wk_ic_btn_leisure</drawable>
+<drawable name="wk_cat_restaurants">@drawable/wk_ic_btn_restaurants</drawable>
+<drawable name="wk_cat_services">@drawable/wk_ic_btn_services</drawable>
+<drawable name="wk_cat_shopping">@drawable/wk_ic_btn_shopping</drawable>
+<!-- Result item icons -->
+<drawable name="wk_search_brand">@drawable/wk_ic_search_brand</drawable>
+<drawable name="wk_search_geo">@drawable/wk_ic_search_geo</drawable>
+```
+
+#### Offers map
+
+![](http://i.imgur.com/0bCSGkslm.png)
+
+```xml
+<!-- Icons (colored) -->
+<drawable name="wk_pin_unknown">@drawable/wk_ic_pin_unknown</drawable>
+<drawable name="wk_pin_leisure">@drawable/wk_ic_pin_leisure</drawable>
+<drawable name="wk_pin_restaurants">@drawable/wk_ic_pin_restaurant</drawable>
+<drawable name="wk_pin_services">@drawable/wk_ic_pin_services</drawable>
+<drawable name="wk_pin_shopping">@drawable/wk_ic_pin_shopping</drawable>
+```
+
+#### Empty result views
+
+![](http://i.imgur.com/zZQFaXCm.png) ![](http://i.imgur.com/p8okjk4m.png?1)
+
+```xml
+<!-- Colors -->
+<color name="wk_no_results_text">#8F8F8F</color>
+<!-- Icons -->
+<drawable name="wk_empty_offers">@drawable/wk_ic_warning</drawable>
+<drawable name="wk_empty_my_offers">@drawable/wk_ic_saved_offers</drawable>
+```
+
+#### Common
 
 ```xml
 <!-- Activity -->
@@ -93,39 +241,6 @@ If a more thorough customization is required, you can also override the secondar
 <color name="wk_main_text">#505050</color>
 <color name="wk_bold_text">#393939</color>
 <color name="wk_light_text">#8F8F8F</color>
-
-<!-- Action & Navigation Bar -->
-<color name="wk_actionbar_bg">@color/wk_primary</color>
-<color name="wk_actionbar_text">@color/wk_primary_reverse</color>
-<color name="wk_actionbar_subtitle">#AFFF</color>
-<color name="wk_navbar_bg">@color/wk_primary</color>
-<color name="wk_navbar_pressed">@color/wk_primary_pressed</color>
-<color name="wk_navbar_text">@color/wk_primary_reverse</color>
-<color name="wk_navbar_divider">@color/wk_primary_reverse</color>
-
-<!-- Offer Item -->
-<color name="wk_offer_list_item_bg">@color/wk_white</color>
-<color name="wk_offer_short_desc">@color/wk_secondary_reverse</color>
-<color name="wk_offer_short_desc_bg">@color/wk_secondary</color>
-
-<!-- Offer Detail -->
-<color name="wk_store_offers">@color/wk_secondary_reverse</color>
-<color name="wk_store_offers_bg">@color/wk_secondary</color>
-<color name="wk_store_offers_bg_pressed">@color/wk_secondary_pressed</color>
-
-<!-- Action & Filter buttons -->
-<color name="wk_action_active">@color/wk_primary</color>
-<color name="wk_action_pressed">@color/wk_white</color>
-<color name="wk_action_inactive">@color/wk_light_text</color>
-
-<!-- No results view -->
-<color name="wk_no_results_text">#8F8F8F</color>
-
-<!-- Search view -->
-<color name="wk_search_header_bg">#F6F6F6</color>
-<color name="wk_search_list_bg">@color/wk_white</color>
-<color name="wk_search_icon">@color/wk_light_text</color>
-
 ```
 
 # Dependencies
