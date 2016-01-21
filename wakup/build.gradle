@@ -8,8 +8,8 @@ android {
         applicationId "com.yellowpineapple.wakup"
         minSdkVersion 16
         targetSdkVersion 23
-        versionCode 1
-        versionName "1.0"
+        versionCode 10300
+        versionName "1.3.0"
     }
     buildTypes {
         release {
@@ -26,6 +26,5 @@ dependencies {
     compile 'com.android.support:appcompat-v7:23.1.1'
     compile 'com.twinpush.android:sdk:2.0.2'
     compile 'com.wakup.android:sdk:1.0.0'
-    compile 'uk.co.chrisjenx:calligraphy:2.0.1'
     compile 'com.google.android.gms:play-services:8.3.0'
 }
