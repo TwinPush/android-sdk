@@ -2,6 +2,7 @@
 
 ## 2.0.3
 * Improved background location updates: Now LocationService is not necessary
+* Updated [Google Play Services](https://developers.google.com/android/guides/setup) dependency to latest available version: 8.4.0
 
 ## 2.0.2
 * Removed unnecessary AppCompat dependency

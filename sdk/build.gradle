@@ -4,8 +4,8 @@ apply plugin: 'com.android.library'
 apply plugin: 'com.github.dcendents.android-maven'
 apply plugin: 'com.jfrog.bintray'
 
-def libraryVersion = '2.0.2'
-def libraryVersionCode = 2002
+def libraryVersion = '2.0.3'
+def libraryVersionCode = 2003
 
 // Maven group and version
 version = libraryVersion
@@ -15,7 +15,7 @@ group = "com.twinpush.android"                               // Maven Group ID f
 
 android {
     compileSdkVersion 23
-    buildToolsVersion "23.0.1"
+    buildToolsVersion "23.0.2"
 
     defaultConfig {
         minSdkVersion 9
@@ -36,7 +36,7 @@ dependencies {
     testCompile 'junit:junit:4.12'
 
     compile "com.android.support:support-v4:23.1.1"
-    compile 'com.google.android.gms:play-services-gcm:8.3.0'
+    compile 'com.google.android.gms:play-services-gcm:8.4.0'
     compile "cz.msebera.android:httpclient:4.4.1.1"
 }
 
