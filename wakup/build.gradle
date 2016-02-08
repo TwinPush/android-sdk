@@ -25,5 +25,5 @@ dependencies {
 
     compile 'com.android.support:appcompat-v7:23.1.1'
     compile 'com.twinpush.android:sdk:2.0.3'
-    compile 'com.wakup.android:sdk:1.0.1'
+    compile 'com.wakup.android:sdk:1.1.0'
 }

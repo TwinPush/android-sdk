@@ -8,6 +8,6 @@
     <color name="wk_action_active">@color/wk_primary_pressed</color>
 
     <!-- ActionBar Logo -->
-    <drawable name="wk_actionbar_logo">@drawable/ic_action_logo</drawable>
+    <drawable name="wk_actionbar_logo_root">@drawable/ic_action_logo</drawable>
 
 </resources>
