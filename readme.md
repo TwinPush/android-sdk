@@ -40,12 +40,6 @@ Google recommends using [Android Studio](https://developer.android.com/sdk/index
 Include this dependency in your `build.gradle` file to reference this library in your project
 
 ```groovy
-repositories {
-    maven {
-        url  "http://dl.bintray.com/twinpush/sdk"
-    }
-}
-
 dependencies {
     compile 'com.twinpush.android:sdk:2.0.3'
 }
