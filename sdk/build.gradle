@@ -95,7 +95,7 @@ bintray {
         version {
             name = libraryVersion
             desc = 'TwinPush SDK for Android ' + libraryVersion
-            released  = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZZ").format(new java.util.Date())
+            released = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZZ").format(new java.util.Date())
             vcsTag = 'v' + libraryVersion
         }
     }

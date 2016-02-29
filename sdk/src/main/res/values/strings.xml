@@ -2,11 +2,11 @@
 <resources>
 
     <string name="app_name">TwinPush Demo</string>
-    
+
     <!-- Error dialog -->
     <string name="error_message_title">Error</string>
     <string name="error_message_button">Aceptar</string>
-    
+
     <!-- Register activity -->
     <string name="register_title">New device</string>
     <string name="register_loading">Registering device&#8230;</string>
@@ -17,11 +17,11 @@
     <string name="gender">Gender</string>
     <string name="male">Male</string>
     <string name="female">Female</string>
-    
+
     <!-- Notification inbox -->
     <string name="notif_inbox_loading">Loading notifications&#8230;</string>
     <string name="notif_inbox_empty">No results found</string>
-    
+
     <!-- GCM Example code -->
     <string name="error_config">Please set the %1$s constant and recompile the app.</string>
     <string name="already_registered">Device is already registered on server.</string>
@@ -33,8 +33,8 @@
     <string name="gcm_deleted">From GCM: server deleted %1$d pending messages!</string>
     <string name="gcm_internet_connection_error_title">Internet Connection Error</string>
     <string name="gcm_internet_connection_error_message">Please connect to working Internet connection</string>
-    
+
     <!-- Communications -->
-	<string name="communication_error_message">Unable to connect to server</string>
+    <string name="communication_error_message">Unable to connect to server</string>
 
 </resources>

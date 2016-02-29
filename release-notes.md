@@ -1,5 +1,8 @@
 # TwinPush Android SDK Release Notes
 
+## 2.0.4
+* Included sanity check to avoid errors updating location when ACESS_FINE_LOCATION permission is not granted (for Android 6+)
+
 ## 2.0.3
 * Improved background location updates: Now LocationService is not necessary
 * Updated [Google Play Services](https://developers.google.com/android/guides/setup) dependency to latest available version: 8.4.0
