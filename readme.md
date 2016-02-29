@@ -1,6 +1,6 @@
 #TwinPush SDK Library
 [![Download](https://api.bintray.com/packages/twinpush/sdk/android-sdk/images/download.svg)](https://bintray.com/twinpush/sdk/android-sdk/_latestVersion)
-[![Methods Count](https://img.shields.io/badge/Methods count-core: 1149 | deps: 22321-e91e63.svg)](http://www.methodscount.com/?lib=com.twinpush.android%3Asdk%3A2.0.3)
+[![Methods Count](https://img.shields.io/badge/Methods count-core: 1149 | deps: 22321-e91e63.svg)](http://www.methodscount.com/?lib=com.twinpush.android%3Asdk%3A2.0.4)
 [![License](https://go-shields.herokuapp.com/license-MIT-blue.png)](https://raw.githubusercontent.com/TwinPush/android-sdk/master/LICENSE)
 
 
@@ -41,7 +41,7 @@ Include this dependency in your `build.gradle` file to reference this library in
 
 ```groovy
 dependencies {
-    compile 'com.twinpush.android:sdk:2.0.3'
+    compile 'com.twinpush.android:sdk:2.0.4'
 }
 ```
 
@@ -258,6 +258,28 @@ In case of the default Rich Activity:
 </activity>
 ```
 
+###Sending activity report
+
+Using TwinPush is possible to determine the periods of user activity with the application: how long a device uses the application, last usage time or the number of times it is opened. This feature also allows to identify inactive devices to prevent taking them into consideration for the device limit per license.
+
+To include this, you just have to add a call to `activityStart` and `activityStop` methods of TwinPush SDK in onStart and onStop methods of application activities.
+
+To avoid duplicating code, it is recommended to export common functionality to an abstract parent activity that will be extended by the rest of application activities.
+
+```java
+@Override
+protected void onStart() {
+    TwinPushSDK.getInstance(this).activityStart(this);
+    super.onStart();
+};
+
+@Override
+protected void onStop() {
+    TwinPushSDK.getInstance(this).activityStop(this);
+    super.onStop();
+}
+```
+
 ###Displaying notifications inbox
 
 Through TwinPush SDK you can obtain all the rich notifications received by the device in order to display a messages inbox.
@@ -328,28 +350,6 @@ You can also delete all information sent by a device performing a call to `clear
 TwinPushSDK.getInstance(this).clearProperties();
 ```
 
-###Sending usage statistics
-
-Using TwinPush is possible to record the how long a device uses the application, as well as the number of times it is opened. To do this, you just have to add a call to `activityStart` and `activityStop` methods of TwinPush SDK in onStart and onStop methods of application activities.
-
-It is recommended to export common functionality to an abstract parent activity that will be extended by the rest of application activities.
-
-```java
-@Override
-protected void onStart() {
-    TwinPushSDK.getInstance(this).activityStart(this);
-    super.onStart();
-};
-
-@Override
-protected void onStop() {
-    TwinPushSDK.getInstance(this).activityStop(this);
-    super.onStop();
-}
-```
-
-Through these calls TwinPush can determine the periods of user activity with the application.
-
 ###Sending location
 
 There are two ways to notify the user location to TwinPush:
@@ -363,6 +363,8 @@ To access the location using either of the two methods, it is necessary to inclu
 <!-- Permission to access to GPS Location -->
 <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
 ```
+
+**Note:** For Android 6+ _ACCESS\_FINE\_LOCATION_ is considered a [_dangerous_](http://developer.android.com/intl/es/guide/topics/security/permissions.html) permission and it will also require a [Runtime Permission Request](http://developer.android.com/intl/es/training/permissions/requesting.html). If the permission is not granted by the user, the location will not be updated.
 
 ####Automatic sending of location
 
