@@ -1,7 +1,11 @@
 # TwinPush Android SDK Release Notes
 
+## 2.1.0
+* Included Notification Inbox for User. Every user will be able to maintain its own inbox in multiple devices.
+* Updated Android Support V4 dependency to latest version: 23.3.0
+
 ## 2.0.4
-* Included sanity check to avoid errors updating location when ACESS_FINE_LOCATION permission is not granted (for Android 6+)
+* Included sanity check to avoid errors updating location when ACESS\_FINE\_LOCATION permission is not granted (for Android 6+)
 
 ## 2.0.3
 * Improved background location updates: Now LocationService is not necessary
