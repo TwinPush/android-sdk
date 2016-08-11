@@ -27,6 +27,7 @@ import com.twincoders.twinpush.sdk.communications.requests.notifications.GetNoti
 import com.twincoders.twinpush.sdk.communications.requests.notifications.GetNotificationsRequest;
 import com.twincoders.twinpush.sdk.communications.requests.notifications.GetNotificationsRequest.Listener;
 import com.twincoders.twinpush.sdk.communications.requests.register.RegisterRequest;
+import com.twincoders.twinpush.sdk.entities.InboxNotification;
 import com.twincoders.twinpush.sdk.entities.LocationPrecision;
 import com.twincoders.twinpush.sdk.entities.PropertyType;
 import com.twincoders.twinpush.sdk.entities.RegistrationInfo;
@@ -277,6 +278,11 @@ public class DefaultTwinPushSDK extends TwinPushSDK implements LocationListener 
     @Override
     public void getNotification(String notificationId, GetNotificationDetailsRequest.Listener listener) {
         getRequestFactory().getNotification(notificationId, listener);
+    }
+
+    @Override
+    public void deleteNotification(InboxNotification notification, DefaultListener listener) {
+        getRequestFactory().deleteNotification(notification, listener);
     }
 
     /* Properties */

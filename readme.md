@@ -280,50 +280,43 @@ protected void onStop() {
 }
 ```
 
-###Displaying notifications inbox
+###Displaying User Notifications Inbox
 
-Through TwinPush SDK you can obtain all the rich notifications received by the device in order to display a messages inbox.
+Through the _User Inbox_ that TwinPush offers, it is possible for an user of your application to access to its received notifications from different devices.
 
-This requires performing a method call getNotifications of TwinPushSDK:
+This requires performing a method call `getUserInbox` of TwinPushSDK:
 
 ```java
-TwinPushSDK.getInstance(this).getNotifications(currentPage, maxPages,new GetNotificationsRequest.Listener() {
+TwinPushSDK.getInstance(this).getUserInbox(currentPage, maxPages,new GetInboxRequest.Listener() {
     @Override
     public void onError(Exception exception) {
         // Error occurred on request
     }
 
     @Override
-    public void onSuccess(List<PushNotification> notifications, int totalPages) {
+    public void onSuccess(List<InboxNotification> notifications, int totalPages) {
         // Request successful
     }
 });
 ```
-
-To make it easier to display the results in a list, there is an abstract implementation for an Adapter that can be extended.
-
-In the following code sample we configure an Adapter to be used in an activity to display notifications on a ListView. You can insert this code in the onCreate method of your activity:
+To remove a notification from the User Inbox, only is required to call the `deleteNotification` method from TwinPushSDK:
 
 ```java
-/* Setup list adapter */
-NotifListAdapter adapter = new NotifListAdapter(this) {
+InboxNotification notification = mAdapter.getNotifications().get(position);
+TwinPushSDK.getInstance(this).deleteNotification(notification, new TwinRequest.DefaultListener() {
     @Override
-    public NotificationListItemView getViewInstance(Context context) {
-        NotificationListItemView view = new MyCustomView(context);
-        // Your class MyCustomView should implement NotificationListItemView interface
-        return view;
+    public void onSuccess() {
+        // Request successful
     }
-};
 
-adapter.setListener(new NotifListAdapter.Listener() {
     @Override
-    public void onNotificationSelected(PushNotification notification) {
-        // Notification selected
+    public void onError(Exception exception) {
+        // An error occurred
     }
 });
 ```
 
-The Demo Application contains an Inbox Activity that uses the new method of implementing lists through [ReciclerView](http://developer.android.com/intl/es/reference/android/support/v7/widget/RecyclerView.html).
+The Demo Application contains an [Inbox Activity](](https://github.com/TwinPush/android-sdk/blob/master/demo/src/main/java/com/twincoders/twinpush/sdk/demo/InboxActivity.java)) that implements a fully functional example of the User Inbox using a [ReciclerView](http://developer.android.com/intl/es/reference/android/support/v7/widget/RecyclerView.html) adapter.
 
 ###Sending user information
 

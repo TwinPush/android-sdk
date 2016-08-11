@@ -4,9 +4,11 @@ import android.app.Activity;
 import android.content.Context;
 import android.location.Location;
 
+import com.twincoders.twinpush.sdk.communications.TwinRequest;
 import com.twincoders.twinpush.sdk.communications.requests.notifications.GetInboxRequest;
 import com.twincoders.twinpush.sdk.communications.requests.notifications.GetNotificationDetailsRequest;
 import com.twincoders.twinpush.sdk.communications.requests.notifications.GetNotificationsRequest;
+import com.twincoders.twinpush.sdk.entities.InboxNotification;
 import com.twincoders.twinpush.sdk.entities.LocationPrecision;
 import com.twincoders.twinpush.sdk.entities.TwinPushOptions;
 import com.twincoders.twinpush.sdk.notifications.PushNotification;
@@ -94,6 +96,13 @@ public abstract class TwinPushSDK {
      * @param listener Listener object to notify result to
      */
     public abstract void getNotification(String notificationId, GetNotificationDetailsRequest.Listener listener);
+
+    /**
+     * Removes a given notification from the current user inbox.
+     * @param notification Inbox notification to remove
+     * @param listener Listener to notify callback
+     */
+    public abstract void deleteNotification(InboxNotification notification, TwinRequest.DefaultListener listener);
     
     /* Properties */
     /**

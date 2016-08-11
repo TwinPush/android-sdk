@@ -13,24 +13,27 @@ import android.widget.Toast;
 
 import com.twincoders.twinpush.sdk.TwinPushSDK;
 import com.twincoders.twinpush.sdk.activities.RichNotificationActivity;
+import com.twincoders.twinpush.sdk.communications.TwinRequest;
 import com.twincoders.twinpush.sdk.communications.requests.notifications.GetInboxRequest;
 import com.twincoders.twinpush.sdk.demo.adapters.DividerItemDecoration;
 import com.twincoders.twinpush.sdk.demo.adapters.InboxAdapter;
 import com.twincoders.twinpush.sdk.demo.adapters.ItemClickSupport;
 import com.twincoders.twinpush.sdk.entities.InboxNotification;
+import com.twincoders.twinpush.sdk.logging.Ln;
 import com.twincoders.twinpush.sdk.services.NotificationIntentService;
 
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by agutierrez on 5/11/15.
+ * Example of User Inbox using a Recycler view with InboxAdapter.
+ * In this demo, long click over a notification will remove it from the inbox
  */
-public class InboxActivity extends ParentActivity implements ItemClickSupport.OnItemClickListener {
+public class InboxActivity extends ParentActivity implements ItemClickSupport.OnItemClickListener,
+        ItemClickSupport.OnItemLongClickListener{
 
     private RecyclerView mRecyclerView;
     private InboxAdapter mAdapter;
-    private RecyclerView.LayoutManager mLayoutManager;
 
     View progressView;
     View emptyView;
@@ -53,7 +56,7 @@ public class InboxActivity extends ParentActivity implements ItemClickSupport.On
         mRecyclerView.setHasFixedSize(true);
 
         // use a linear layout manager
-        mLayoutManager = new LinearLayoutManager(this);
+        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(this);
         mRecyclerView.setLayoutManager(mLayoutManager);
 
         // specify an adapter (see also next example)
@@ -63,6 +66,7 @@ public class InboxActivity extends ParentActivity implements ItemClickSupport.On
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
 
         ItemClickSupport.addTo(mRecyclerView).setOnItemClickListener(this);
+        ItemClickSupport.addTo(mRecyclerView).setOnItemLongClickListener(this);
 
         reload(null);
     }
@@ -92,9 +96,28 @@ public class InboxActivity extends ParentActivity implements ItemClickSupport.On
     @Override
     public void onItemClicked(RecyclerView recyclerView, int position, View v) {
         InboxNotification notification = mAdapter.getNotifications().get(position);
-        Intent richIntent = new Intent(this, RichNotificationActivity.class);
-        richIntent.putExtra(NotificationIntentService.EXTRA_NOTIFICATION, notification.getNotification());
-        startActivity(richIntent);
+        if (notification.getNotification().isRichNotification()) {
+            Intent richIntent = new Intent(this, RichNotificationActivity.class);
+            richIntent.putExtra(NotificationIntentService.EXTRA_NOTIFICATION, notification.getNotification());
+            startActivity(richIntent);
+        }
+    }
+
+    @Override
+    public boolean onItemLongClicked(RecyclerView recyclerView, int position, View v) {
+        InboxNotification notification = mAdapter.getNotifications().get(position);
+        TwinPushSDK.getInstance(this).deleteNotification(notification, new TwinRequest.DefaultListener() {
+            @Override
+            public void onSuccess() {
+                reload(null);
+            }
+
+            @Override
+            public void onError(Exception exception) {
+                Ln.e(exception, "Could not delete notification");
+            }
+        });
+        return false;
     }
 
     private void showProgress() {
@@ -103,7 +126,7 @@ public class InboxActivity extends ParentActivity implements ItemClickSupport.On
 
     private void stopProgress(View targetView) {
         this.displayView = targetView;
-        super.showProgress(false, progressView, displayView != null ? displayView : this.displayView);
+        super.showProgress(false, progressView, displayView);
     }
 
     @Override
