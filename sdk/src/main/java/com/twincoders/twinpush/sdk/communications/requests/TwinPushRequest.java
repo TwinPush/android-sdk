@@ -1,5 +1,15 @@
 package com.twincoders.twinpush.sdk.communications.requests;
 
+import com.twincoders.twinpush.sdk.TwinPushSDK;
+import com.twincoders.twinpush.sdk.communications.RESTJSONRequest;
+import com.twincoders.twinpush.sdk.entities.InboxNotification;
+import com.twincoders.twinpush.sdk.logging.Ln;
+import com.twincoders.twinpush.sdk.notifications.PushNotification;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -10,15 +20,6 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.TimeZone;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import com.twincoders.twinpush.sdk.TwinPushSDK;
-import com.twincoders.twinpush.sdk.communications.RESTJSONRequest;
-import com.twincoders.twinpush.sdk.logging.Ln;
-import com.twincoders.twinpush.sdk.notifications.PushNotification;
 
 public abstract class TwinPushRequest extends RESTJSONRequest {
 	
@@ -126,6 +127,13 @@ public abstract class TwinPushRequest extends RESTJSONRequest {
 		final static String DATE_ALT = "send_since";
 		final static String DATE_FORMAT = "yyyy-MM-dd HH:mm:ss 'UTC'";
 	}
+
+    private static class InboxItemFields {
+        final static String ID = "id";
+        final static String CREATED_AT = "created_at";
+        final static String OPEN_AT = "open_at";
+        final static String NOTIFICATION = "notification";
+    }
 	
 	protected PushNotification parseNotification(JSONObject json) throws JSONException {
 		PushNotification n = new PushNotification();
@@ -138,24 +146,9 @@ public abstract class TwinPushRequest extends RESTJSONRequest {
 		if (!json.isNull(NotificationFields.TAGS_KEY)) {
 			n.setTags(getTags(json.getJSONArray(NotificationFields.TAGS_KEY)));
 		}
-		// Parse date
-		SimpleDateFormat dateFormat = new SimpleDateFormat(NotificationFields.DATE_FORMAT, Locale.UK);
-		dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
-		Date date;
-		try {
-			String dateString = getNullableString(json, json.has(NotificationFields.DATE) ? NotificationFields.DATE : NotificationFields.DATE_ALT);
-			if (dateString != null) {
-				date = dateFormat.parse(dateString);
-			} else {
-				date = new Date();
-			}
-		} catch (ParseException e) {
-			Ln.e(e, "Error while trying to parse notification date");
-			date = new Date();
-			Ln.i("Current format: %s", dateFormat.format(date));
-		}
-		n.setDate(date);
-		return n;
+        String dateString = getNullableString(json, json.has(NotificationFields.DATE) ? NotificationFields.DATE : NotificationFields.DATE_ALT);
+        n.setDate(parseDate(dateString));
+        return n;
 	}
 	
 	protected Map<String, String> getCustomPropertiesMap(JSONObject json) {
@@ -187,5 +180,31 @@ public abstract class TwinPushRequest extends RESTJSONRequest {
 		}
 		return tags;
 	}
+
+	protected InboxNotification parseInboxNotification(JSONObject json) throws JSONException {
+		InboxNotification n = new InboxNotification();
+        n.setId(getNullableString(json, InboxItemFields.ID));
+        n.setNotification(parseNotification(json.getJSONObject(InboxItemFields.NOTIFICATION)));
+		n.setCreatedAt(parseDate(getNullableString(json, InboxItemFields.CREATED_AT)));
+        n.setOpenAt(parseDate(getNullableString(json, InboxItemFields.OPEN_AT)));
+		return n;
+	}
+
+    SimpleDateFormat dateFormat = null;
+    protected Date parseDate(String dateString) {
+        Date date = null;
+        if (dateString != null) {
+            if (dateFormat == null) {
+                dateFormat = new SimpleDateFormat(NotificationFields.DATE_FORMAT, Locale.UK);
+                dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
+            }
+            try {
+                date = dateFormat.parse(dateString);
+            } catch (ParseException e) {
+                Ln.e(e, "Error while trying to parse notification date");
+            }
+        }
+        return date;
+    }
 
 }

@@ -8,7 +8,7 @@ import android.widget.TextView;
 
 import com.twincoders.twinpush.sdk.controllers.NotificationListItemView;
 import com.twincoders.twinpush.sdk.demo.R;
-import com.twincoders.twinpush.sdk.notifications.PushNotification;
+import com.twincoders.twinpush.sdk.entities.InboxNotification;
 
 import java.text.SimpleDateFormat;
 
@@ -23,7 +23,7 @@ public class InboxItemView extends LinearLayout implements NotificationListItemV
     TextView dateTxt;
 
     /* Properties */
-    PushNotification notification;
+    InboxNotification notification;
 
     public InboxItemView(Context context) {
         super(context);
@@ -35,16 +35,16 @@ public class InboxItemView extends LinearLayout implements NotificationListItemV
     }
 
     @Override
-    public void setNotification(PushNotification notification) {
+    public void setNotification(InboxNotification notification) {
         this.notification = notification;
-        String title = notification.getTitle();
-        String message = notification.getMessage();
+        String title = notification.getNotification().getTitle();
+        String message = notification.getNotification().getMessage();
         boolean containsTitle = title.trim().length() > 0;
         titleTxt.setVisibility(containsTitle ? View.VISIBLE : View.GONE);
         titleTxt.setText(title);
         messageTxt.setText(message);
-        String date = SimpleDateFormat.getDateInstance().format(notification.getDate());
-        String hour = SimpleDateFormat.getTimeInstance(SimpleDateFormat.SHORT).format(notification.getDate());
+        String date = SimpleDateFormat.getDateInstance().format(notification.getCreatedAt());
+        String hour = SimpleDateFormat.getTimeInstance(SimpleDateFormat.SHORT).format(notification.getCreatedAt());
         dateTxt.setText(String.format("%s\n%s", date, hour));
     }
 

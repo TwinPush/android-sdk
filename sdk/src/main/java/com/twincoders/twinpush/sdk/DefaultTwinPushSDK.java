@@ -22,6 +22,7 @@ import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.twincoders.twinpush.sdk.communications.TwinPushRequestFactory;
 import com.twincoders.twinpush.sdk.communications.TwinRequest.DefaultListener;
 import com.twincoders.twinpush.sdk.communications.requests.TwinPushRequest;
+import com.twincoders.twinpush.sdk.communications.requests.notifications.GetInboxRequest;
 import com.twincoders.twinpush.sdk.communications.requests.notifications.GetNotificationDetailsRequest;
 import com.twincoders.twinpush.sdk.communications.requests.notifications.GetNotificationsRequest;
 import com.twincoders.twinpush.sdk.communications.requests.notifications.GetNotificationsRequest.Listener;
@@ -266,6 +267,11 @@ public class DefaultTwinPushSDK extends TwinPushSDK implements LocationListener 
     @Override
     public void getNotifications(int page, int resultsPerPage, GetNotificationsRequest.Listener listener) {
         getNotifications(page, resultsPerPage, null, null, true, listener);
+    }
+
+    @Override
+    public void getUserInbox(int page, int resultsPerPage, GetInboxRequest.Listener listener) {
+        getRequestFactory().getUserInbox(page, resultsPerPage, listener);
     }
 
     @Override

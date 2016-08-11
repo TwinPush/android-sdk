@@ -1,23 +1,23 @@
 package com.twincoders.twinpush.sdk.controllers;
 
-import java.util.List;
-
 import android.content.Context;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 
 import com.twincoders.twinpush.sdk.TwinPushSDK;
-import com.twincoders.twinpush.sdk.notifications.PushNotification;
+import com.twincoders.twinpush.sdk.entities.InboxNotification;
+
+import java.util.List;
 
 public abstract class NotifListAdapter extends BaseAdapter implements NotificationListItemView.Listener {
 
 	public interface Listener {
-		void onNotificationSelected(PushNotification notification);
-		void onNotificationLongClicked(PushNotification notification);
+		void onNotificationSelected(InboxNotification notification);
+		void onNotificationLongClicked(InboxNotification notification);
 	}
 
-	List<PushNotification> notifications;
+	List<InboxNotification> notifications;
 	Listener listener;
 	Context context;
 
@@ -36,8 +36,8 @@ public abstract class NotifListAdapter extends BaseAdapter implements Notificati
 	}
 
 	@Override
-	public PushNotification getItem(int position) {
-		PushNotification n = null;
+	public InboxNotification getItem(int position) {
+		InboxNotification n = null;
 		if (position < notifications.size()) {
 			n = notifications.get(position); 
 		}
@@ -63,7 +63,7 @@ public abstract class NotifListAdapter extends BaseAdapter implements Notificati
 
 		if (view != null) {
 			// Set the view contents
-			final PushNotification notification = getItem(position);
+			final InboxNotification notification = getItem(position);
 			view.setNotification(notification);
 			view.setListener(this);
 		}
@@ -77,24 +77,24 @@ public abstract class NotifListAdapter extends BaseAdapter implements Notificati
 		this.listener = listener;
 	}
 	
-	public void setNotifications(List<PushNotification> notifications) {
+	public void setNotifications(List<InboxNotification> notifications) {
 		this.notifications = notifications;
 	}
 	
-	public List<PushNotification> getNotifications() {
+	public List<InboxNotification> getNotifications() {
 		return notifications;
 	}
 	
 	@Override
-	public void onNotificationSelected(PushNotification notification) {
+	public void onNotificationSelected(InboxNotification notification) {
 		if (listener != null) {
-			TwinPushSDK.getInstance(context).onNotificationOpen(notification);
+			TwinPushSDK.getInstance(context).onNotificationOpen(notification.getNotification());
 			listener.onNotificationSelected(notification);
 		}
 	}
 	
 	@Override
-	public void onNotificationLongClicked(PushNotification notification) {
+	public void onNotificationLongClicked(InboxNotification notification) {
 		if (listener != null) listener.onNotificationLongClicked(notification);
 	}
 

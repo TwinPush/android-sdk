@@ -13,11 +13,11 @@ import android.widget.Toast;
 
 import com.twincoders.twinpush.sdk.TwinPushSDK;
 import com.twincoders.twinpush.sdk.activities.RichNotificationActivity;
-import com.twincoders.twinpush.sdk.communications.requests.notifications.GetNotificationsRequest;
+import com.twincoders.twinpush.sdk.communications.requests.notifications.GetInboxRequest;
 import com.twincoders.twinpush.sdk.demo.adapters.DividerItemDecoration;
 import com.twincoders.twinpush.sdk.demo.adapters.InboxAdapter;
 import com.twincoders.twinpush.sdk.demo.adapters.ItemClickSupport;
-import com.twincoders.twinpush.sdk.notifications.PushNotification;
+import com.twincoders.twinpush.sdk.entities.InboxNotification;
 import com.twincoders.twinpush.sdk.services.NotificationIntentService;
 
 import java.util.ArrayList;
@@ -57,7 +57,7 @@ public class InboxActivity extends ParentActivity implements ItemClickSupport.On
         mRecyclerView.setLayoutManager(mLayoutManager);
 
         // specify an adapter (see also next example)
-        mAdapter = new InboxAdapter(this, new ArrayList<PushNotification>());
+        mAdapter = new InboxAdapter(this, new ArrayList<InboxNotification>());
         mRecyclerView.setAdapter(mAdapter);
 
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
@@ -69,9 +69,9 @@ public class InboxActivity extends ParentActivity implements ItemClickSupport.On
 
     public void reload(MenuItem object) {
         showProgress();
-        TwinPushSDK.getInstance(this).getNotifications(0, 50, null, null, true, new GetNotificationsRequest.Listener() {
+        TwinPushSDK.getInstance(this).getUserInbox(0, 50, new GetInboxRequest.Listener() {
             @Override
-            public void onSuccess(List<PushNotification> notifications, int totalPages) {
+            public void onSuccess(List<InboxNotification> notifications, int totalPages) {
                 mAdapter.setNotifications(notifications);
                 mAdapter.notifyDataSetChanged();
                 if (notifications.isEmpty()) {
@@ -91,9 +91,9 @@ public class InboxActivity extends ParentActivity implements ItemClickSupport.On
 
     @Override
     public void onItemClicked(RecyclerView recyclerView, int position, View v) {
-        PushNotification notification = mAdapter.getNotifications().get(position);
+        InboxNotification notification = mAdapter.getNotifications().get(position);
         Intent richIntent = new Intent(this, RichNotificationActivity.class);
-        richIntent.putExtra(NotificationIntentService.EXTRA_NOTIFICATION, notification);
+        richIntent.putExtra(NotificationIntentService.EXTRA_NOTIFICATION, notification.getNotification());
         startActivity(richIntent);
     }
 

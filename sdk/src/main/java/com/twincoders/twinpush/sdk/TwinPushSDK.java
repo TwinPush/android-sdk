@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.location.Location;
 
+import com.twincoders.twinpush.sdk.communications.requests.notifications.GetInboxRequest;
 import com.twincoders.twinpush.sdk.communications.requests.notifications.GetNotificationDetailsRequest;
 import com.twincoders.twinpush.sdk.communications.requests.notifications.GetNotificationsRequest;
 import com.twincoders.twinpush.sdk.entities.LocationPrecision;
@@ -77,6 +78,15 @@ public abstract class TwinPushSDK {
      * @param listener Listener object to notify result to
      */
     public abstract void getNotifications(int page, int resultsPerPage, List<String> tags, List<String> noTags, boolean ignoreNonRichNotifications ,GetNotificationsRequest.Listener listener);
+
+    /**
+     * Method to obtain notifications sent to current user identified by alias.
+     * The request will fail if no alias is associated with the current device.
+     * @param page Page to obtain notifications from. First page is 0
+     * @param resultsPerPage Number of results to obtain per page
+     * @param listener Listener object to notify result to
+     */
+    public abstract void getUserInbox(int page, int resultsPerPage, GetInboxRequest.Listener listener);
 
     /**
      * Obtains the details for the selected notification

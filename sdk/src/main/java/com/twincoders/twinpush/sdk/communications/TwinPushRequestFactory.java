@@ -1,9 +1,5 @@
 package com.twincoders.twinpush.sdk.communications;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-
 import android.content.Context;
 
 import com.twincoders.twinpush.sdk.TwinPushSDK;
@@ -11,6 +7,7 @@ import com.twincoders.twinpush.sdk.communications.TwinRequest.DefaultListener;
 import com.twincoders.twinpush.sdk.communications.TwinRequest.OnRequestFinishListener;
 import com.twincoders.twinpush.sdk.communications.requests.TwinPushRequest;
 import com.twincoders.twinpush.sdk.communications.requests.forms.ReportFormRequest;
+import com.twincoders.twinpush.sdk.communications.requests.notifications.GetInboxRequest;
 import com.twincoders.twinpush.sdk.communications.requests.notifications.GetNotificationDetailsRequest;
 import com.twincoders.twinpush.sdk.communications.requests.notifications.GetNotificationsRequest;
 import com.twincoders.twinpush.sdk.communications.requests.notifications.GetNotificationsRequest.Listener;
@@ -24,6 +21,10 @@ import com.twincoders.twinpush.sdk.communications.requests.statistics.ReportStat
 import com.twincoders.twinpush.sdk.entities.PropertyType;
 import com.twincoders.twinpush.sdk.entities.RegistrationInfo;
 import com.twincoders.twinpush.sdk.notifications.PushNotification;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 public class TwinPushRequestFactory {
 
@@ -70,6 +71,12 @@ public class TwinPushRequestFactory {
 	
 	public TwinPushRequest getNotificationInbox(int page, int resultsPerPage, List<String> tags, List<String> noTags, boolean ignoreNonRichNotifications, Listener listener) {
 		TwinPushRequest request = new GetNotificationsRequest(getAppId(), getDeviceId(), page, resultsPerPage, tags, noTags, ignoreNonRichNotifications, listener);
+		launch(request);
+		return request;
+	}
+
+	public TwinPushRequest getUserInbox(int page, int resultsPerPage, GetInboxRequest.Listener listener) {
+		TwinPushRequest request = new GetInboxRequest(getAppId(), getDeviceId(), page, resultsPerPage, listener);
 		launch(request);
 		return request;
 	}

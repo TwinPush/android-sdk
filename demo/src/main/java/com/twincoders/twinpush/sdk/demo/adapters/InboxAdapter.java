@@ -7,7 +7,7 @@ import android.view.ViewGroup;
 
 import com.twincoders.twinpush.sdk.controllers.NotificationListItemView;
 import com.twincoders.twinpush.sdk.demo.views.InboxItemView;
-import com.twincoders.twinpush.sdk.notifications.PushNotification;
+import com.twincoders.twinpush.sdk.entities.InboxNotification;
 
 import java.util.List;
 
@@ -17,7 +17,7 @@ import java.util.List;
 public class InboxAdapter extends RecyclerView.Adapter<InboxAdapter.ViewHolder> {
 
     private Context context;
-    private List<PushNotification> notifications;
+    private List<InboxNotification> notifications;
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
 
@@ -29,7 +29,7 @@ public class InboxAdapter extends RecyclerView.Adapter<InboxAdapter.ViewHolder> 
     }
 
     // Provide a suitable constructor (depends on the kind of dataset)
-    public InboxAdapter(Context context, List<PushNotification> notifications) {
+    public InboxAdapter(Context context, List<InboxNotification> notifications) {
         this.notifications = notifications;
         this.context = context;
     }
@@ -57,11 +57,11 @@ public class InboxAdapter extends RecyclerView.Adapter<InboxAdapter.ViewHolder> 
     }
 
     // Getter and setter for data set
-    public void setNotifications(List<PushNotification> notifications) {
+    public void setNotifications(List<InboxNotification> notifications) {
         this.notifications = notifications;
     }
 
-    public List<PushNotification> getNotifications() {
+    public List<InboxNotification> getNotifications() {
         return notifications;
     }
 }
