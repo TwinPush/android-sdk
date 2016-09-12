@@ -1,5 +1,12 @@
 # TwinPush Android SDK Release Notes
 
+## 2.2.0
+Version updates to support Android SDK v24:
+
+* Updated Android build tools and target SDK to latest available version: 24
+* Updated Android Support V4 dependency to latest version: 24.2.0
+* Updated Gradle version to 2.1.3
+
 ## 2.1.0
 * Included Notification Inbox for User. Every user will be able to maintain its own inbox in multiple devices.
 * Updated Android Support V4 dependency to latest version: 23.3.0
