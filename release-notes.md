@@ -1,6 +1,6 @@
 # TwinPush Android SDK Release Notes
 
-## 2.2.0
+## 2.2.1
 Version updates to support Android SDK v24:
 
 * Updated Android build tools and target SDK to latest available version: 24
