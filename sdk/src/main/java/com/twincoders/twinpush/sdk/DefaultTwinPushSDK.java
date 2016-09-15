@@ -123,6 +123,7 @@ public class DefaultTwinPushSDK extends TwinPushSDK implements LocationListener 
 
                                 @Override
                                 public void onError(Exception exception) {
+                                    registerRequest = null;
                                     registerError(exception, listener);
                                 }
 
