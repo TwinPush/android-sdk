@@ -1,5 +1,14 @@
 # TwinPush Android SDK Release Notes
 
+## 2.2.2
+Version updates to support Android SDK v25:
+
+* Updated Android build tools and target SDK to latest available version: 25
+* Updated Android Support V4 dependency to latest version: 25.0.0
+* Updated Gradle build tools version to 2.2.2
+* Updated [Google Play Services](https://developers.google.com/android/guides/setup) dependency to latest available version: 9.8.0
+
+
 ## 2.2.1
 Version updates to support Android SDK v24:
 
