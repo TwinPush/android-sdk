@@ -1,24 +1,25 @@
 #TwinPush SDK Library
 [![Download](https://api.bintray.com/packages/twinpush/sdk/android-sdk/images/download.svg)](https://bintray.com/twinpush/sdk/android-sdk/_latestVersion)
-[![Methods Count](https://img.shields.io/badge/Methods count-core: 1149 | deps: 22321-e91e63.svg)](http://www.methodscount.com/?lib=com.twinpush.android%3Asdk%3A2.2.2)
+[![Methods Count](https://img.shields.io/badge/Methods count-core: 1149 | deps: 22321-e91e63.svg)](http://www.methodscount.com/?lib=com.twinpush.android%3Asdk%3A2.3.0)
 [![License](https://go-shields.herokuapp.com/license-MIT-blue.png)](https://raw.githubusercontent.com/TwinPush/android-sdk/master/LICENSE)
 
 
 Native Android SDK library for [TwinPush](http://twinpush.com) platform.
 
-## Register For Google Cloud Messaging
+## Setup Firebase Cloud Messaging
 
-TwinPush uses Google Cloud Messaging to deliver Push Notifications to Android devices.
+TwinPush uses Firebase Cloud Messaging (FCM) to deliver Push Notifications to Android devices.
 
-To use this service, it is necessary to access to the [Google Developers Console](https://console.developers.google.com) and perform the following steps:
+To use this service, it is necessary to access to the [Firebase Console](https://console.firebase.google.com) and perform the following steps:
 
- 1. Create a Project (or select an existing one)
- 2. Enable Google Cloud Messaging service
- 3. Create a Public API access Key for Server in the Credentials section
+ 1. Create a Project or import it from previous Google Cloud Messaging (GCM)
+ 2. Write down the **Server Key** from the Settings -> Cloud Messaging section of project
+ 3. Create an Android Application
+ 4. Setup Firebase in your Android project and include the required `google-services.json` file
  
-Write down the **Public API Key** and the **Project Number** (GCM sender ID) as it will be used later.
- 
-You can create and manage projects in the [Google Developers Console](https://console.developers.google.com). For instructions, see the [Developers Console documentation](https://developers.google.com/console/help/new/).
+You can perform these steps through an assistant in the Tools -> Firebase menu of Android Studio:
+
+![](http://i.imgur.com/cD7Z8iT.png)
 
 ## Register your application in TwinPush
 
@@ -26,11 +27,11 @@ The next step is to setup the TwinPush application. This can be done through the
 
 1. Access to TwinPush website and login with your account
 2. From the control panel of your application, select Application Settings
-3. Open _Google Cloud Messaging (GCM)_ section
-4. Enter the Server API Key obtained during Google Cloud Messaging registration
+3. Open _Firebase Cloud Messaging (FCM)_ section
+4. Enter the Server API Key obtained during Firebase Cloud Messaging registration
 5. Enter the Android Application package
 
-![Notification in Actionbar](http://developers.twinpush.com/assets/android_apikey-7d67473c7ca735ac5ff674dbcc7841bf.png)
+![Android settings view](http://developers.twinpush.com/assets/android_apikey-7d67473c7ca735ac5ff674dbcc7841bf.png)
 
 ## Building the application
 
@@ -41,93 +42,29 @@ Include this dependency in your `build.gradle` file to reference this library in
 
 ```groovy
 dependencies {
-    compile 'com.twinpush.android:sdk:2.2.2'
+    compile 'com.twinpush.android:sdk:2.3.0'
 }
-```
-
-### Non-Gradle Library import
-
-For projects not using Android Studio, first it is needed to Setup the project for **Google Play Services**. This is done by adding `google-play-services_lib` library as an Android Library Dependency and include the following service declaration in the `application` node of your *manifest* file:
-
-```xml
-<meta-data android:name="com.google.android.gms.version" 
-           android:value="@integer/google_play_services_version" />
-```
-
-You can follow official documentation [here](https://developers.google.com/android/guides/setup).
-
-In addition, it is mandatory to include the following libraries to the project by dragging them to the libs folder:
-
-* **[twinpush-sdk.jar](https://bintray.com/twinpush/sdk/android-sdk/_latestVersion)** - TwinPush stand-alone Library JAR. Provides native access to the TwinPush API and includes convenience methods.
-* **[httpclient-4.4.1.1.jar](http://central.maven.org/maven2/cz/msebera/android/httpclient/4.4.1.1/httpclient-4.4.1.1.jar)** - Library used by TwinPush to resolve communications
-* **android-support-v4** - Android Compatibility Library. Allows the use of methods and classes of an API Level on devices with lower versions. Can be added to Eclipse project by *right clicking the project -> Android Tools -> Add Support Library*
-
-The libraries must be checked to be exported with the project.
-
-To use GCM is needed Android 2.3 or higher. Therefore, the application must have a minimum API Level of 9:
-
-```xml
-<uses-sdk android:minSdkVersion="9" android:targetSdkVersion="xx"/>
-```
-
-Also it is neccesary to include the following permissions in the _Manifest.xml_ file of your application:
-
-```xml
-<!-- [START twinpush_permission] -->
-<uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
-<!-- GCM connects to Internet Services. -->
-<uses-permission android:name="android.permission.INTERNET" />
-<!-- Keeps the processor from sleeping when a message is received. -->
-<uses-permission android:name="android.permission.WAKE_LOCK" />
-<!-- Permission to vibrate -->
-<uses-permission android:name="android.permission.VIBRATE" />
-<!-- GCM requires a Google account (for Android version lower than 4.0.4) -->
-<uses-permission android:name="android.permission.GET_ACCOUNTS" />
-<!-- Custom permission so only this application can receive GCM messages 
-(not required for applications targeted to minSdkVersion 16 and higher) -->
-<permission android:name="my_app_package.permission.C2D_MESSAGE" android:protectionLevel="signature" />
-<uses-permission android:name="my_app_package.permission.C2D_MESSAGE" />
-<!-- [END twinpush_permission] -->
 ```
 
 ### Configuring Android manifest
 
-Inside the _application_ node include the GCM receiver:
+Inside the _application_ node include the following services:
 
 ```xml
-<!-- [START gcm_receiver] -->
-<receiver
-    android:name="com.google.android.gms.gcm.GcmReceiver"
-    android:exported="true"
-    android:permission="com.google.android.c2dm.permission.SEND">
+<service
+    android:name="com.twincoders.twinpush.sdk.services.TwinPushInstanceIdService">
     <intent-filter>
-        <action android:name="com.google.android.c2dm.intent.RECEIVE" />
-    
-        <category android:name="my_app_package" />
+        <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
     </intent-filter>
-</receiver>
-<!-- [END gcm_receiver] -->
-```
-And include also the TwinPush services to register device and receive notifications:
+</service>
 
-```xml
-<!-- [START twinpush_services] -->
 <service
-    android:name="com.twincoders.twinpush.sdk.services.NotificationIntentService"
-    android:exported="false">
+    android:name="com.twincoders.twinpush.sdk.services.NotificationIntentService">
     <intent-filter>
-        <action android:name="com.google.android.c2dm.intent.RECEIVE" />
+        <action android:name="com.google.firebase.MESSAGING_EVENT" />
     </intent-filter>
 </service>
-    
-<service
-    android:name="com.twincoders.twinpush.sdk.services.RegistrationIntentService"
-    android:exported="false">
-</service>
-<!-- [END twinpush_services] -->
 ```
-    
-Where `my_app_package` must be replaced by the package name of your application.
 
 ### Starting TwinPush SDK
 
@@ -135,7 +72,6 @@ To Setup TwinPush SDK you will need the following information:
 
 * **TwinPush App ID**: Application ID obtained from Settings section of TwinPush platform
 * **TwinPush API Key**: TwinPush Application API Key displayed in Settings section
-* **Google Project Number**: Project number (formerly Sender ID) obtained in the Google APIs Console
 * **Subdomain**: Server subdomain where the application is deployed. Can be obtained in the Settings section of the TwinPush platform.
 * **Notification icon**: An image resource that will be displayed on action bar when a Push notification is received
   
@@ -150,7 +86,6 @@ public void onCreate(Bundle savedInstanceState) {
     TwinPushOptions options = new TwinPushOptions();                // Initialize options
     options.twinPushAppId =     "7687xxxxxxxxxxxx";                 // - APP ID
     options.twinPushApiKey =    "c5caxxxxxxxxxxxxxxxxxxxxxxxx1592"; // - API Key
-    options.gcmProjectNumber =  "8xxxxxxxxxxx";                     // - GCM Project Number
     options.subdomain =         "mycompany";                        // - Application subdomain
     options.notificationIcon =  R.drawable.ic_notification;         // - Notification icon
     TwinPushSDK.getInstance(this).setup(options);                   // Call setup
@@ -446,10 +381,9 @@ public class MyIntentService extends NotificationIntentService {
 
 ```xml
 <service
-    android:name="my_app_package.services.MyIntentService"
-    android:exported="false">
+    android:name="my_app_package.services.MyIntentService">
     <intent-filter>
-        <action android:name="com.google.android.c2dm.intent.RECEIVE" />
+        <action android:name="com.google.firebase.MESSAGING_EVENT" />
     </intent-filter>
 </service>
 ```
