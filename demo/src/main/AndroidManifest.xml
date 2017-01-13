@@ -30,34 +30,46 @@
             android:theme="@style/AppTheme">
         </activity>
 
-        <!-- [START gcm_receiver] -->
-        <receiver
-            android:name="com.google.android.gms.gcm.GcmReceiver"
-            android:exported="true"
-            android:permission="com.google.android.c2dm.permission.SEND">
-            <intent-filter>
-                <action android:name="com.google.android.c2dm.intent.RECEIVE" />
+        <!--&lt;!&ndash; [START gcm_receiver] &ndash;&gt;-->
+        <!--<receiver-->
+            <!--android:name="com.google.android.gms.gcm.GcmReceiver"-->
+            <!--android:exported="true"-->
+            <!--android:permission="com.google.android.c2dm.permission.SEND">-->
+            <!--<intent-filter>-->
+                <!--<action android:name="com.google.android.c2dm.intent.RECEIVE" />-->
 
-                <category android:name="com.twincoders.twinpush.sdk.demo" />
-            </intent-filter>
-        </receiver>
-        <!-- [END gcm_receiver] -->
+                <!--<category android:name="com.twincoders.twinpush.sdk.demo" />-->
+            <!--</intent-filter>-->
+        <!--</receiver>-->
+        <!--&lt;!&ndash; [END gcm_receiver] &ndash;&gt;-->
 
-        <!-- [START twinpush_services] -->
-        <service
-            android:name="com.twincoders.twinpush.sdk.services.NotificationIntentService"
-            android:exported="false">
-            <intent-filter>
-                <action android:name="com.google.android.c2dm.intent.RECEIVE" />
-            </intent-filter>
-        </service>
+        <!--&lt;!&ndash; [START twinpush_services] &ndash;&gt;-->
+        <!--<service-->
+            <!--android:name="com.twincoders.twinpush.sdk.services.NotificationIntentService"-->
+            <!--android:exported="false">-->
+            <!--<intent-filter>-->
+                <!--<action android:name="com.google.android.c2dm.intent.RECEIVE" />-->
+            <!--</intent-filter>-->
+        <!--</service>-->
 
-        <service
-            android:name="com.twincoders.twinpush.sdk.services.RegistrationIntentService"
-            android:exported="false">
-        </service>
+        <!--<service-->
+            <!--android:name="com.twincoders.twinpush.sdk.services.RegistrationIntentService"-->
+            <!--android:exported="false">-->
+        <!--</service>-->
         <!-- [END twinpush_services] -->
+        <service
+            android:name="com.twincoders.twinpush.sdk.services.TwinPushInstanceIdService">
+            <intent-filter>
+                <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
+            </intent-filter>
+        </service>
 
+        <service
+            android:name="com.twincoders.twinpush.sdk.services.NotificationIntentService">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+            </intent-filter>
+        </service>
 
     </application>
 

@@ -5,10 +5,10 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
-import android.os.Bundle;
 import android.support.v4.app.NotificationCompat;
 
-import com.google.android.gms.gcm.GcmListenerService;
+import com.google.firebase.messaging.FirebaseMessagingService;
+import com.google.firebase.messaging.RemoteMessage;
 import com.twincoders.twinpush.sdk.TwinPushSDK;
 import com.twincoders.twinpush.sdk.logging.Ln;
 import com.twincoders.twinpush.sdk.notifications.PushNotification;
@@ -21,7 +21,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
-public class NotificationIntentService extends GcmListenerService {
+public class NotificationIntentService extends FirebaseMessagingService {
 
 	public final static String EXTRA_NOTIFICATION_TITLE = "title";
 	public final static String EXTRA_NOTIFICATION_MESSAGE = "message";
@@ -36,13 +36,19 @@ public class NotificationIntentService extends GcmListenerService {
         super();
     }
 
-	public void onMessageReceived(String from, Bundle data) {
+	@Override
+	public void onMessageReceived(RemoteMessage message){
     	Ln.i("Received message");
-        
-        PushNotification notification = getNotification(data);
-        
-        // notifies user
-        displayNotification(getBaseContext(), notification);
+
+		// Check if message contains a notification payload.
+		if (message.getNotification() != null) {
+			super.onMessageReceived(message);
+		} else {
+			PushNotification notification = getNotification(message.getData());
+
+			// notifies user
+			displayNotification(getBaseContext(), notification);
+		}
     }
 
     /**
@@ -89,8 +95,7 @@ public class NotificationIntentService extends GcmListenerService {
     	intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_CLEAR_TOP);
     	intent.putExtra(EXTRA_NOTIFICATION, notification);
         // Prepare the pending intent
-        PendingIntent pendingIntent = PendingIntent.getActivity(context, notification.getId().hashCode(), intent, PendingIntent.FLAG_CANCEL_CURRENT);
-        return pendingIntent;
+        return PendingIntent.getActivity(context, notification.getId().hashCode(), intent, PendingIntent.FLAG_CANCEL_CURRENT);
     }
     
     /**
@@ -98,14 +103,15 @@ public class NotificationIntentService extends GcmListenerService {
      * @param data Bundle containing the push notification info
      * @return PushNotification object retrieved from message
      */
-    protected PushNotification getNotification(Bundle data) {
+    protected PushNotification getNotification(Map<String, String> data) {
     	// Extract info from message intent
-    	String notificationId = data.getString(EXTRA_NOTIFICATION_ID);
-    	String title = data.getString(EXTRA_NOTIFICATION_TITLE);
-		String message = data.getString(EXTRA_NOTIFICATION_MESSAGE);
-		String richURL = data.getString(EXTRA_NOTIFICATION_RICH_URL);
+    	String notificationId = data.get(EXTRA_NOTIFICATION_ID);
+    	String title = data.get(EXTRA_NOTIFICATION_TITLE);
+		String message = data.get(EXTRA_NOTIFICATION_MESSAGE);
+		String richURL = data.get(EXTRA_NOTIFICATION_RICH_URL);
 		Date date = new Date();
-		Map<String, String> customProperties = getCustomPropertiesMap(data);
+		Map<String, String> customProperties = getCustomPropertiesMap(data.get(EXTRA_NOTIFICATION_CUSTOM));
+
 		
 		PushNotification notification = new PushNotification();
 		notification.setId(notificationId);
@@ -113,16 +119,14 @@ public class NotificationIntentService extends GcmListenerService {
 		notification.setMessage(message);
 		notification.setDate(date);
 		notification.setRichURL(richURL);
-		notification.setCustomProperties(customProperties);
+        notification.setCustomProperties(customProperties);
 		
 		return notification;
     }
     
-    private Map<String, String> getCustomPropertiesMap(Bundle data) {
-    	Map<String, String> propertiesMap = new HashMap<String, String>();
+    private Map<String, String> getCustomPropertiesMap(String custom) {
+    	Map<String, String> propertiesMap = new HashMap<>();
     	try {
-    		// Extract raw custom String
-    		String custom = data.getString(EXTRA_NOTIFICATION_CUSTOM);
     		if (custom != null) {
 	    		JSONObject json = new JSONObject(custom);
 	    		Iterator<?> iter = json.keys();

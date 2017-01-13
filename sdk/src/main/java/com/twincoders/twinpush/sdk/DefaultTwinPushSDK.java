@@ -1,12 +1,11 @@
 package com.twincoders.twinpush.sdk;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.PendingIntent;
-import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.Location;
@@ -15,10 +14,8 @@ import android.location.LocationManager;
 import android.os.Bundle;
 import android.provider.Settings.Secure;
 import android.support.v4.content.ContextCompat;
-import android.support.v4.content.LocalBroadcastManager;
 
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.GooglePlayServicesUtil;
+import com.google.firebase.iid.FirebaseInstanceId;
 import com.twincoders.twinpush.sdk.communications.TwinPushRequestFactory;
 import com.twincoders.twinpush.sdk.communications.TwinRequest.DefaultListener;
 import com.twincoders.twinpush.sdk.communications.requests.TwinPushRequest;
@@ -36,7 +33,6 @@ import com.twincoders.twinpush.sdk.logging.Ln;
 import com.twincoders.twinpush.sdk.logging.Strings;
 import com.twincoders.twinpush.sdk.notifications.PushNotification;
 import com.twincoders.twinpush.sdk.services.LocationChangeReceiver;
-import com.twincoders.twinpush.sdk.services.RegistrationIntentService;
 import com.twincoders.twinpush.sdk.util.LastLocationFinder;
 import com.twincoders.twinpush.sdk.util.StringEncrypter;
 
@@ -52,12 +48,10 @@ public class DefaultTwinPushSDK extends TwinPushSDK implements LocationListener 
     /* Constants */
     private static final String PREF_FILE_NAME = "TwinPushPrefs";
     private static final String PREF_REGISTRATION_HASH = "REGISTRATION_HASH";
-    private static final String PREF_GCM_REGISTERED = "GCM_REGISTERED";
     private static final String PREF_NOTIFICATION_SMALL_ICON = "NOTIFICATION_SMALL_ICON";
+    private static final String PREF_DEVICE_UDID = "DEVICE_UDID";
     private static final String PREF_DEVICE_ID = "DEVICE_ID";
     private static final String PREF_DEVICE_ALIAS = "DEVICE_ALIAS";
-    private static final String PREF_DEVICE_PUSH_TOKEN = "DEVICE_PUSH_TOKEN";
-    private static final String PREF_GCM_PROJECT_NUMBER = "GCM_SENDER_ID";
     private static final String PREF_TWINPUSH_API_KEY = "TWINPUSH_TOKEN";
     private static final String PREF_TWINPUSH_APP_ID = "TWINPUSH_APP_ID";
     private static final String PREF_TWINPUSH_SUBDOMAIN = "TWINPUSH_SUBDOMAIN";
@@ -79,79 +73,24 @@ public class DefaultTwinPushSDK extends TwinPushSDK implements LocationListener 
     private static final String PREF_SSL_ISSUER = "PREF_SSL_ISSUER";
     private static final String PREF_SSL_SUBJECT = "PREF_SSL_SUBJECT";
 
-    private final static int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
-
     /* Private properties */
     private Context _context = null;
     private TwinPushRequest registerRequest = null;
-    private BroadcastReceiver registrationReceiver;
-    private List<Activity> openedActivities = new ArrayList<Activity>();
+    private List<Activity> openedActivities = new ArrayList<>();
     private LastLocationFinder locationFinder = null;
 
     /* Properties */
     private String deviceAlias = null;
     private String deviceId = null;
     private int notificationSmallIcon = 0;
-    private String gcmProjectNumber = null;
     private String apiKey = null;
     private String appId = null;
-    private String pushToken = null;
 
     /* Private constructor */
-    protected DefaultTwinPushSDK(Context context) {
+    DefaultTwinPushSDK(Context context) {
         _context = context.getApplicationContext();
         locationFinder = new LastLocationFinder(context.getApplicationContext());
         locationFinder.setChangedLocationListener(this);
-    }
-
-    void onGCMRegister(final String deviceAlias, final String pushToken, final OnRegistrationListener listener) {
-        Ln.d("GCM registration completed");
-        // Only register if registration info has changed since last register
-        RegistrationInfo info = RegistrationInfo.fromContext(getContext(), getDeviceUDID(), deviceAlias, pushToken);
-        String registrationHash = encrypt(info.toString());
-
-        if (!Strings.equals(registrationHash, getRegistrationHash())) {
-            setRegistrationHash(registrationHash);
-            Ln.d("Registration changed! Launching new registration request");
-            // Device is already registered on GCM
-            if (registerRequest != null) {
-                registerRequest.cancel();
-            }
-            registerRequest = getRequestFactory().
-                    register(info,
-                            new RegisterRequest.Listener() {
-
-                                @Override
-                                public void onError(Exception exception) {
-                                    registerRequest = null;
-                                    registerError(exception, listener);
-                                }
-
-                                @Override
-                                public void onRegistrationSuccess(String deviceId, String deviceAlias) {
-                                    Ln.i("Device successfully registered on TwinPush (deviceId:%s, alias:%s)", deviceId, deviceAlias);
-                                    registerRequest = null;
-                                    setDeviceId(deviceId);
-                                    setDeviceAlias(deviceAlias);
-                                    setPushToken(pushToken);
-                                    if (listener != null) {
-                                        listener.onRegistrationSuccess(deviceAlias);
-                                    }
-                                }
-                            });
-        } else {
-            Ln.d("Registration info did not change since last registration");
-            if (listener != null) {
-                listener.onRegistrationSuccess(deviceAlias);
-            }
-
-        }
-    }
-
-    RegistrationInfo getRegistrationInfo(String deviceAlias, String pushToken) {
-        RegistrationInfo info = new RegistrationInfo();
-
-        return info;
     }
 
 	/* Public API Methods */
@@ -168,96 +107,63 @@ public class DefaultTwinPushSDK extends TwinPushSDK implements LocationListener 
 
     @Override
     public void register(final String deviceAlias, final OnRegistrationListener listener) {
-        String gcmSenderId = getGcmProjectNumber();
         String appId = getAppId();
-        String token = getApiKey();
-        if (gcmSenderId != null) {
-            if (appId != null) {
-                if (token != null) {
-                    // Make sure the device has the proper dependencies.
-                    if (checkPlayServices()) {
-                        Ln.i("Starting RegistrationIntentService");
-                        // Start registration service
-                        registrationReceiver = new RegisterBroadcastReceiver(deviceAlias, listener);
-                        LocalBroadcastManager.getInstance(getContext()).registerReceiver(registrationReceiver,
-                                new IntentFilter(RegistrationIntentService.REGISTRATION_COMPLETE));
+        String apiKey = getApiKey();
+        if (appId != null) {
+            if (apiKey != null) {
+                // Make sure the device has the proper dependencies.
+                // Only register if registration info has changed since last register
+                String pushToken = FirebaseInstanceId.getInstance().getToken();
+                RegistrationInfo info = RegistrationInfo.fromContext(getContext(), getDeviceUDID(), deviceAlias, pushToken);
+                String registrationHash = encrypt(info.toString());
 
-                        // Start IntentService to register this application with GCM.
-                        Intent intent = new Intent(getContext(), RegistrationIntentService.class);
-                        getContext().startService(intent);
-                    } else {
-                        registerError(new Exception("No valid Google Play Services APK found"), listener);
+                if (!Strings.equals(registrationHash, getRegistrationHash())) {
+                    setRegistrationHash(registrationHash);
+                    Ln.d("Registration changed! Launching new registration request");
+                    if (registerRequest != null) {
+                        registerRequest.cancel();
                     }
+                    registerRequest = getRequestFactory().
+                            register(info,
+                                    new RegisterRequest.Listener() {
+
+                                        @Override
+                                        public void onError(Exception exception) {
+                                            registerRequest = null;
+                                            registerError(exception, listener);
+                                        }
+
+                                        @Override
+                                        public void onRegistrationSuccess(String deviceId, String deviceAlias) {
+                                            Ln.i("Device successfully registered on TwinPush (deviceId:%s, alias:%s)", deviceId, deviceAlias);
+                                            registerRequest = null;
+                                            setDeviceId(deviceId);
+                                            setDeviceAlias(deviceAlias);
+                                            if (listener != null) {
+                                                listener.onRegistrationSuccess(deviceAlias);
+                                            }
+                                        }
+                                    });
                 } else {
-                    registerError(new Exception("Token is not setup in TwinPush SDK"), listener);
+                    Ln.d("Registration info did not change since last registration");
+                    if (listener != null) {
+                        listener.onRegistrationSuccess(deviceAlias);
+                    }
+
                 }
             } else {
-                registerError(new Exception("Application ID is not setup in TwinPush SDK"), listener);
+                registerError(new Exception("Token is not setup in TwinPush SDK"), listener);
             }
         } else {
-            registerError(new Exception("GCM Sender ID is not setup in TwinPush SDK"), listener);
+            registerError(new Exception("Application ID is not setup in TwinPush SDK"), listener);
         }
     }
 
-    void registerError(Exception e, OnRegistrationListener listener) {
+    private void registerError(Exception e, OnRegistrationListener listener) {
         // Sender ID is not setup
         Ln.e(e);
         if (listener != null) {
             listener.onRegistrationError(e);
-        }
-    }
-
-    private void unregisterReceiver() {
-        if (registrationReceiver != null) {
-            LocalBroadcastManager.getInstance(getContext()).unregisterReceiver(registrationReceiver);
-            registrationReceiver = null;
-        }
-    }
-
-    /**
-     * Check the device to make sure it has the Google Play Services APK. If
-     * it doesn't, display a dialog that allows users to download the APK from
-     * the Google Play Store or enable it in the device's system settings.
-     */
-    private boolean checkPlayServices() {
-        int resultCode = GooglePlayServicesUtil.isGooglePlayServicesAvailable(getContext());
-        if (resultCode != ConnectionResult.SUCCESS) {
-            if (GooglePlayServicesUtil.isUserRecoverableError(resultCode) && getContext() instanceof Activity) {
-                GooglePlayServicesUtil.getErrorDialog(resultCode, (Activity) getContext(), PLAY_SERVICES_RESOLUTION_REQUEST).show();
-            } else {
-                Ln.e("checkPlayServices failed: This device is not supported.");
-            }
-            return false;
-        }
-        return true;
-    }
-
-    /**
-     * Receiving register events
-     * */
-
-    private class RegisterBroadcastReceiver extends BroadcastReceiver {
-
-        private String deviceAlias;
-        private OnRegistrationListener listener;
-
-
-        private RegisterBroadcastReceiver(String deviceAlias, OnRegistrationListener listener) {
-            super();
-            this.deviceAlias = deviceAlias;
-            this.listener = listener;
-        }
-
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            String pushToken = intent.getStringExtra(RegistrationIntentService.EXTRA_PUSH_TOKEN);
-            String error = intent.getStringExtra(RegistrationIntentService.EXTRA_REGISTRATION_ERROR);
-            if (Strings.isEmpty(error)) {
-                onGCMRegister(deviceAlias, pushToken, listener);
-            } else {
-                registerError(new Exception(error), listener);
-            }
-            unregisterReceiver();
         }
     }
 
@@ -360,7 +266,7 @@ public class DefaultTwinPushSDK extends TwinPushSDK implements LocationListener 
 
     // Background location
 
-    PendingIntent getBackgroundLocationIntent() {
+    private PendingIntent getBackgroundLocationIntent() {
         Intent passiveIntent = new Intent(getContext(), LocationChangeReceiver.class);
         return PendingIntent.getBroadcast(getContext(), 0, passiveIntent, PendingIntent.FLAG_UPDATE_CURRENT);
     }
@@ -373,7 +279,7 @@ public class DefaultTwinPushSDK extends TwinPushSDK implements LocationListener 
         Ln.i("Registering for location updates");
         getSharedPreferences().edit().
                 putLong(PREF_LOCATION_MIN_UPDATE_TIME, precision.getMinUpdateTime()).
-                putInt(PREF_LOCATION_MIN_UPDATE_DISTANCE, precision.getMinUpdateDistance()).commit();
+                putInt(PREF_LOCATION_MIN_UPDATE_DISTANCE, precision.getMinUpdateDistance()).apply();
         setMonitoringLocationChanges(true);
         registerForLocationUpdates();
     }
@@ -402,7 +308,7 @@ public class DefaultTwinPushSDK extends TwinPushSDK implements LocationListener 
     }
 
     private void setMonitoringLocationChanges(boolean monitoring) {
-        getSharedPreferences().edit().putBoolean(PREF_MONITOR_LOCATION_CHANGES, monitoring).commit();
+        getSharedPreferences().edit().putBoolean(PREF_MONITOR_LOCATION_CHANGES, monitoring).apply();
     }
 
     public boolean isMonitoringLocationChanges() {
@@ -461,8 +367,7 @@ public class DefaultTwinPushSDK extends TwinPushSDK implements LocationListener 
     }
 
     private SharedPreferences getSharedPreferences(String preferencesName) {
-        SharedPreferences prefs = getContext().getSharedPreferences(preferencesName, Context.MODE_PRIVATE);
-        return prefs;
+        return getContext().getSharedPreferences(preferencesName, Context.MODE_PRIVATE);
     }
 
     /* Getters & Setters */
@@ -479,7 +384,7 @@ public class DefaultTwinPushSDK extends TwinPushSDK implements LocationListener 
     }
 
     private void setNotificationSmallIcon(int notificationSmallIcon) {
-        getSharedPreferences().edit().putInt(PREF_NOTIFICATION_SMALL_ICON, notificationSmallIcon).commit();
+        getSharedPreferences().edit().putInt(PREF_NOTIFICATION_SMALL_ICON, notificationSmallIcon).apply();
         this.notificationSmallIcon = notificationSmallIcon;
     }
 
@@ -492,7 +397,7 @@ public class DefaultTwinPushSDK extends TwinPushSDK implements LocationListener 
     }
 
     private void setDeviceAlias(String deviceAlias) {
-        getSharedPreferences().edit().putString(PREF_DEVICE_ALIAS, encrypt(deviceAlias)).commit();
+        getSharedPreferences().edit().putString(PREF_DEVICE_ALIAS, encrypt(deviceAlias)).apply();
         this.deviceAlias = deviceAlias;
     }
 
@@ -505,20 +410,8 @@ public class DefaultTwinPushSDK extends TwinPushSDK implements LocationListener 
     }
 
     private void setDeviceId(String deviceId) {
-        getSharedPreferences().edit().putString(PREF_DEVICE_ID, deviceId).commit();
+        getSharedPreferences().edit().putString(PREF_DEVICE_ID, deviceId).apply();
         this.deviceId = deviceId;
-    }
-
-    public String getGcmProjectNumber() {
-        if (gcmProjectNumber == null) {
-            gcmProjectNumber = getSharedPreferences().getString(PREF_GCM_PROJECT_NUMBER, null);
-        }
-        return gcmProjectNumber;
-    }
-
-    private void setGcmProjectNumber(String gcmProjectNumber) {
-        getSharedPreferences().edit().putString(PREF_GCM_PROJECT_NUMBER, gcmProjectNumber).commit();
-        this.gcmProjectNumber = gcmProjectNumber;
     }
 
     @Override
@@ -529,9 +422,9 @@ public class DefaultTwinPushSDK extends TwinPushSDK implements LocationListener 
         return apiKey;
     }
 
-    protected void setApiKey(String token) {
-        getSharedPreferences().edit().putString(PREF_TWINPUSH_API_KEY, token).commit();
-        this.apiKey = token;
+    private void setApiKey(String apiKey) {
+        getSharedPreferences().edit().putString(PREF_TWINPUSH_API_KEY, apiKey).apply();
+        this.apiKey = apiKey;
     }
 
     public String getAppId() {
@@ -541,21 +434,9 @@ public class DefaultTwinPushSDK extends TwinPushSDK implements LocationListener 
         return appId;
     }
 
-    protected void setAppId(String appId) {
-        getSharedPreferences().edit().putString(PREF_TWINPUSH_APP_ID, appId).commit();
+    private void setAppId(String appId) {
+        getSharedPreferences().edit().putString(PREF_TWINPUSH_APP_ID, appId).apply();
         this.appId = appId;
-    }
-
-    public String getPushToken() {
-        if (pushToken == null) {
-            pushToken = getSharedPreferences().getString(PREF_DEVICE_PUSH_TOKEN, null);
-        }
-        return pushToken;
-    }
-
-    private void setPushToken(String pushToken) {
-        getSharedPreferences().edit().putString(PREF_DEVICE_PUSH_TOKEN, pushToken).commit();
-        this.pushToken = pushToken;
     }
 
     public long getLocationMinUpdateTime() {
@@ -566,9 +447,14 @@ public class DefaultTwinPushSDK extends TwinPushSDK implements LocationListener 
         return getSharedPreferences().getInt(PREF_LOCATION_MIN_UPDATE_DISTANCE, 0);
     }
 
-    protected String getDeviceUDID() {
-        String deviceId = Secure.getString(getContext().getContentResolver(), Secure.ANDROID_ID);
-        return deviceId;
+    @Override
+    public void setDeviceUDID(String deviceUDID) {
+        getSharedPreferences().edit().putString(PREF_DEVICE_UDID, deviceUDID).apply();
+    }
+
+    @SuppressLint("HardwareIds")
+    private String getDeviceUDID() {
+        return getSharedPreferences().getString(PREF_DEVICE_UDID, Secure.getString(getContext().getContentResolver(), Secure.ANDROID_ID));
     }
 
     @Override
@@ -576,20 +462,17 @@ public class DefaultTwinPushSDK extends TwinPushSDK implements LocationListener 
         if (options != null) {
             String appId = options.twinPushAppId;
             String apiKey = options.twinPushApiKey;
-            String gcmProjectNumber = options.gcmProjectNumber;
             String subdomain = options.subdomain;
             String serverHost = options.serverHost;
             int smallIcon = options.notificationIcon;
 
-            boolean validSetup = Strings.notEmpty(appId) && Strings.notEmpty(apiKey) &&
-                    Strings.notEmpty(gcmProjectNumber) && smallIcon > 0;
+            boolean validSetup = Strings.notEmpty(appId) && Strings.notEmpty(apiKey) && smallIcon > 0;
             boolean validHost = Strings.notEmpty(subdomain) || Strings.notEmpty(serverHost);
 
             if (validSetup) {
                 if (validHost) {
                     setAppId(options.twinPushAppId);
                     setApiKey(options.twinPushApiKey);
-                    setGcmProjectNumber(options.gcmProjectNumber);
                     setNotificationSmallIcon(options.notificationIcon);
                     if (options.serverHost != null) {
                         setServerHost(options.serverHost);
@@ -614,8 +497,8 @@ public class DefaultTwinPushSDK extends TwinPushSDK implements LocationListener 
         return TwinPushRequestFactory.getSharedinstance(getContext());
     }
 
-    DefaultListener getDefaultListener(final String requestName) {
-        DefaultListener listener = new DefaultListener() {
+    private DefaultListener getDefaultListener(final String requestName) {
+        return new DefaultListener() {
 
             @Override
             public void onError(Exception exception) {
@@ -627,7 +510,6 @@ public class DefaultTwinPushSDK extends TwinPushSDK implements LocationListener 
                 Ln.i("Successfuly sent %s request", requestName);
             }
         };
-        return listener;
     }
 
     private void setLastKnownLocation(Location location) {
@@ -639,7 +521,7 @@ public class DefaultTwinPushSDK extends TwinPushSDK implements LocationListener 
                     putFloat(PREF_LOCATION_ACCURACY, location.getAccuracy()).
                     putLong(PREF_LOCATION_TIME, location.getTime()).
                     putString(PREF_LOCATION_PROVIDER, location.getProvider()).
-                    commit();
+                    apply();
         }
     }
 
@@ -678,7 +560,7 @@ public class DefaultTwinPushSDK extends TwinPushSDK implements LocationListener 
     @Override
     public void onStatusChanged(String provider, int status, Bundle extras) {}
 
-    boolean isDeviceRegistered() {
+    private boolean isDeviceRegistered() {
         return getDeviceId() != null;
     }
 
@@ -687,12 +569,12 @@ public class DefaultTwinPushSDK extends TwinPushSDK implements LocationListener 
     private void resetSSLChecks() {
         // Reset SSL Checks
         setSSLPublicKeyCheck(null);
-        getSharedPreferences(PREF_SSL_ISSUER).edit().clear().commit();
-        getSharedPreferences(PREF_SSL_SUBJECT).edit().clear().commit();
+        getSharedPreferences(PREF_SSL_ISSUER).edit().clear().apply();
+        getSharedPreferences(PREF_SSL_SUBJECT).edit().clear().apply();
     }
 
     public void setSSLPublicKeyCheck(String encodedKey) {
-        getSharedPreferences().edit().putString(PREF_SSL_PUBLIC_KEY, encodedKey).commit();
+        getSharedPreferences().edit().putString(PREF_SSL_PUBLIC_KEY, encodedKey).apply();
     }
 
     public String getSSLPublicKeyCheck() {
@@ -700,15 +582,15 @@ public class DefaultTwinPushSDK extends TwinPushSDK implements LocationListener 
     }
 
     public void addSSLIssuerCheck(String field, String expectedValue) {
-        getSharedPreferences(PREF_SSL_ISSUER).edit().putString(field, expectedValue).commit();
+        getSharedPreferences(PREF_SSL_ISSUER).edit().putString(field, expectedValue).apply();
     }
 
     public void addSSLSubjectCheck(String field, String expectedValue) {
-        getSharedPreferences(PREF_SSL_SUBJECT).edit().putString(field, expectedValue).commit();
+        getSharedPreferences(PREF_SSL_SUBJECT).edit().putString(field, expectedValue).apply();
     }
 
     public Map<String, String> getSSLIssuerChecks() {
-        Map<String, String> map = new HashMap<String, String>();
+        Map<String, String> map = new HashMap<>();
         for( Entry<?, ?> entry : getSharedPreferences(PREF_SSL_ISSUER).getAll().entrySet() ) {
             map.put( entry.getKey().toString(), entry.getValue().toString() );
         }
@@ -716,7 +598,7 @@ public class DefaultTwinPushSDK extends TwinPushSDK implements LocationListener 
     }
 
     public Map<String, String> getSSLSubjectChecks() {
-        Map<String, String> map = new HashMap<String, String>();
+        Map<String, String> map = new HashMap<>();
         for( Entry<?, ?> entry : getSharedPreferences(PREF_SSL_SUBJECT).getAll().entrySet() ) {
             map.put( entry.getKey().toString(), entry.getValue().toString() );
         }
@@ -745,16 +627,16 @@ public class DefaultTwinPushSDK extends TwinPushSDK implements LocationListener 
         return null;
     }
 
-    public void setSubdomain(String subdomain) {
-        getSharedPreferences().edit().putString(PREF_TWINPUSH_SUBDOMAIN, subdomain).commit();
+    private void setSubdomain(String subdomain) {
+        getSharedPreferences().edit().putString(PREF_TWINPUSH_SUBDOMAIN, subdomain).apply();
     }
 
     public String getSubdomain() {
         return getSharedPreferences().getString(PREF_TWINPUSH_SUBDOMAIN, DEFAULT_SUBDOMAIN);
     }
 
-    public void setServerHost(String serverHost) {
-        getSharedPreferences().edit().putString(PREF_TWINPUSH_CUSTOM_HOST, serverHost).commit();
+    private void setServerHost(String serverHost) {
+        getSharedPreferences().edit().putString(PREF_TWINPUSH_CUSTOM_HOST, serverHost).apply();
     }
 
     public String getServerHost() {
@@ -762,7 +644,7 @@ public class DefaultTwinPushSDK extends TwinPushSDK implements LocationListener 
     }
 
     private void setRegistrationHash(String registrationHash) {
-        getSharedPreferences().edit().putString(PREF_REGISTRATION_HASH, registrationHash).commit();
+        getSharedPreferences().edit().putString(PREF_REGISTRATION_HASH, registrationHash).apply();
     }
 
     private String getRegistrationHash() {

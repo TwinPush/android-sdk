@@ -16,6 +16,7 @@ import com.twincoders.twinpush.sdk.notifications.PushNotification;
 import java.util.List;
 import java.util.Map;
 
+@SuppressWarnings("unused")
 public abstract class TwinPushSDK {
 
     /* Callbacks */
@@ -42,19 +43,25 @@ public abstract class TwinPushSDK {
 	/* Register methods */
 
     /**
+     * Allows to customize the unique identifier of the device for the TwinPush platform.
+     * If not set, will use ANDROID_ID. Must be set before register method is called to avoid duplicity in records.
+     * @param udid unique identifier for the physical device
+     */
+    public abstract void setDeviceUDID(String udid);
+
+    /**
      * Registers the device on TwinPush service without assigning any alias. If the device already has an alias, it will be kept.
-     * This method will register to GCM previously if needed
      */
     public abstract void register();
 
     /**
-     * Registers the device on TwinPush service with the given alias. This method will register to GCM previously if needed
+     * Registers the device on TwinPush service with the given alias
      * @param deviceAlias Alias to assign to device. If alias parameter is null, previously set alias will remain
      */
     public abstract void register(final String deviceAlias);
 
     /**
-     * Registers the device on TwinPush service with the given alias. This method will register to GCM previously if needed
+     * Registers the device on TwinPush service with the given alias
      * @param deviceAlias Alias to assign to device. If alias parameter is null, previously set alias will remain
      * @param listener Listener to be notified of the result of the registration process. Can be null if result is not relevant.
      */
@@ -192,19 +199,19 @@ public abstract class TwinPushSDK {
 
     /**
      * Notifies the start of an activity in order to register user application use
-     * @param activity
+     * @param activity started activity
      */
     public abstract void activityStart(Activity activity);
 
     /**
      * Notifies the stop of an activity in order to register user application use
-     * @param activity
+     * @param activity stopped activity
      */
     public abstract void activityStop(Activity activity);
 
     /**
      * Notifies that the user has opened a received notification
-     * @param notification
+     * @param notification opened notification
      */
     public abstract void onNotificationOpen(PushNotification notification);
     
@@ -231,12 +238,6 @@ public abstract class TwinPushSDK {
      * @return Device ID assigned by TwinPush API
      */
     public abstract String getDeviceId();
-
-    /**
-     * Returns the GCM Project number (aka Sender ID)
-     * @return Project number previously setup
-     */
-    public abstract String getGcmProjectNumber();
 
     /**
      * Obtains previously set TwinPush Application API Key
@@ -274,7 +275,7 @@ public abstract class TwinPushSDK {
 
     /**
      * Obtains the SSL certificate Public Key check previously set
-     * @return
+     * @return ssl certificate check
      */
     public abstract String getSSLPublicKeyCheck();
 
@@ -294,7 +295,7 @@ public abstract class TwinPushSDK {
 
     /**
      * Obtains the map of checks for the SSL Certificate Issuer
-     * @return
+     * @return map of ssl certificate checks
      */
     public abstract Map<String, String> getSSLIssuerChecks();
 

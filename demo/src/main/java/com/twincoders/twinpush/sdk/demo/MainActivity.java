@@ -64,10 +64,9 @@ public class MainActivity extends ParentActivity {
         twinPush = TwinPushSDK.getInstance(this);
         // Setup TwinPush SDK
         TwinPushOptions options = new TwinPushOptions();                // Initialize options
-        options.twinPushAppId =     "768xxxxxxxxxxxx7";                 // - APP ID
-        options.twinPushApiKey =    "c5cxxxxxxxxxxxxxxxxxxxxxxxx81592"; // - API Key
-        options.gcmProjectNumber =  "8xxxxxxxxxxx";                     // - GCM Project Number
-        options.subdomain =         "mycompany";                        // - Application subdomain
+        options.twinPushAppId =     "2785b9d61574e029";                 // - APP ID
+        options.twinPushApiKey =    "ef6943d309f14f0658794dd855aef410"; // - API Key
+        options.serverHost =         "http://pre.twinpush.com";                        // - Application subdomain
         options.notificationIcon =  R.drawable.ic_notification;         // - Notification icon
         TwinPushSDK.getInstance(this).setup(options);                   // Call setup
 
