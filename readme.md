@@ -17,7 +17,7 @@ To use this service, it is necessary to access to the [Firebase Console](https:/
  3. Create an Android Application
  4. Setup Firebase in your Android project and include the required `google-services.json` file
  
-You can perform these steps through an assistant in the Tools -> Firebase menu of Android Studio:
+You can also perform these steps through an assistant in the Tools -> Firebase menu of Android Studio:
 
 ![](http://i.imgur.com/cD7Z8iT.png)
 
