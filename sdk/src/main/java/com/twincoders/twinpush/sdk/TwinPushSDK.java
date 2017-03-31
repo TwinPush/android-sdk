@@ -250,6 +250,12 @@ public abstract class TwinPushSDK {
     public abstract String getAppId();
 
     /**
+     * Obtains the current push token. Will be null before GCM registration
+     * @return Push token
+     */
+    public abstract String getPushToken();
+
+    /**
      * Obtains the last obtained location
      */
     public abstract Location getLastKnownLocation();
