@@ -64,10 +64,10 @@ In addition, it is mandatory to include the following libraries to the project b
 
 The libraries must be checked to be exported with the project.
 
-To use GCM is needed Android 2.3 or higher. Therefore, the application must have a minimum API Level of 9:
+To use GCM is needed Android 4.0.3 or higher. Therefore, the application must have a minimum API Level of 14:
 
 ```xml
-<uses-sdk android:minSdkVersion="9" android:targetSdkVersion="xx"/>
+<uses-sdk android:minSdkVersion="14" android:targetSdkVersion="xx"/>
 ```
 
 Also it is neccesary to include the following permissions in the _Manifest.xml_ file of your application:
