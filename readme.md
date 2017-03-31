@@ -1,6 +1,6 @@
 #TwinPush SDK Library
 [![Download](https://api.bintray.com/packages/twinpush/sdk/android-sdk/images/download.svg)](https://bintray.com/twinpush/sdk/android-sdk/_latestVersion)
-[![Methods Count](https://img.shields.io/badge/Methods count-core: 1149 | deps: 22321-e91e63.svg)](http://www.methodscount.com/?lib=com.twinpush.android%3Asdk%3A2.2.2)
+[![Methods Count](https://img.shields.io/badge/Methods count-core: 1149 | deps: 22321-e91e63.svg)](http://www.methodscount.com/?lib=com.twinpush.android%3Asdk%3A2.2.3)
 [![License](https://go-shields.herokuapp.com/license-MIT-blue.png)](https://raw.githubusercontent.com/TwinPush/android-sdk/master/LICENSE)
 
 
@@ -41,7 +41,7 @@ Include this dependency in your `build.gradle` file to reference this library in
 
 ```groovy
 dependencies {
-    compile 'com.twinpush.android:sdk:2.2.2'
+    compile 'com.twinpush.android:sdk:2.2.3'
 }
 ```
 
