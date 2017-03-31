@@ -14,8 +14,8 @@ public class OpenNotificationRequest extends TwinPushRequest {
 	/* Properties */
 	DefaultListener listener;
 	
-	public OpenNotificationRequest(String appId, String deviceId, PushNotification notification, DefaultListener listener) {
-		super(appId, deviceId, notification.getId());
+	public OpenNotificationRequest(String appId, String deviceId, String notificationId, DefaultListener listener) {
+		super(appId, deviceId, notificationId);
 		this.listener = listener;
 		this.httpMethod = HttpMethod.POST;
 		// Segments

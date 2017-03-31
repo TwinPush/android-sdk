@@ -448,10 +448,17 @@ public class DefaultTwinPushSDK extends TwinPushSDK implements LocationListener 
     }
 
     @Override
+    public void onNotificationOpen(String notificationId) {
+        if (notificationId != null) {
+            DefaultListener listener = getDefaultListener(String.format("On Notification Open: %s", notificationId));
+            getRequestFactory().openNotification(notificationId, listener);
+        }
+    }
+
+    @Override
     public void onNotificationOpen(PushNotification notification) {
         if (notification != null) {
-            DefaultListener listener = getDefaultListener(String.format("On Notification Open: %s", notification.getId()));
-            getRequestFactory().openNotification(notification, listener);
+            onNotificationOpen(notification.getId());
         }
     }
 

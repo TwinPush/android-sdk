@@ -1,10 +1,11 @@
 # TwinPush Android SDK Release Notes
 
-## 2.2.3
+## 2.2.4
 * Updated Android Support V4 dependency to latest version: 25.3.1
 * Updated Gradle build tools version to 3.3
 * Updated [Google Play Services](https://developers.google.com/android/guides/setup) dependency to latest available version: 10.2.1
 * Increased minSdkVersion from 9 to 14 as a requirement for Google Play Services v10
+* Included convenience methods to obtain Push token once registered and report open notification by ID
 
 ## 2.2.2
 Version updates to support Android SDK v25:

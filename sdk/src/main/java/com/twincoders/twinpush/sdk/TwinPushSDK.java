@@ -207,6 +207,12 @@ public abstract class TwinPushSDK {
      * @param notification
      */
     public abstract void onNotificationOpen(PushNotification notification);
+
+    /**
+     * Notifies that the user has opened the notification with given ID
+     * @param notificationId
+     */
+    public abstract void onNotificationOpen(String notificationId);
     
     // API Setup methods
 
