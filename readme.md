@@ -27,11 +27,11 @@ The next step is to setup the TwinPush application. This can be done through the
 
 1. Access to TwinPush website and login with your account
 2. From the control panel of your application, select Application Settings
-3. Open _Google Cloud Messaging (GCM)_ section
+3. Locate the _Google Cloud Messaging (GCM)_ section
 4. Enter the Server API Key obtained during Google Cloud Messaging registration
 5. Enter the Android Application package
 
-![Notification in Actionbar](http://developers.twinpush.com/assets/android_apikey-7d67473c7ca735ac5ff674dbcc7841bf.png)
+![API Key input](http://i.imgur.com/F2adKJJ.png)
 
 ## Building the application
 
@@ -140,7 +140,7 @@ To Setup TwinPush SDK you will need the following information:
 * **Subdomain**: Server subdomain where the application is deployed. Can be obtained in the Settings section of the TwinPush platform.
 * **Notification icon**: An image resource that will be displayed on action bar when a Push notification is received
   
-![](http://developers.twinpush.com/assets/android_icon-2f9119a5e58e5ac4854d3f637699c18b.png)
+![Notification example](http://i.imgur.com/y2wSepym.jpg)
 
 To initialize the SDK you will ussually override the `onCreate` method of main activity and call `setup` method from the TwinPush SDK, that accepts a `TwinPushOptions` object as  parameter that will hold the required information.
 
