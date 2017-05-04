@@ -1,7 +1,6 @@
-#TwinPush SDK Library
+# TwinPush SDK Library
 
 [![Download](https://api.bintray.com/packages/twinpush/sdk/android-sdk/images/download.svg)](https://bintray.com/twinpush/sdk/android-sdk/_latestVersion)
-[![Methods Count](https://img.shields.io/badge/Methods count-core: 1149 | deps: 22321-e91e63.svg)](http://www.methodscount.com/?lib=com.twinpush.android%3Asdk%3A2.2.4)
 [![License](https://go-shields.herokuapp.com/license-MIT-blue.png)](https://raw.githubusercontent.com/TwinPush/android-sdk/master/LICENSE)
 
 
@@ -193,7 +192,7 @@ twinPush.register("email@company.com", new TwinPushSDK.OnRegistrationListener() 
 });
 ```
 
-###Receiving notifications
+### Receiving notifications
 
 When your application receives a Push notification, it will be shown in the status bar. If the user interacts with the notification, it will send an Intent to the main activity of your application with the information received.
 
@@ -208,7 +207,7 @@ To obtain the information from this Intent, depending on the execution mode and 
 * `onCreate`: When the activity is not running, `onCreate` method will be called. To access to the Intent, use the activity `getIntent()` method.
 * `onNewIntent`: This method will be called when the application is already running. The new intent will be set as parameter.
 
-####Example
+#### Example
 
 As an example, the following code shows an activity with a WebView when it receives a rich notification (containing HTML).
 
@@ -259,7 +258,7 @@ In case of the default Rich Activity:
 </activity>
 ```
 
-###Sending activity report
+### Sending activity report
 
 Using TwinPush is possible to determine the periods of user activity with the application: how long a device uses the application, last usage time or the number of times it is opened. This feature also allows to identify inactive devices to prevent taking them into consideration for the device limit per license.
 
@@ -281,7 +280,7 @@ protected void onStop() {
 }
 ```
 
-###Displaying User Notifications Inbox
+### Displaying User Notifications Inbox
 
 Through the _User Inbox_ that TwinPush offers, it is possible for an user of your application to access to its received notifications from different devices.
 
@@ -319,7 +318,7 @@ TwinPushSDK.getInstance(this).deleteNotification(notification, new TwinRequest.D
 
 The Demo Application contains an [Inbox Activity](https://github.com/TwinPush/android-sdk/blob/master/demo/src/main/java/com/twincoders/twinpush/sdk/demo/InboxActivity.java) that implements a fully functional example of the User Inbox using a [ReciclerView](http://developer.android.com/intl/es/reference/android/support/v7/widget/RecyclerView.html) adapter.
 
-###Sending user information
+### Sending user information
 
 Through TwinPush SDK it is possible to send information of the application users.
 
@@ -344,7 +343,7 @@ You can also delete all information sent by a device performing a call to `clear
 TwinPushSDK.getInstance(this).clearProperties();
 ```
 
-###Sending location
+### Sending location
 
 There are two ways to notify the user location to TwinPush:
 
@@ -360,7 +359,7 @@ To access the location using either of the two methods, it is necessary to inclu
 
 **Note:** For Android 6+ _ACCESS\_FINE\_LOCATION_ is considered a [_dangerous_](http://developer.android.com/intl/es/guide/topics/security/permissions.html) permission and it will also require a [Runtime Permission Request](http://developer.android.com/intl/es/training/permissions/requesting.html). If the permission is not granted by the user, the location will not be updated.
 
-####Automatic sending of location
+#### Automatic sending of location
 
 TwinPush automatically sends the position using a service that is running in the background and is notified of changes in the user's location.
 
@@ -402,7 +401,7 @@ To stop monitoring the location, just do a call to `stopMonitoringLocationChange
 TwinPushSDK.getInstance(this).stopMonitoringLocationChanges();
 ```
 
-####Explicitly sending the location
+#### Explicitly sending the location
 
 To explicitly update the user's location you can make a call to any of the following methods:
 
