@@ -89,8 +89,7 @@ public class NotificationIntentService extends GcmListenerService {
     	intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_CLEAR_TOP);
     	intent.putExtra(EXTRA_NOTIFICATION, notification);
         // Prepare the pending intent
-        PendingIntent pendingIntent = PendingIntent.getActivity(context, notification.getId().hashCode(), intent, PendingIntent.FLAG_CANCEL_CURRENT);
-        return pendingIntent;
+        return PendingIntent.getActivity(context, notification.getId().hashCode(), intent, PendingIntent.FLAG_CANCEL_CURRENT);
     }
     
     /**
@@ -119,7 +118,7 @@ public class NotificationIntentService extends GcmListenerService {
     }
     
     private Map<String, String> getCustomPropertiesMap(Bundle data) {
-    	Map<String, String> propertiesMap = new HashMap<String, String>();
+    	Map<String, String> propertiesMap = new HashMap<>();
     	try {
     		// Extract raw custom String
     		String custom = data.getString(EXTRA_NOTIFICATION_CUSTOM);

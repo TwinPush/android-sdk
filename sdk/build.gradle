@@ -38,6 +38,8 @@ dependencies {
     compile "com.android.support:support-v4:25.3.1"
     compile 'com.google.android.gms:play-services-gcm:10.2.1'
     compile "cz.msebera.android:httpclient:4.4.1.1"
+    // Encrypted shared preferences
+    compile 'com.scottyab:secure-preferences-lib:0.1.4'
 }
 
 
