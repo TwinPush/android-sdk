@@ -56,7 +56,6 @@ public class DefaultTwinPushSDK extends TwinPushSDK implements LocationListener 
     /* Constants */
     private static final String PREF_FILE_NAME = "TwinPushPrefs";
     private static final String PREF_REGISTRATION_HASH = "REGISTRATION_HASH";
-    private static final String PREF_NOTIFICATION_SMALL_ICON = "NOTIFICATION_SMALL_ICON";
     private static final String PREF_DEVICE_ID = "DEVICE_ID";
     private static final String PREF_DEVICE_ALIAS = "DEVICE_ALIAS";
     private static final String PREF_DEVICE_PUSH_TOKEN = "DEVICE_PUSH_TOKEN";
@@ -94,7 +93,6 @@ public class DefaultTwinPushSDK extends TwinPushSDK implements LocationListener 
     /* Properties */
     private String deviceAlias = null;
     private String deviceId = null;
-    private int notificationSmallIcon = 0;
     private String gcmProjectNumber = null;
     private String apiKey = null;
     private String appId = null;
@@ -477,7 +475,7 @@ public class DefaultTwinPushSDK extends TwinPushSDK implements LocationListener 
             }
             sharedPreferencesMap.put(preferencesName, prefs);
         }
-        return getContext().getSharedPreferences(preferencesName, Context.MODE_PRIVATE);
+        return prefs;
     }
 
     private void securePreferences(SharedPreferences securePreferences, SharedPreferences oldPrefs) {
@@ -516,19 +514,6 @@ public class DefaultTwinPushSDK extends TwinPushSDK implements LocationListener 
     /* Getters & Setters */
     public Context getContext() {
         return _context;
-    }
-
-    @Override
-    public int getNotificationSmallIcon() {
-        if (notificationSmallIcon == 0) {
-            notificationSmallIcon = getSharedPreferences().getInt(PREF_NOTIFICATION_SMALL_ICON, 0);
-        }
-        return notificationSmallIcon;
-    }
-
-    private void setNotificationSmallIcon(int notificationSmallIcon) {
-        getSharedPreferences().edit().putInt(PREF_NOTIFICATION_SMALL_ICON, notificationSmallIcon).apply();
-        this.notificationSmallIcon = notificationSmallIcon;
     }
 
     @Override
@@ -627,10 +612,9 @@ public class DefaultTwinPushSDK extends TwinPushSDK implements LocationListener 
             String gcmProjectNumber = options.gcmProjectNumber;
             String subdomain = options.subdomain;
             String serverHost = options.serverHost;
-            int smallIcon = options.notificationIcon;
 
             boolean validSetup = Strings.notEmpty(appId) && Strings.notEmpty(apiKey) &&
-                    Strings.notEmpty(gcmProjectNumber) && smallIcon > 0;
+                    Strings.notEmpty(gcmProjectNumber);
             boolean validHost = Strings.notEmpty(subdomain) || Strings.notEmpty(serverHost);
 
             if (validSetup) {
@@ -638,7 +622,6 @@ public class DefaultTwinPushSDK extends TwinPushSDK implements LocationListener 
                     setAppId(options.twinPushAppId);
                     setApiKey(options.twinPushApiKey);
                     setGcmProjectNumber(options.gcmProjectNumber);
-                    setNotificationSmallIcon(options.notificationIcon);
                     if (options.serverHost != null) {
                         setServerHost(options.serverHost);
                     } else {

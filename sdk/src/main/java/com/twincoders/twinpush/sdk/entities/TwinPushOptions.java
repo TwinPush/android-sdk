@@ -14,7 +14,5 @@ public class TwinPushOptions {
     public String subdomain = null;
     /* Custom host for the TwinPush server. Default is "https://{{subdomain}}.twinpush.com" */
     public String serverHost = null;
-    /* resource ID for notifications small icon (shown on notifications or status bar) */
-    public int notificationIcon = 0;
 
 }

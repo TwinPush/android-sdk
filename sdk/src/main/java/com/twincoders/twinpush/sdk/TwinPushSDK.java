@@ -223,11 +223,6 @@ public abstract class TwinPushSDK {
     public abstract boolean setup(TwinPushOptions options);
 
     /**
-     * Obtains previously set resource ID for notifications small icon (shown on notifications or status bar)
-     */
-    public abstract int getNotificationSmallIcon();
-
-    /**
      * @return Last alias used to register this device
      */
     public abstract String getDeviceAlias();

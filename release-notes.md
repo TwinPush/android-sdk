@@ -1,5 +1,9 @@
 # TwinPush Android SDK Release Notes
 
+## 2.3.0
+* Preferences stored by application are now encrypted to avoid its access from rooted devices
+* Notification icon is now specified through resources reference to ensure it is refreshed after application update without the need to open application 
+
 ## 2.2.4
 * Updated Android Support V4 dependency to latest version: 25.3.1
 * Updated Gradle build tools version to 3.3

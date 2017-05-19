@@ -41,7 +41,7 @@ Include this dependency in your `build.gradle` file to reference this library in
 
 ```groovy
 dependencies {
-    compile 'com.twinpush.android:sdk:2.2.4'
+    compile 'com.twinpush.android:sdk:2.3.0'
 }
 ```
 
@@ -137,7 +137,6 @@ To Setup TwinPush SDK you will need the following information:
 * **TwinPush API Key**: TwinPush Application API Key displayed in Settings section
 * **Google Project Number**: Project number (formerly Sender ID) obtained in the Google APIs Console
 * **Subdomain**: Server subdomain where the application is deployed. Can be obtained in the Settings section of the TwinPush platform.
-* **Notification icon**: An image resource that will be displayed on action bar when a Push notification is received
   
 ![Notification example](http://i.imgur.com/y2wSepym.jpg)
 
@@ -152,7 +151,6 @@ public void onCreate(Bundle savedInstanceState) {
     options.twinPushApiKey =    "c5caxxxxxxxxxxxxxxxxxxxxxxxx1592"; // - API Key
     options.gcmProjectNumber =  "8xxxxxxxxxxx";                     // - GCM Project Number
     options.subdomain =         "mycompany";                        // - Application subdomain
-    options.notificationIcon =  R.drawable.ic_notification;         // - Notification icon
     TwinPushSDK.getInstance(this).setup(options);                   // Call setup
     /* Your code goes here... */
 }
@@ -162,6 +160,19 @@ The `setup` method will return **false** if any of the required parameter is mis
 
 As seen in the previous example, to access to the shared instance of TwinPush SDK, it is possible to invoque `TwinPushSDK.getInstance` class method that takes the context as parameter.
 
+#### Notification small icon (updated in version 2.3)
+
+It is also required to setup the image resource that will be displayed in the action bar when a Push notification is received:
+
+![Notification small icon](http://i.imgur.com/7QMWksIm.jpg)
+
+To specify the desired icon for notifications, include a drawable reference to `ic_tp_notification` in one of your resource values files (e.g. `res/values/drawables.xml`).
+
+```xml
+<drawable name="ic_tp_notification">@drawable/my_notification_icon</drawable>
+```
+
+You can follow the [official documentation](https://developer.android.com/studio/write/image-asset-studio.html?hl=es-419#creating-notification) for creating notification icons to ensure that your icon follows the [Android Status Bar Icons Guidelines](https://developer.android.com/guide/practices/ui_guidelines/icon_design_status_bar.html).
 
 ## Basic TwinPush integration
 

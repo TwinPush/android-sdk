@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <drawable name="ic_tp_notification">@drawable/logo_twinpush_blue</drawable>
+</resources>

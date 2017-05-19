@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.support.v4.app.NotificationCompat;
 
 import com.google.android.gms.gcm.GcmListenerService;
+import com.twincoders.twinpush.sdk.R;
 import com.twincoders.twinpush.sdk.TwinPushSDK;
 import com.twincoders.twinpush.sdk.logging.Ln;
 import com.twincoders.twinpush.sdk.notifications.PushNotification;
@@ -65,7 +66,7 @@ public class NotificationIntentService extends GcmListenerService {
         .setContentTitle(title)
         .setContentText(notification.getMessage())
         .setTicker(notification.getMessage())
-        .setSmallIcon(TwinPushSDK.getInstance(context).getNotificationSmallIcon())
+        .setSmallIcon(R.drawable.ic_tp_notification)
         .setDefaults(Notification.DEFAULT_LIGHTS | Notification.DEFAULT_VIBRATE | Notification.DEFAULT_SOUND)
 		.setContentIntent(pendingIntent)
 		.setAutoCancel(true)
