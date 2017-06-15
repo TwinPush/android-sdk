@@ -27,11 +27,12 @@ The next step is to setup the TwinPush application. This can be done through the
 
 1. Access to TwinPush website and login with your account
 2. From the control panel of your application, select Application Settings
-3. Open _Firebase Cloud Messaging (FCM)_ section
-4. Enter the Server API Key obtained during Firebase Cloud Messaging registration
-5. Enter the Android Application package
+3. Locate the _Android Push notifications_ section
+4. Select _Firebase_ as platform
+5. Enter the Server API Key obtained during Firebase Cloud Messaging registration
+6. Enter the Android Application package
 
-![API Key input](http://i.imgur.com/F2adKJJ.png)
+![API Key input](http://i.imgur.com/0WoTbbv.png)
 
 ## Building the application
 
