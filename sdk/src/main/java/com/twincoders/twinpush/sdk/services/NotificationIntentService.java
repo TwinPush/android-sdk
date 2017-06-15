@@ -9,7 +9,7 @@ import android.support.v4.app.NotificationCompat;
 
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
-import com.twincoders.twinpush.sdk.TwinPushSDK;
+import com.twincoders.twinpush.sdk.R;
 import com.twincoders.twinpush.sdk.logging.Ln;
 import com.twincoders.twinpush.sdk.notifications.PushNotification;
 
@@ -71,7 +71,7 @@ public class NotificationIntentService extends FirebaseMessagingService {
         .setContentTitle(title)
         .setContentText(notification.getMessage())
         .setTicker(notification.getMessage())
-        .setSmallIcon(TwinPushSDK.getInstance(context).getNotificationSmallIcon())
+        .setSmallIcon(R.drawable.ic_tp_notification)
         .setDefaults(Notification.DEFAULT_LIGHTS | Notification.DEFAULT_VIBRATE | Notification.DEFAULT_SOUND)
 		.setContentIntent(pendingIntent)
 		.setAutoCancel(true)
@@ -97,52 +97,51 @@ public class NotificationIntentService extends FirebaseMessagingService {
         // Prepare the pending intent
         return PendingIntent.getActivity(context, notification.getId().hashCode(), intent, PendingIntent.FLAG_CANCEL_CURRENT);
     }
-    
-    /**
-     * Creates an instance of a PushNotification object with the info contained in the message intent
-     * @param data Bundle containing the push notification info
-     * @return PushNotification object retrieved from message
-     */
-    protected PushNotification getNotification(Map<String, String> data) {
-    	// Extract info from message intent
-    	String notificationId = data.get(EXTRA_NOTIFICATION_ID);
-    	String title = data.get(EXTRA_NOTIFICATION_TITLE);
+
+	/**
+	 * Creates an instance of a PushNotification object with the info contained in the message intent
+	 * @param data Bundle containing the push notification info
+	 * @return PushNotification object retrieved from message
+	 */
+	protected PushNotification getNotification(Map<String, String> data) {
+		// Extract info from message intent
+		String notificationId = data.get(EXTRA_NOTIFICATION_ID);
+		String title = data.get(EXTRA_NOTIFICATION_TITLE);
 		String message = data.get(EXTRA_NOTIFICATION_MESSAGE);
 		String richURL = data.get(EXTRA_NOTIFICATION_RICH_URL);
 		Date date = new Date();
 		Map<String, String> customProperties = getCustomPropertiesMap(data.get(EXTRA_NOTIFICATION_CUSTOM));
 
-		
 		PushNotification notification = new PushNotification();
 		notification.setId(notificationId);
 		notification.setTitle(title);
 		notification.setMessage(message);
 		notification.setDate(date);
 		notification.setRichURL(richURL);
-        notification.setCustomProperties(customProperties);
-		
+		notification.setCustomProperties(customProperties);
+
 		return notification;
-    }
-    
-    private Map<String, String> getCustomPropertiesMap(String custom) {
-    	Map<String, String> propertiesMap = new HashMap<>();
-    	try {
-    		if (custom != null) {
-	    		JSONObject json = new JSONObject(custom);
-	    		Iterator<?> iter = json.keys();
-	    		while (iter.hasNext()) {
-	    			String key = (String) iter.next();
-	    			try {
-	    				String value = (String) json.get(key);
-	    				propertiesMap.put(key, value);
-	    			} catch (JSONException e) {
-	    				Ln.e(e, "Could not find property %1$s on Custom properties JSON");
-	    			}
-	    		}
-    		}
-    	} catch (Exception e) {
-    		Ln.e(e, "Error while trying to parse JSON object");
-    	}
-    	return propertiesMap;
-    }
+	}
+
+	private Map<String, String> getCustomPropertiesMap(String custom) {
+		Map<String, String> propertiesMap = new HashMap<>();
+		try {
+			if (custom != null) {
+				JSONObject json = new JSONObject(custom);
+				Iterator<?> iterator = json.keys();
+				while (iterator.hasNext()) {
+					String key = (String) iterator.next();
+					try {
+						String value = (String) json.get(key);
+						propertiesMap.put(key, value);
+					} catch (JSONException e) {
+						Ln.e(e, "Could not find property %s on Custom properties JSON", key);
+					}
+				}
+			}
+		} catch (Exception e) {
+			Ln.e(e, "Error while trying to parse JSON object");
+		}
+		return propertiesMap;
+	}
 }

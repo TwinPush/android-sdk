@@ -16,6 +16,7 @@ import android.provider.Settings.Secure;
 import android.support.v4.content.ContextCompat;
 
 import com.google.firebase.iid.FirebaseInstanceId;
+import com.securepreferences.SecurePreferences;
 import com.twincoders.twinpush.sdk.communications.TwinPushRequestFactory;
 import com.twincoders.twinpush.sdk.communications.TwinRequest.DefaultListener;
 import com.twincoders.twinpush.sdk.communications.requests.TwinPushRequest;
@@ -40,17 +41,18 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.TreeMap;
 
 public class DefaultTwinPushSDK extends TwinPushSDK implements LocationListener {
 
     /* Constants */
     private static final String PREF_FILE_NAME = "TwinPushPrefs";
     private static final String PREF_REGISTRATION_HASH = "REGISTRATION_HASH";
-    private static final String PREF_NOTIFICATION_SMALL_ICON = "NOTIFICATION_SMALL_ICON";
-    private static final String PREF_DEVICE_UDID = "DEVICE_UDID";
     private static final String PREF_DEVICE_ID = "DEVICE_ID";
+    private static final String PREF_DEVICE_UDID = "DEVICE_UDID";
     private static final String PREF_DEVICE_ALIAS = "DEVICE_ALIAS";
     private static final String PREF_TWINPUSH_API_KEY = "TWINPUSH_TOKEN";
     private static final String PREF_TWINPUSH_APP_ID = "TWINPUSH_APP_ID";
@@ -82,7 +84,6 @@ public class DefaultTwinPushSDK extends TwinPushSDK implements LocationListener 
     /* Properties */
     private String deviceAlias = null;
     private String deviceId = null;
-    private int notificationSmallIcon = 0;
     private String apiKey = null;
     private String appId = null;
 
@@ -354,38 +355,77 @@ public class DefaultTwinPushSDK extends TwinPushSDK implements LocationListener 
     }
 
     @Override
+    public void onNotificationOpen(String notificationId) {
+        if (notificationId != null) {
+            DefaultListener listener = getDefaultListener(String.format("On Notification Open: %s", notificationId));
+            getRequestFactory().openNotification(notificationId, listener);
+        }
+    }
+
+    @Override
     public void onNotificationOpen(PushNotification notification) {
         if (notification != null) {
-            DefaultListener listener = getDefaultListener(String.format("On Notification Open: %s", notification.getId()));
-            getRequestFactory().openNotification(notification, listener);
+            onNotificationOpen(notification.getId());
         }
     }
 
     /* Storage */
+    private Map<String, SharedPreferences> sharedPreferencesMap = new TreeMap<>();
+
     private SharedPreferences getSharedPreferences() {
         return getSharedPreferences(PREF_FILE_NAME);
     }
 
     private SharedPreferences getSharedPreferences(String preferencesName) {
-        return getContext().getSharedPreferences(preferencesName, Context.MODE_PRIVATE);
+        SharedPreferences prefs = sharedPreferencesMap.get(preferencesName);
+        if (prefs == null) {
+            prefs = new SecurePreferences(getContext(), "", String.format(Locale.ENGLISH, "%sSec", preferencesName));
+            SharedPreferences oldPrefs = getContext().getSharedPreferences(preferencesName, Context.MODE_PRIVATE);
+            // Check if old
+            if (!oldPrefs.getAll().isEmpty()) {
+                securePreferences(prefs, oldPrefs);
+            }
+            sharedPreferencesMap.put(preferencesName, prefs);
+        }
+        return prefs;
+    }
+
+    private void securePreferences(SharedPreferences securePreferences, SharedPreferences oldPrefs) {
+        // Migrates values stored in old preferences to secured preferences
+        SharedPreferences.Editor editor = securePreferences.edit();
+        if( !oldPrefs.getAll().isEmpty() )
+        {
+            // Move everything over.
+            for(Map.Entry<String, ?> entry : oldPrefs.getAll().entrySet())
+            {
+                Object value = entry.getValue();
+
+                if( value instanceof String ) {
+                    editor.putString(entry.getKey(), (String) value);
+                }
+                else if( value instanceof Integer ) {
+                    editor.putInt(entry.getKey(), (Integer) value);
+                }
+                else if( value instanceof Long ) {
+                    editor.putLong(entry.getKey(), (Long) value);
+                }
+                else if( value instanceof Float ) {
+                    editor.putFloat(entry.getKey(), (Float) value);
+                }
+                else if( value instanceof Boolean ) {
+                    editor.putBoolean(entry.getKey(), (Boolean) value);
+                }
+            }
+
+            editor.apply();
+            // Clear old prefs.
+            oldPrefs.edit().clear().apply();
+        }
     }
 
     /* Getters & Setters */
     public Context getContext() {
         return _context;
-    }
-
-    @Override
-    public int getNotificationSmallIcon() {
-        if (notificationSmallIcon == 0) {
-            notificationSmallIcon = getSharedPreferences().getInt(PREF_NOTIFICATION_SMALL_ICON, 0);
-        }
-        return notificationSmallIcon;
-    }
-
-    private void setNotificationSmallIcon(int notificationSmallIcon) {
-        getSharedPreferences().edit().putInt(PREF_NOTIFICATION_SMALL_ICON, notificationSmallIcon).apply();
-        this.notificationSmallIcon = notificationSmallIcon;
     }
 
     @Override
@@ -464,16 +504,14 @@ public class DefaultTwinPushSDK extends TwinPushSDK implements LocationListener 
             String apiKey = options.twinPushApiKey;
             String subdomain = options.subdomain;
             String serverHost = options.serverHost;
-            int smallIcon = options.notificationIcon;
 
-            boolean validSetup = Strings.notEmpty(appId) && Strings.notEmpty(apiKey) && smallIcon > 0;
+            boolean validSetup = Strings.notEmpty(appId) && Strings.notEmpty(apiKey);
             boolean validHost = Strings.notEmpty(subdomain) || Strings.notEmpty(serverHost);
 
             if (validSetup) {
                 if (validHost) {
                     setAppId(options.twinPushAppId);
                     setApiKey(options.twinPushApiKey);
-                    setNotificationSmallIcon(options.notificationIcon);
                     if (options.serverHost != null) {
                         setServerHost(options.serverHost);
                     } else {

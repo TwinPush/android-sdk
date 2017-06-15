@@ -1,6 +1,6 @@
-#TwinPush SDK Library
+# TwinPush SDK Library
+
 [![Download](https://api.bintray.com/packages/twinpush/sdk/android-sdk/images/download.svg)](https://bintray.com/twinpush/sdk/android-sdk/_latestVersion)
-[![Methods Count](https://img.shields.io/badge/Methods count-core: 1149 | deps: 22321-e91e63.svg)](http://www.methodscount.com/?lib=com.twinpush.android%3Asdk%3A2.3.0)
 [![License](https://go-shields.herokuapp.com/license-MIT-blue.png)](https://raw.githubusercontent.com/TwinPush/android-sdk/master/LICENSE)
 
 
@@ -31,7 +31,7 @@ The next step is to setup the TwinPush application. This can be done through the
 4. Enter the Server API Key obtained during Firebase Cloud Messaging registration
 5. Enter the Android Application package
 
-![Android settings view](http://developers.twinpush.com/assets/android_apikey-7d67473c7ca735ac5ff674dbcc7841bf.png)
+![API Key input](http://i.imgur.com/F2adKJJ.png)
 
 ## Building the application
 
@@ -73,9 +73,8 @@ To Setup TwinPush SDK you will need the following information:
 * **TwinPush App ID**: Application ID obtained from Settings section of TwinPush platform
 * **TwinPush API Key**: TwinPush Application API Key displayed in Settings section
 * **Subdomain**: Server subdomain where the application is deployed. Can be obtained in the Settings section of the TwinPush platform.
-* **Notification icon**: An image resource that will be displayed on action bar when a Push notification is received
   
-![](http://developers.twinpush.com/assets/android_icon-2f9119a5e58e5ac4854d3f637699c18b.png)
+![Notification example](http://i.imgur.com/y2wSepym.jpg)
 
 To initialize the SDK you will ussually override the `onCreate` method of main activity and call `setup` method from the TwinPush SDK, that accepts a `TwinPushOptions` object as  parameter that will hold the required information.
 
@@ -87,7 +86,6 @@ public void onCreate(Bundle savedInstanceState) {
     options.twinPushAppId =     "7687xxxxxxxxxxxx";                 // - APP ID
     options.twinPushApiKey =    "c5caxxxxxxxxxxxxxxxxxxxxxxxx1592"; // - API Key
     options.subdomain =         "mycompany";                        // - Application subdomain
-    options.notificationIcon =  R.drawable.ic_notification;         // - Notification icon
     TwinPushSDK.getInstance(this).setup(options);                   // Call setup
     /* Your code goes here... */
 }
@@ -97,6 +95,19 @@ The `setup` method will return **false** if any of the required parameter is mis
 
 As seen in the previous example, to access to the shared instance of TwinPush SDK, it is possible to invoque `TwinPushSDK.getInstance` class method that takes the context as parameter.
 
+#### Notification small icon (updated in version 2.3)
+
+It is also required to setup the image resource that will be displayed in the action bar when a Push notification is received:
+
+![Notification small icon](http://i.imgur.com/7QMWksIm.jpg)
+
+To specify the desired icon for notifications, include a drawable reference to `ic_tp_notification` in one of your resource values files (e.g. `res/values/drawables.xml`).
+
+```xml
+<drawable name="ic_tp_notification">@drawable/my_notification_icon</drawable>
+```
+
+You can follow the [official documentation](https://developer.android.com/studio/write/image-asset-studio.html?hl=es-419#creating-notification) for creating notification icons to ensure that your icon follows the [Android Status Bar Icons Guidelines](https://developer.android.com/guide/practices/ui_guidelines/icon_design_status_bar.html).
 
 ## Basic TwinPush integration
 
@@ -127,7 +138,7 @@ twinPush.register("email@company.com", new TwinPushSDK.OnRegistrationListener() 
 });
 ```
 
-###Receiving notifications
+### Receiving notifications
 
 When your application receives a Push notification, it will be shown in the status bar. If the user interacts with the notification, it will send an Intent to the main activity of your application with the information received.
 
@@ -142,7 +153,7 @@ To obtain the information from this Intent, depending on the execution mode and 
 * `onCreate`: When the activity is not running, `onCreate` method will be called. To access to the Intent, use the activity `getIntent()` method.
 * `onNewIntent`: This method will be called when the application is already running. The new intent will be set as parameter.
 
-####Example
+#### Example
 
 As an example, the following code shows an activity with a WebView when it receives a rich notification (containing HTML).
 
@@ -193,7 +204,7 @@ In case of the default Rich Activity:
 </activity>
 ```
 
-###Sending activity report
+### Sending activity report
 
 Using TwinPush is possible to determine the periods of user activity with the application: how long a device uses the application, last usage time or the number of times it is opened. This feature also allows to identify inactive devices to prevent taking them into consideration for the device limit per license.
 
@@ -215,7 +226,7 @@ protected void onStop() {
 }
 ```
 
-###Displaying User Notifications Inbox
+### Displaying User Notifications Inbox
 
 Through the _User Inbox_ that TwinPush offers, it is possible for an user of your application to access to its received notifications from different devices.
 
@@ -253,7 +264,7 @@ TwinPushSDK.getInstance(this).deleteNotification(notification, new TwinRequest.D
 
 The Demo Application contains an [Inbox Activity](https://github.com/TwinPush/android-sdk/blob/master/demo/src/main/java/com/twincoders/twinpush/sdk/demo/InboxActivity.java) that implements a fully functional example of the User Inbox using a [ReciclerView](http://developer.android.com/intl/es/reference/android/support/v7/widget/RecyclerView.html) adapter.
 
-###Sending user information
+### Sending user information
 
 Through TwinPush SDK it is possible to send information of the application users.
 
@@ -278,7 +289,7 @@ You can also delete all information sent by a device performing a call to `clear
 TwinPushSDK.getInstance(this).clearProperties();
 ```
 
-###Sending location
+### Sending location
 
 There are two ways to notify the user location to TwinPush:
 
@@ -294,7 +305,7 @@ To access the location using either of the two methods, it is necessary to inclu
 
 **Note:** For Android 6+ _ACCESS\_FINE\_LOCATION_ is considered a [_dangerous_](http://developer.android.com/intl/es/guide/topics/security/permissions.html) permission and it will also require a [Runtime Permission Request](http://developer.android.com/intl/es/training/permissions/requesting.html). If the permission is not granted by the user, the location will not be updated.
 
-####Automatic sending of location
+#### Automatic sending of location
 
 TwinPush automatically sends the position using a service that is running in the background and is notified of changes in the user's location.
 
@@ -336,7 +347,7 @@ To stop monitoring the location, just do a call to `stopMonitoringLocationChange
 TwinPushSDK.getInstance(this).stopMonitoringLocationChanges();
 ```
 
-####Explicitly sending the location
+#### Explicitly sending the location
 
 To explicitly update the user's location you can make a call to any of the following methods:
 

@@ -214,6 +214,12 @@ public abstract class TwinPushSDK {
      * @param notification opened notification
      */
     public abstract void onNotificationOpen(PushNotification notification);
+
+    /**
+     * Notifies that the user has opened the notification with given ID
+     * @param notificationId
+     */
+    public abstract void onNotificationOpen(String notificationId);
     
     // API Setup methods
 
@@ -222,11 +228,6 @@ public abstract class TwinPushSDK {
      * @return true if the setup is OK, false if any of the required parameters is missing
      */
     public abstract boolean setup(TwinPushOptions options);
-
-    /**
-     * Obtains previously set resource ID for notifications small icon (shown on notifications or status bar)
-     */
-    public abstract int getNotificationSmallIcon();
 
     /**
      * @return Last alias used to register this device

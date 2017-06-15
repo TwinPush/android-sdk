@@ -57,7 +57,7 @@ public class MainActivity extends ParentActivity {
 
         // Setup "status" dropdown
         String[] statusArray = getResources().getStringArray(R.array.status_arrays);
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, statusArray);
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, statusArray);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         statusSpinner.setAdapter(adapter);
 
@@ -67,7 +67,6 @@ public class MainActivity extends ParentActivity {
         options.twinPushAppId =     "768xxxxxxxxxxxx7";                 // - APP ID
         options.twinPushApiKey =    "c5cxxxxxxxxxxxxxxxxxxxxxxxx81592"; // - API Key
         options.subdomain =         "mycompany";                        // - Application subdomain
-        options.notificationIcon =  R.drawable.ic_notification;         // - Notification icon
         TwinPushSDK.getInstance(this).setup(options);                   // Call setup
 
         // Show previous values when present

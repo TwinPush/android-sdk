@@ -129,8 +129,8 @@ public class TwinPushRequestFactory {
 		return request;
 	}
 	
-	public TwinPushRequest openNotification(PushNotification notification, DefaultListener listener) {
-		TwinPushRequest request = new OpenNotificationRequest(getAppId(), getDeviceId(), notification, listener);
+	public TwinPushRequest openNotification(String notificationId, DefaultListener listener) {
+		TwinPushRequest request = new OpenNotificationRequest(getAppId(), getDeviceId(), notificationId, listener);
 		launch(request);
 		return request;
 	}

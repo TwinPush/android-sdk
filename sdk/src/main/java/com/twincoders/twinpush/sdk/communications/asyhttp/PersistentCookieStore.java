@@ -47,7 +47,7 @@ import cz.msebera.android.httpclient.cookie.Cookie;
  */
 @SuppressLint("DefaultLocale")
 public class PersistentCookieStore implements CookieStore {
-    private static final String COOKIE_PREFS = "CookiePrefsFile";
+    private static final String COOKIE_PREFS = "TwinPushCookiePrefsFile";
     private static final String COOKIE_NAME_STORE = "tp_names";
     private static final String COOKIE_NAME_PREFIX = "tp_cookie_";
 
