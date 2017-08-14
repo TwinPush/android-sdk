@@ -27,7 +27,7 @@
 
         <activity
             android:name="com.twincoders.twinpush.sdk.activities.RichNotificationActivity"
-            android:theme="@style/AppTheme">
+            android:theme="@android:style/Theme.Holo.NoActionBar">
         </activity>
 
         <!--&lt;!&ndash; [START gcm_receiver] &ndash;&gt;-->
