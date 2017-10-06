@@ -6,6 +6,7 @@ import android.location.Location;
 
 import com.twincoders.twinpush.sdk.communications.TwinRequest;
 import com.twincoders.twinpush.sdk.communications.requests.notifications.GetInboxRequest;
+import com.twincoders.twinpush.sdk.communications.requests.notifications.GetInboxSummaryRequest;
 import com.twincoders.twinpush.sdk.communications.requests.notifications.GetNotificationDetailsRequest;
 import com.twincoders.twinpush.sdk.communications.requests.notifications.GetNotificationsRequest;
 import com.twincoders.twinpush.sdk.entities.InboxNotification;
@@ -89,6 +90,14 @@ public abstract class TwinPushSDK {
      * @param listener Listener object to notify result to
      */
     public abstract void getUserInbox(int page, int resultsPerPage, GetInboxRequest.Listener listener);
+
+    /**
+     * Method to obtain a summary with the total and unopened counts of the notifications sent to
+     * current user identified by alias.
+     * The request will fail if no alias is associated with the current device.
+     * @param listener Listener object to notify result to
+     */
+    public abstract void getUserInboxSummary(GetInboxSummaryRequest.Listener listener);
 
     /**
      * Obtains the details for the selected notification

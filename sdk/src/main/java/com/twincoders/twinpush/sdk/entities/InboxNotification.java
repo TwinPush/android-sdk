@@ -9,10 +9,9 @@ import java.util.Date;
  */
 public class InboxNotification {
 
-    String id;
-    Date createdAt;
-    Date openAt;
-    PushNotification notification;
+    private String id;
+    private Date createdAt, openAt;
+    private PushNotification notification;
 
     public String getId() {
         return id;

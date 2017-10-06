@@ -9,6 +9,7 @@ import com.twincoders.twinpush.sdk.communications.requests.TwinPushRequest;
 import com.twincoders.twinpush.sdk.communications.requests.forms.ReportFormRequest;
 import com.twincoders.twinpush.sdk.communications.requests.notifications.DeleteInboxNotificationRequest;
 import com.twincoders.twinpush.sdk.communications.requests.notifications.GetInboxRequest;
+import com.twincoders.twinpush.sdk.communications.requests.notifications.GetInboxSummaryRequest;
 import com.twincoders.twinpush.sdk.communications.requests.notifications.GetNotificationDetailsRequest;
 import com.twincoders.twinpush.sdk.communications.requests.notifications.GetNotificationsRequest;
 import com.twincoders.twinpush.sdk.communications.requests.notifications.GetNotificationsRequest.Listener;
@@ -79,6 +80,12 @@ public class TwinPushRequestFactory {
 
 	public TwinPushRequest getUserInbox(int page, int resultsPerPage, GetInboxRequest.Listener listener) {
 		TwinPushRequest request = new GetInboxRequest(getAppId(), getDeviceId(), page, resultsPerPage, listener);
+		launch(request);
+		return request;
+	}
+
+	public TwinPushRequest getUserInboxSummary(GetInboxSummaryRequest.Listener listener) {
+		TwinPushRequest request = new GetInboxSummaryRequest(getAppId(), getDeviceId(), listener);
 		launch(request);
 		return request;
 	}
