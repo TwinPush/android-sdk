@@ -2,6 +2,7 @@
 
 ## 2.4.0 - 2017-10-18
 * Migrated push service from GCM to **Firebase**
+* Included method call for inbox summary in SDK interface
 
 Version updates to support Android SDK v26:
 
