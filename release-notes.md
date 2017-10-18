@@ -1,5 +1,13 @@
 # TwinPush Android SDK Release Notes
 
+## 2.4.0 - 2017-10-18
+* Migrated push service from GCM to **Firebase**
+
+Version updates to support Android SDK v26:
+
+* Updated Android build tools and target SDK to latest available version: 26
+* Updated Android Support V4 dependency to latest version: 26.1.0
+
 ## 2.3.0 - 2017-05-22
 * Preferences stored by application are now encrypted to avoid its access from rooted devices
 * Notification icon is now setup through resources reference to ensure it is refreshed after application update without the need to open application 
