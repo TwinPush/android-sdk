@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.location.Location;
 
+import com.google.firebase.FirebaseApp;
 import com.twincoders.twinpush.sdk.communications.TwinRequest;
 import com.twincoders.twinpush.sdk.communications.requests.notifications.GetInboxRequest;
 import com.twincoders.twinpush.sdk.communications.requests.notifications.GetInboxSummaryRequest;
@@ -324,4 +325,10 @@ public abstract class TwinPushSDK {
      * Obtains the host for the TwinPush server. Default is "https://{{subdomain}}.twinpush.com"
      */
     public abstract String getServerHost();
+
+    /**
+     * Retrieves the Firebase app instance setup for TwinPush. It will be the default instance or a
+     * customized one depending integration preferences
+     */
+    public abstract FirebaseApp getFirebaseApp();
 }

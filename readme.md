@@ -17,9 +17,18 @@ To use this service, it is necessary to access to the [Firebase Console](https:/
  3. Create an Android Application
  4. Setup Firebase in your Android project and include the required `google-services.json` file
  
-You can also perform these steps through an assistant in the Tools -> Firebase menu of Android Studio:
+This action can be easily done following these steps through an assistant in the Tools -> Firebase menu of Android Studio:
 
 ![](http://i.imgur.com/cD7Z8iT.png)
+
+Select Set up Firebase Cloud Messagind on the side assistant menu:
+![](https://i.imgur.com/NPasncQ.png)
+
+And perform the steps 1 and 2 to add FCM to your application:
+
+![](https://i.imgur.com/efaZBNz.png)
+
+The remaining steps are automatically handled by the TwinPush SDK.
 
 ## Register your application in TwinPush
 

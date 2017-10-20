@@ -15,6 +15,8 @@ import android.os.Bundle;
 import android.provider.Settings.Secure;
 import android.support.v4.content.ContextCompat;
 
+import com.google.firebase.FirebaseApp;
+import com.google.firebase.FirebaseOptions;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.securepreferences.SecurePreferences;
 import com.twincoders.twinpush.sdk.communications.TwinPushRequestFactory;
@@ -115,7 +117,7 @@ public class DefaultTwinPushSDK extends TwinPushSDK implements LocationListener 
             if (apiKey != null) {
                 // Make sure the device has the proper dependencies.
                 // Only register if registration info has changed since last register
-                String pushToken = FirebaseInstanceId.getInstance().getToken();
+                String pushToken = FirebaseInstanceId.getInstance(getFirebaseApp()).getToken();
                 RegistrationInfo info = RegistrationInfo.fromContext(getContext(), getDeviceUDID(), deviceAlias, pushToken);
                 String registrationHash = encrypt(info.toString());
 
@@ -695,6 +697,31 @@ public class DefaultTwinPushSDK extends TwinPushSDK implements LocationListener 
         return getSharedPreferences().getString(PREF_REGISTRATION_HASH, null);
     }
 
+    /* Customizable Firebase instance */
+    private FirebaseApp firebase = null;
+    @Override
+    public FirebaseApp getFirebaseApp() {
+        if (firebase == null) {
+            String firebaseAppId =  getContext().getString(R.string.fcmMobileAppId);
+            if (Strings.notEmpty(firebaseAppId)) {
+                // Manually configure Firebase Options
+                FirebaseOptions options = new FirebaseOptions.Builder()
+                        .setApplicationId(firebaseAppId)
+                        .setApiKey(getContext().getString(R.string.fcmApiKey))
+                        .setGcmSenderId(getContext().getString(R.string.fcmProjectNumber))
+                        .build();
 
+                // Initialize with TwinPush app name
+                Ln.i("Using customized Firebase App with ID %s", firebaseAppId);
+                FirebaseApp.initializeApp(getContext(), options);
+                // Retrieve TwinPush firebase app.
+                firebase = FirebaseApp.getInstance();
 
+            } else {
+                firebase = FirebaseApp.getInstance();
+                Ln.i("Using default Firebase App");
+            }
+        }
+        return firebase;
+    }
 }

@@ -21,12 +21,14 @@ public class TwinPushInstanceIdService extends FirebaseInstanceIdService {
 
     @Override
     public void onTokenRefresh() {
+        TwinPushSDK twinPush = TwinPushSDK.getInstance(getApplicationContext());
+
+        Ln.d("TwinPush Intent Service called");
         // Get updated InstanceID token.
-        String refreshedToken = FirebaseInstanceId.getInstance().getToken();
+        String refreshedToken = FirebaseInstanceId.getInstance(twinPush.getFirebaseApp()).getToken();
         Ln.d("FCM Token created: " + refreshedToken);
 
-        TwinPushSDK twinPush = TwinPushSDK.getInstance(getApplicationContext());
-        // TODO Refresh register if needed
+        // Refresh register if needed
         if (twinPush.getDeviceId() != null) {
             twinPush.register();
         }
@@ -36,4 +38,10 @@ public class TwinPushInstanceIdService extends FirebaseInstanceIdService {
         LocalBroadcastManager.getInstance(this).sendBroadcast(registrationComplete);
     }
 
+    @Override
+    public void handleIntent(Intent intent) {
+        // Init TwinPush FirebaseApp
+        TwinPushSDK.getInstance(getApplicationContext()).getFirebaseApp();
+        super.handleIntent(intent);
+    }
 }
