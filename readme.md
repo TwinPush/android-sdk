@@ -30,6 +30,8 @@ And perform the steps 1 and 2 to add FCM to your application:
 
 The remaining steps are automatically handled by the TwinPush SDK.
 
+**NOTE:** If your can not setup Firebase through the `google-services.json` file in your project, you can still use the [alternative method](#alternative-firebase-setup) using string resources.
+
 ## Register your application in TwinPush
 
 The next step is to setup the TwinPush application. This can be done through the [TwinPush console](https://app.twinpush.com):
@@ -52,7 +54,7 @@ Include this dependency in your `build.gradle` file to reference this library in
 
 ```groovy
 dependencies {
-    compile 'com.twinpush.android:sdk:2.4.0'
+    compile 'com.twinpush.android:sdk:2.4.1'
 }
 ```
 
@@ -408,3 +410,31 @@ public class MyIntentService extends NotificationIntentService {
     </intent-filter>
 </service>
 ```
+
+### Alternative Firebase setup
+
+It is also possible to setup Firebase platform without including the `google-services.json` file in the project.
+
+To do so, you will need to extract the required information from the JSON file and put it in a Strings resources XML file. TwinPush will automatically obtain the parameters from the resources file and setup the Firebase client according to it.
+
+In the following table you have the relation between the fields from the JSON file and the equivalent in the Strings Resources file:
+
+| String resource    | `google-services.json` |
+|--------------------|------------------------|
+| `fcmProjectNumber` | `project_info.project_number` |
+| `fcmMobileAppId`   | `client.client_info.mobilesdk_app_id` |
+| `fcmApiKey`        | `client.api_key.current_key` |
+
+An example resources file could be as following (e.g. `res/values/firebase.xml`):
+
+```xml
+<resources>
+  <string name="fcmProjectNumber">181234567890</string>
+  <string name="fcmMobileAppId">1:181234567890:android:0c15ec0987654321</string>
+  <string name="fcmApiKey">AIzaSyDCOSDluQ5hmu4ZduNbOWB01PcDllww6_o</string>
+</resources>
+```
+
+**Note:** If your project is not using any `google-services.json` file for other Google services (as Google Maps or Analytics) you will need to ensure that the following line **is not present** in your module gradle file:
+
+	apply plugin: 'com.google.gms.google-services'

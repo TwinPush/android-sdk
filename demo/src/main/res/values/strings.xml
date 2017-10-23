@@ -17,8 +17,4 @@
         <item>Separated</item>
     </string-array>
 
-    <!-- Customizable firebase app -->
-    <string name="fcmProjectNumber">181313xxxxx</string>
-    <string name="fcmMobileAppId">1:181313xxxxx:android:0c15ec0f644xxxx</string>
-    <string name="fcmApiKey">AIzaSyDCOSDluQ5hmu4ZduNbOWB01xxxxxxxxxx</string>
 </resources>
