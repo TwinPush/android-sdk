@@ -1,8 +1,9 @@
 # TwinPush Android SDK Release Notes
 
-## 2.4.1 - 2017-10-23
+## 2.4.2 - 2017-10-24
 * Migrated push service from GCM to **Firebase**
 * Included method call for inbox summary in SDK interface
+* `register` method will now execute as a background task
 
 Version updates to support Android SDK v26:
 
