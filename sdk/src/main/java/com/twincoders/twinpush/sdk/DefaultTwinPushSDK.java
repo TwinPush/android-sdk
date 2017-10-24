@@ -11,7 +11,10 @@ import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.provider.Settings.Secure;
 import android.support.v4.content.ContextCompat;
 
@@ -40,6 +43,7 @@ import com.twincoders.twinpush.sdk.services.LocationChangeReceiver;
 import com.twincoders.twinpush.sdk.util.LastLocationFinder;
 import com.twincoders.twinpush.sdk.util.StringEncrypter;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -111,63 +115,83 @@ public class DefaultTwinPushSDK extends TwinPushSDK implements LocationListener 
 
     @Override
     public void register(final String deviceAlias, final OnRegistrationListener listener) {
-        String appId = getAppId();
-        String apiKey = getApiKey();
-        if (appId != null) {
-            if (apiKey != null) {
-                // Make sure the device has the proper dependencies.
-                // Only register if registration info has changed since last register
-                String pushToken = FirebaseInstanceId.getInstance(getFirebaseApp()).getToken();
-                RegistrationInfo info = RegistrationInfo.fromContext(getContext(), getDeviceUDID(), deviceAlias, pushToken);
-                String registrationHash = encrypt(info.toString());
+        // Run in background
+        AsyncTask.execute(new Runnable() {
+            @Override
+            public void run() {
+                String appId = getAppId();
+                String apiKey = getApiKey();
+                if (appId != null) {
+                    if (apiKey != null) {
+                        // Make sure the device has the proper dependencies.
+                        // Only register if registration info has changed since last register
+                        String pushToken = getFirebaseInstanceIdToken();
+                        RegistrationInfo info = RegistrationInfo.fromContext(getContext(), getDeviceUDID(), deviceAlias, pushToken);
+                        String registrationHash = encrypt(info.toString());
 
-                if (!Strings.equals(registrationHash, getRegistrationHash())) {
-                    setRegistrationHash(registrationHash);
-                    Ln.d("Registration changed! Launching new registration request");
-                    if (registerRequest != null) {
-                        registerRequest.cancel();
+                        if (!Strings.equals(registrationHash, getRegistrationHash())) {
+                            setRegistrationHash(registrationHash);
+                            Ln.d("Registration changed! Launching new registration request");
+                            if (registerRequest != null) {
+                                registerRequest.cancel();
+                            }
+                            registerRequest = getRequestFactory().
+                                    register(info,
+                                            new RegisterRequest.Listener() {
+
+                                                @Override
+                                                public void onError(Exception exception) {
+                                                    registerRequest = null;
+                                                    registerError(exception, listener);
+                                                }
+
+                                                @Override
+                                                public void onRegistrationSuccess(String deviceId, String deviceAlias) {
+                                                    Ln.i("Device successfully registered on TwinPush (deviceId:%s, alias:%s)", deviceId, deviceAlias);
+                                                    registerRequest = null;
+                                                    setDeviceId(deviceId);
+                                                    setDeviceAlias(deviceAlias);
+                                                    notifySuccess(deviceAlias, listener);
+                                                }
+                                            });
+                        } else {
+                            Ln.d("Registration info did not change since last registration");
+                            notifySuccess(deviceAlias, listener);
+
+                        }
+                    } else {
+                        registerError(new Exception("Token is not setup in TwinPush SDK"), listener);
                     }
-                    registerRequest = getRequestFactory().
-                            register(info,
-                                    new RegisterRequest.Listener() {
-
-                                        @Override
-                                        public void onError(Exception exception) {
-                                            registerRequest = null;
-                                            registerError(exception, listener);
-                                        }
-
-                                        @Override
-                                        public void onRegistrationSuccess(String deviceId, String deviceAlias) {
-                                            Ln.i("Device successfully registered on TwinPush (deviceId:%s, alias:%s)", deviceId, deviceAlias);
-                                            registerRequest = null;
-                                            setDeviceId(deviceId);
-                                            setDeviceAlias(deviceAlias);
-                                            if (listener != null) {
-                                                listener.onRegistrationSuccess(deviceAlias);
-                                            }
-                                        }
-                                    });
                 } else {
-                    Ln.d("Registration info did not change since last registration");
-                    if (listener != null) {
-                        listener.onRegistrationSuccess(deviceAlias);
-                    }
-
+                    registerError(new Exception("Application ID is not setup in TwinPush SDK"), listener);
                 }
-            } else {
-                registerError(new Exception("Token is not setup in TwinPush SDK"), listener);
             }
-        } else {
-            registerError(new Exception("Application ID is not setup in TwinPush SDK"), listener);
+        });
+    }
+
+    private void notifySuccess(final String deviceAlias, final OnRegistrationListener listener) {
+        if (listener != null) {
+            Handler mainHandler = new Handler(Looper.getMainLooper());
+            mainHandler.post(new Runnable() {
+                @Override
+                public void run() {
+                    listener.onRegistrationSuccess(deviceAlias);
+                }
+            });
         }
     }
 
-    private void registerError(Exception e, OnRegistrationListener listener) {
+    private void registerError(final Exception e, final OnRegistrationListener listener) {
         // Sender ID is not setup
         Ln.e(e);
         if (listener != null) {
-            listener.onRegistrationError(e);
+            Handler mainHandler = new Handler(Looper.getMainLooper());
+            mainHandler.post(new Runnable() {
+                @Override
+                public void run() {
+                    listener.onRegistrationError(e);
+                }
+            });
         }
     }
 
@@ -699,6 +723,7 @@ public class DefaultTwinPushSDK extends TwinPushSDK implements LocationListener 
 
     /* Customizable Firebase instance */
     private FirebaseApp firebase = null;
+    private final static String FIREBASE_NAME = "twinpush";
     @Override
     public FirebaseApp getFirebaseApp() {
         if (firebase == null) {
@@ -712,16 +737,46 @@ public class DefaultTwinPushSDK extends TwinPushSDK implements LocationListener 
                         .build();
 
                 // Initialize with TwinPush app name
-                Ln.i("Using customized Firebase App with ID %s", firebaseAppId);
-                FirebaseApp.initializeApp(getContext(), options);
-                // Retrieve TwinPush firebase app.
-                firebase = FirebaseApp.getInstance();
+                if (!isDefaultFirebaseInitialized()) {
+                    Ln.i("Using customized Firebase App as PRIMARY with ID %s", firebaseAppId);
+                    FirebaseApp.initializeApp(getContext(), options);
+                    // Retrieve TwinPush firebase app.
+                    firebase = FirebaseApp.getInstance();
+                } else {
+                    Ln.i("Using customized Firebase App as SECONDARY with ID %s", firebaseAppId);
+                    FirebaseApp.initializeApp(getContext(), options, FIREBASE_NAME);
+                    // Retrieve TwinPush firebase app.
+                    firebase = FirebaseApp.getInstance(FIREBASE_NAME);
+                }
 
             } else {
                 firebase = FirebaseApp.getInstance();
-                Ln.i("Using default Firebase App");
+                Ln.i("Using DEFAULT Firebase App");
             }
         }
         return firebase;
+    }
+
+    private boolean isDefaultFirebaseInitialized() {
+        boolean hasBeenInitialized=false;
+        List<FirebaseApp> firebaseApps = FirebaseApp.getApps(getContext());
+        for(FirebaseApp app : firebaseApps){
+            if(app.getName().equals(FirebaseApp.DEFAULT_APP_NAME)){
+                hasBeenInitialized=true;
+            }
+        }
+        return hasBeenInitialized;
+    }
+
+    public String getFirebaseInstanceIdToken() {
+        FirebaseApp firebaseApp = getFirebaseApp();
+        try {
+            return FirebaseInstanceId.getInstance(firebaseApp).getToken(
+                    firebaseApp.getOptions().getGcmSenderId(),
+                    "FCM");
+        } catch (IOException ex) {
+            Ln.e(ex, "Error while trying to obtain Firebase Token");
+            return null;
+        }
     }
 }

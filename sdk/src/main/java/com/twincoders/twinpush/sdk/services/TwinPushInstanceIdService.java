@@ -25,7 +25,7 @@ public class TwinPushInstanceIdService extends FirebaseInstanceIdService {
 
         Ln.d("TwinPush Intent Service called");
         // Get updated InstanceID token.
-        String refreshedToken = FirebaseInstanceId.getInstance(twinPush.getFirebaseApp()).getToken();
+        String refreshedToken = twinPush.getFirebaseInstanceIdToken();
         Ln.d("FCM Token created: " + refreshedToken);
 
         // Refresh register if needed

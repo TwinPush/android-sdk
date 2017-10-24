@@ -3,6 +3,7 @@ package com.twincoders.twinpush.sdk;
 import android.app.Activity;
 import android.content.Context;
 import android.location.Location;
+import android.support.annotation.WorkerThread;
 
 import com.google.firebase.FirebaseApp;
 import com.twincoders.twinpush.sdk.communications.TwinRequest;
@@ -227,7 +228,6 @@ public abstract class TwinPushSDK {
 
     /**
      * Notifies that the user has opened the notification with given ID
-     * @param notificationId
      */
     public abstract void onNotificationOpen(String notificationId);
     
@@ -331,4 +331,12 @@ public abstract class TwinPushSDK {
      * customized one depending integration preferences
      */
     public abstract FirebaseApp getFirebaseApp();
+
+    /**
+     * Obtains the Firebase InstanceId token for the Firebase Instance setup for TwinPush.
+     * This method can not be called from Main Thread
+     * @return Firebase InstanceId token
+     */
+    @WorkerThread
+    public abstract String getFirebaseInstanceIdToken();
 }
