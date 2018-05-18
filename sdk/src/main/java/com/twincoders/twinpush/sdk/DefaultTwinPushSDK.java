@@ -127,10 +127,8 @@ public class DefaultTwinPushSDK extends TwinPushSDK implements LocationListener 
                         // Only register if registration info has changed since last register
                         String pushToken = getFirebaseInstanceIdToken();
                         RegistrationInfo info = RegistrationInfo.fromContext(getContext(), getDeviceUDID(), deviceAlias, pushToken);
-                        String registrationHash = encrypt(info.toString());
-
-                        if (!Strings.equals(registrationHash, getRegistrationHash())) {
-                            setRegistrationHash(registrationHash);
+                        final String registrationHash = encrypt(info.toString());
+                        if (!isDeviceRegistered() || !Strings.equals(registrationHash, getRegistrationHash())) {
                             Ln.d("Registration changed! Launching new registration request");
                             if (registerRequest != null) {
                                 registerRequest.cancel();
@@ -151,6 +149,7 @@ public class DefaultTwinPushSDK extends TwinPushSDK implements LocationListener 
                                                     registerRequest = null;
                                                     setDeviceId(deviceId);
                                                     setDeviceAlias(deviceAlias);
+                                                    setRegistrationHash(registrationHash);
                                                     notifySuccess(deviceAlias, listener);
                                                 }
                                             });
