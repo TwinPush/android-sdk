@@ -16,6 +16,8 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.provider.Settings.Secure;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 
 import com.google.firebase.FirebaseApp;
@@ -35,6 +37,7 @@ import com.twincoders.twinpush.sdk.entities.InboxNotification;
 import com.twincoders.twinpush.sdk.entities.LocationPrecision;
 import com.twincoders.twinpush.sdk.entities.PropertyType;
 import com.twincoders.twinpush.sdk.entities.RegistrationInfo;
+import com.twincoders.twinpush.sdk.entities.RegistrationMode;
 import com.twincoders.twinpush.sdk.entities.TwinPushOptions;
 import com.twincoders.twinpush.sdk.logging.Ln;
 import com.twincoders.twinpush.sdk.logging.Strings;
@@ -58,6 +61,7 @@ public class DefaultTwinPushSDK extends TwinPushSDK implements LocationListener 
     /* Constants */
     private static final String PREF_FILE_NAME = "TwinPushPrefs";
     private static final String PREF_REGISTRATION_HASH = "REGISTRATION_HASH";
+    private static final String PREF_REGISTRATION_MODE = "REGISTRATION_MODE";
     private static final String PREF_DEVICE_ID = "DEVICE_ID";
     private static final String PREF_DEVICE_UDID = "DEVICE_UDID";
     private static final String PREF_DEVICE_ALIAS = "DEVICE_ALIAS";
@@ -126,33 +130,24 @@ public class DefaultTwinPushSDK extends TwinPushSDK implements LocationListener 
                         // Make sure the device has the proper dependencies.
                         // Only register if registration info has changed since last register
                         String pushToken = getFirebaseInstanceIdToken();
-                        RegistrationInfo info = RegistrationInfo.fromContext(getContext(), getDeviceUDID(), deviceAlias, pushToken);
+                        String newDeviceAlias = deviceAlias != null ? deviceAlias : getDeviceAlias();
+                        final RegistrationInfo info = RegistrationInfo.fromContext(getContext(), getDeviceUDID(), newDeviceAlias, pushToken);
+                        info.printLog();
                         final String registrationHash = encrypt(info.toString());
                         if (!isDeviceRegistered() || !Strings.equals(registrationHash, getRegistrationHash())) {
                             Ln.d("Registration changed! Launching new registration request");
-                            if (registerRequest != null) {
-                                registerRequest.cancel();
+                            RegistrationMode registrationMode = getRegistrationMode();
+                            Ln.d("Using registration mode: %s", registrationMode);
+                            switch (registrationMode) {
+                                case INTERNAL:
+                                    launchRegistrationRequest(info, listener);
+                                    break;
+                                case EXTERNAL:
+                                    break;
+                                default:
+                                    registerError(new Exception("Registration mode not supported: " + registrationMode), listener);
+                                    break;
                             }
-                            registerRequest = getRequestFactory().
-                                    register(info,
-                                            new RegisterRequest.Listener() {
-
-                                                @Override
-                                                public void onError(Exception exception) {
-                                                    registerRequest = null;
-                                                    registerError(exception, listener);
-                                                }
-
-                                                @Override
-                                                public void onRegistrationSuccess(String deviceId, String deviceAlias) {
-                                                    Ln.i("Device successfully registered on TwinPush (deviceId:%s, alias:%s)", deviceId, deviceAlias);
-                                                    registerRequest = null;
-                                                    setDeviceId(deviceId);
-                                                    setDeviceAlias(deviceAlias);
-                                                    setRegistrationHash(registrationHash);
-                                                    notifySuccess(deviceAlias, listener);
-                                                }
-                                            });
                         } else {
                             Ln.d("Registration info did not change since last registration");
                             notifySuccess(deviceAlias, listener);
@@ -166,6 +161,36 @@ public class DefaultTwinPushSDK extends TwinPushSDK implements LocationListener 
                 }
             }
         });
+    }
+
+    public void onRegistrationSuccess(@NonNull String deviceId, @NonNull RegistrationInfo info) {
+        setDeviceId(deviceId);
+        setDeviceAlias(deviceAlias);
+        setRegistrationHash(encrypt(info.toString()));
+        Ln.i("Device successfully registered on TwinPush (deviceId:%s, alias:%s)", deviceId, info.getDeviceAlias());
+    }
+
+    private void launchRegistrationRequest(final RegistrationInfo info, @Nullable final OnRegistrationListener listener) {
+        if (registerRequest != null) {
+            registerRequest.cancel();
+        }
+        registerRequest = getRequestFactory().
+                register(info,
+                        new RegisterRequest.Listener() {
+
+                            @Override
+                            public void onError(Exception exception) {
+                                registerRequest = null;
+                                registerError(exception, listener);
+                            }
+
+                            @Override
+                            public void onRegistrationSuccess(String deviceId, String deviceAlias) {
+                                registerRequest = null;
+                                DefaultTwinPushSDK.this.onRegistrationSuccess(deviceId, info);
+                                notifySuccess(deviceAlias, listener);
+                            }
+                        });
     }
 
     private void notifySuccess(final String deviceAlias, final OnRegistrationListener listener) {
@@ -535,26 +560,35 @@ public class DefaultTwinPushSDK extends TwinPushSDK implements LocationListener 
             String apiKey = options.twinPushApiKey;
             String subdomain = options.subdomain;
             String serverHost = options.serverHost;
+            RegistrationMode registrationMode = options.registrationMode;
 
-            boolean validSetup = Strings.notEmpty(appId) && Strings.notEmpty(apiKey);
             boolean validHost = Strings.notEmpty(subdomain) || Strings.notEmpty(serverHost);
 
-            if (validSetup) {
-                if (validHost) {
-                    setAppId(options.twinPushAppId);
-                    setApiKey(options.twinPushApiKey);
-                    if (options.serverHost != null) {
-                        setServerHost(options.serverHost);
+            if (registrationMode != null) {
+                if (Strings.notEmpty(appId)) {
+                    if (Strings.notEmpty(apiKey) || registrationMode != RegistrationMode.INTERNAL) {
+                        if (validHost) {
+                            setAppId(options.twinPushAppId);
+                            setApiKey(options.twinPushApiKey);
+                            setRegistrationMode(options.registrationMode);
+                            if (options.serverHost != null) {
+                                setServerHost(options.serverHost);
+                            } else {
+                                setSubdomain(options.subdomain);
+                            }
+                            resetSSLChecks();
+                            return true;
+                        } else {
+                            Ln.e("TwinPush Setup Error: subdomain or serverHost are required");
+                        }
                     } else {
-                        setSubdomain(options.subdomain);
+                        Ln.e("TwinPush Setup Error: API Key is required for Internal registrarion mode");
                     }
-                    resetSSLChecks();
-                    return true;
                 } else {
-                    Ln.e("TwinPush Setup Error: subdomain or serverHost are required");
+                    Ln.e("TwinPush Setup Error: App ID info is missing");
                 }
             } else {
-                Ln.e("TwinPush Setup Error: some of the required fields are missing");
+                Ln.e("TwinPush Setup Error: registration mode can not be null");
             }
         } else {
             Ln.e("TwinPush Setup Error: options object is null");
@@ -718,6 +752,16 @@ public class DefaultTwinPushSDK extends TwinPushSDK implements LocationListener 
 
     private String getRegistrationHash() {
         return getSharedPreferences().getString(PREF_REGISTRATION_HASH, null);
+    }
+
+    private void setRegistrationMode(@NonNull RegistrationMode registrationMode) {
+        getSharedPreferences().edit().putInt(PREF_REGISTRATION_MODE, registrationMode.getId()).apply();
+    }
+
+    private RegistrationMode getRegistrationMode() {
+        return RegistrationMode.fromId(getSharedPreferences().
+                getInt(PREF_REGISTRATION_MODE, RegistrationMode.INTERNAL.getId())
+        );
     }
 
     /* Customizable Firebase instance */

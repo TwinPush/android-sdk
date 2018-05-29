@@ -51,17 +51,17 @@ public class RegisterRequest extends TwinPushTokenRequest {
 		addSegmentParam(REGISTER_SEGMENT);
 		// Parameters
 		addParam(PLATFORM_KEY, PLATFORM_VALUE);
-		addParam(UDID_KEY, registrationInfo.udid);
-		addParam(ALIAS_KEY, registrationInfo.deviceAlias);
-        addParam(PUSH_TOKEN_KEY, registrationInfo.pushToken);
-        addParam(APP_VERSION_KEY, registrationInfo.appVersion);
-        addParam(SDK_VERSION_KEY, registrationInfo.sdkVersion);
-        addParam(OS_VERSION_KEY, registrationInfo.osVersion);
-        addParam(OS_VERSION_CODE_KEY, registrationInfo.osVersionInt);
-        addParam(MANUFACTURER_KEY, registrationInfo.deviceManufacturer);
-        addParam(DEVICE_MODEL_KEY, registrationInfo.deviceModel);
-        addParam(DEVICE_CODE_KEY, registrationInfo.deviceCode);
-        addParam(LANGUAGE_KEY, registrationInfo.language);
+		addParam(UDID_KEY, registrationInfo.getUdid());
+		addParam(ALIAS_KEY, registrationInfo.getDeviceAlias());
+        addParam(PUSH_TOKEN_KEY, registrationInfo.getPushToken());
+        addParam(APP_VERSION_KEY, registrationInfo.getAppVersion());
+        addParam(SDK_VERSION_KEY, registrationInfo.getSdkVersion());
+        addParam(OS_VERSION_KEY, registrationInfo.getOsVersion());
+        addParam(OS_VERSION_CODE_KEY, registrationInfo.getOsVersionInt());
+        addParam(MANUFACTURER_KEY, registrationInfo.getDeviceManufacturer());
+        addParam(DEVICE_MODEL_KEY, registrationInfo.getDeviceModel());
+        addParam(DEVICE_CODE_KEY, registrationInfo.getDeviceCode());
+        addParam(LANGUAGE_KEY, registrationInfo.getLanguage());
 	}
 	
 	@Override

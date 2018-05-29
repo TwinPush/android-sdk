@@ -16,31 +16,31 @@ import java.util.Map;
 public class RegistrationInfo {
 
     /* TwinPush SDK Version */
-    public String sdkVersion = null;
+    private String sdkVersion = null;
     /* Client Application Version */
-    public String appVersion = null;
+    private String appVersion = null;
     /* Android version name ("4.2.2", "5.1") */
-    public String osVersion = null;
+    private String osVersion = null;
     /* Android API Level (19 for "4.2.2", etc) */
-    public Integer osVersionInt = null;
+    private Integer osVersionInt = null;
     /* Current device locale ("en_US", "es_ES")*/
-    public String language = null;
+    private String language = null;
     /* Device Manufacturer ("samsung", "motorola") */
-    public String deviceManufacturer = null;
+    private String deviceManufacturer = null;
     /* User readable device model ("Galaxy Nexus", "Moto G3") */
-    public String deviceModel = null;
+    private String deviceModel = null;
     /* Technical device code */
-    public String deviceCode = null;
+    private String deviceCode = null;
     /* Device Unique Identifier */
-    public String udid = null;
+    private String udid = null;
 
     /* User alias for registration */
-    public String deviceAlias = null;
-    /* GCM Token for notifications */
-    public String pushToken = null;
+    private String deviceAlias = null;
+    /* FCM Token for notifications */
+    private String pushToken = null;
 
     /* TwinPush setup parameters */
-    public String appID = null;
+    private String appID = null;
 
 
     public static RegistrationInfo fromContext(Context context, String udid, String deviceAlias, String pushToken) {
@@ -64,8 +64,6 @@ public class RegistrationInfo {
         // TwinPush setup params
         TwinPushSDK twinPush = TwinPushSDK.getInstance(context);
         info.appID = twinPush.getAppId();
-
-        info.printLog();
 
         return info;
     }
@@ -98,7 +96,7 @@ public class RegistrationInfo {
         Ln.d("============================================");
     }
 
-    public Map<String, Object> toMap() {
+    private Map<String, Object> toMap() {
         Map<String, Object> map = new LinkedHashMap<>();
         map.put("app_id", appID);
         map.put("app_version", appVersion);
@@ -126,4 +124,82 @@ public class RegistrationInfo {
         return builder.toString();
     }
 
+    /* Boiler plate */
+
+    /**
+     * Obtains the current TwinPush SDK Version
+     */
+    public String getSdkVersion() {
+        return sdkVersion;
+    }
+
+    /**
+     * Returns the client Application Version
+     */
+    public String getAppVersion() {
+        return appVersion;
+    }
+
+    /**
+     * Android version name ("4.2.2", "5.1")
+     */
+    public String getOsVersion() {
+        return osVersion;
+    }
+
+    /**
+     * Android API Level (19 for "4.2.2", etc)
+     */
+    public Integer getOsVersionInt() {
+        return osVersionInt;
+    }
+
+    /**
+     * Current device locale ("en_US", "es_ES")
+     */
+    public String getLanguage() {
+        return language;
+    }
+
+    /**
+     * Device Manufacturer ("samsung", "motorola")
+     */
+    public String getDeviceManufacturer() {
+        return deviceManufacturer;
+    }
+
+    /**
+     * User readable device model ("Galaxy Nexus", "Moto G3")
+     */
+    public String getDeviceModel() {
+        return deviceModel;
+    }
+
+    /**
+     * Technical device code
+     */
+    public String getDeviceCode() {
+        return deviceCode;
+    }
+
+    /**
+     * Device Unique Identifier
+     */
+    public String getUdid() {
+        return udid;
+    }
+
+    /**
+     * User alias for registration
+     */
+    public String getDeviceAlias() {
+        return deviceAlias;
+    }
+
+    /**
+     * FCM Token for notifications
+     */
+    public String getPushToken() {
+        return pushToken;
+    }
 }

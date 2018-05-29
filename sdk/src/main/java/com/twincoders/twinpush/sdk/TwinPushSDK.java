@@ -3,6 +3,7 @@ package com.twincoders.twinpush.sdk;
 import android.app.Activity;
 import android.content.Context;
 import android.location.Location;
+import android.support.annotation.NonNull;
 import android.support.annotation.WorkerThread;
 
 import com.google.firebase.FirebaseApp;
@@ -13,6 +14,7 @@ import com.twincoders.twinpush.sdk.communications.requests.notifications.GetNoti
 import com.twincoders.twinpush.sdk.communications.requests.notifications.GetNotificationsRequest;
 import com.twincoders.twinpush.sdk.entities.InboxNotification;
 import com.twincoders.twinpush.sdk.entities.LocationPrecision;
+import com.twincoders.twinpush.sdk.entities.RegistrationInfo;
 import com.twincoders.twinpush.sdk.entities.TwinPushOptions;
 import com.twincoders.twinpush.sdk.notifications.PushNotification;
 
@@ -69,6 +71,14 @@ public abstract class TwinPushSDK {
      * @param listener Listener to be notified of the result of the registration process. Can be null if result is not relevant.
      */
     public abstract void register(final String deviceAlias, final OnRegistrationListener listener);
+
+    /**
+     * Method that should be called after an external registration to set the device ID and the registration
+     * info for the device.
+     * @param deviceId Device ID set by the TwinPush platform after a successful registration
+     * @param info Registration info for current device
+     */
+    public abstract void onRegistrationSuccess(@NonNull String deviceId, @NonNull RegistrationInfo info);
     
 	/* Obtain notifications methods */
 

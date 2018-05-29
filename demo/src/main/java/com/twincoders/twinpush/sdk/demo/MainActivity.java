@@ -12,6 +12,7 @@ import android.widget.Toast;
 
 import com.twincoders.twinpush.sdk.TwinPushSDK;
 import com.twincoders.twinpush.sdk.activities.RichNotificationActivity;
+import com.twincoders.twinpush.sdk.entities.RegistrationMode;
 import com.twincoders.twinpush.sdk.entities.TwinPushOptions;
 import com.twincoders.twinpush.sdk.logging.Strings;
 import com.twincoders.twinpush.sdk.notifications.PushNotification;
@@ -49,11 +50,11 @@ public class MainActivity extends ParentActivity {
 
         mRegisterProgress = findViewById(R.id.register_progress);
         mRegisterForm = findViewById(R.id.register_form);
-        mRegisterButton = (Button) findViewById(R.id.register_button);
+        mRegisterButton = findViewById(R.id.register_button);
 
-        ageTxt = (TextView) findViewById(R.id.age);
-        usernameTxt = (TextView) findViewById(R.id.username);
-        statusSpinner = (MaterialSpinner) findViewById(R.id.status);
+        ageTxt = findViewById(R.id.age);
+        usernameTxt = findViewById(R.id.username);
+        statusSpinner = findViewById(R.id.status);
 
         // Setup "status" dropdown
         String[] statusArray = getResources().getStringArray(R.array.status_arrays);
@@ -64,9 +65,10 @@ public class MainActivity extends ParentActivity {
         twinPush = TwinPushSDK.getInstance(this);
         // Setup TwinPush SDK
         TwinPushOptions options = new TwinPushOptions();                // Initialize options
-        options.twinPushAppId =     "768xxxxxxxxxxxx7";                 // - APP ID
-        options.twinPushApiKey =    "c5cxxxxxxxxxxxxxxxxxxxxxxxx81592"; // - API Key
-        options.subdomain =         "mycompany";                        // - Application subdomain
+        options.twinPushAppId =     "1e207f83310fe964";                 // - APP ID
+        options.twinPushApiKey =    "74e6011f0669d1324b3f764d66f74f67"; // - API Key
+        options.subdomain =         "app";                              // - Application subdomain
+        //options.registrationMode = RegistrationMode.EXTERNAL;
         TwinPushSDK.getInstance(this).setup(options);                   // Call setup
 
         // Show previous values when present
@@ -180,7 +182,7 @@ public class MainActivity extends ParentActivity {
     protected void onStart() {
         TwinPushSDK.getInstance(this).activityStart(this);
         super.onStart();
-    };
+    }
 
     @Override
     protected void onStop() {

@@ -12,5 +12,7 @@ public class TwinPushOptions {
     public String subdomain = null;
     /* Custom host for the TwinPush server. Default is "https://{{subdomain}}.twinpush.com" */
     public String serverHost = null;
+    /* If set to true, the SDK will not make the registration request to the TwinPush API. Instead, it will notify the intent via broadcast**/
+    public RegistrationMode registrationMode = RegistrationMode.INTERNAL;
 
 }
