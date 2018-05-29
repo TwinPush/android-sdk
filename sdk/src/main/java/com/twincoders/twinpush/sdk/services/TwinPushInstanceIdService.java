@@ -2,11 +2,8 @@ package com.twincoders.twinpush.sdk.services;
 
 
 import android.content.Intent;
-import android.support.v4.content.LocalBroadcastManager;
 
-import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.iid.FirebaseInstanceIdService;
-import com.twincoders.twinpush.sdk.DefaultTwinPushSDK;
 import com.twincoders.twinpush.sdk.TwinPushSDK;
 import com.twincoders.twinpush.sdk.logging.Ln;
 
@@ -15,9 +12,6 @@ import com.twincoders.twinpush.sdk.logging.Ln;
  */
 
 public class TwinPushInstanceIdService extends FirebaseInstanceIdService {
-
-    public final static String REGISTRATION_COMPLETE = "REGISTRATION_COMPLETE";
-    public final static String EXTRA_PUSH_TOKEN = "PUSH_TOKEN";
 
     @Override
     public void onTokenRefresh() {
@@ -29,13 +23,9 @@ public class TwinPushInstanceIdService extends FirebaseInstanceIdService {
         Ln.d("FCM Token created: " + refreshedToken);
 
         // Refresh register if needed
-        if (twinPush.getDeviceId() != null) {
+        if (twinPush.isDeviceRegistered()) {
             twinPush.register();
         }
-        // Notify that registration has completed through a broadcast intent
-        Intent registrationComplete = new Intent(REGISTRATION_COMPLETE);
-        if (refreshedToken != null) registrationComplete.putExtra(EXTRA_PUSH_TOKEN, refreshedToken);
-        LocalBroadcastManager.getInstance(this).sendBroadcast(registrationComplete);
     }
 
     @Override

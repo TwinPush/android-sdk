@@ -9,11 +9,12 @@ import com.twincoders.twinpush.sdk.BuildConfig;
 import com.twincoders.twinpush.sdk.TwinPushSDK;
 import com.twincoders.twinpush.sdk.logging.Ln;
 
+import java.io.Serializable;
 import java.util.LinkedHashMap;
 import java.util.Locale;
 import java.util.Map;
 
-public class RegistrationInfo {
+public class RegistrationInfo implements Serializable {
 
     /* TwinPush SDK Version */
     private String sdkVersion = null;

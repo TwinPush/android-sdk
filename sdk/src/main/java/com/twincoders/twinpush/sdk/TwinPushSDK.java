@@ -286,6 +286,12 @@ public abstract class TwinPushSDK {
      */
     public abstract int getLocationMinUpdateDistance();
 
+    /**
+     * Returns true if the device has been successfuly registered in TwinPush platform and has
+     * a valid device ID assigned
+     */
+    public abstract boolean isDeviceRegistered();
+
     // Security
 
     /**

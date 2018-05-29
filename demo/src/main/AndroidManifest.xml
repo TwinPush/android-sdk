@@ -30,33 +30,8 @@
             android:theme="@android:style/Theme.Holo.NoActionBar">
         </activity>
 
-        <!--&lt;!&ndash; [START gcm_receiver] &ndash;&gt;-->
-        <!--<receiver-->
-            <!--android:name="com.google.android.gms.gcm.GcmReceiver"-->
-            <!--android:exported="true"-->
-            <!--android:permission="com.google.android.c2dm.permission.SEND">-->
-            <!--<intent-filter>-->
-                <!--<action android:name="com.google.android.c2dm.intent.RECEIVE" />-->
 
-                <!--<category android:name="com.twincoders.twinpush.sdk.demo" />-->
-            <!--</intent-filter>-->
-        <!--</receiver>-->
-        <!--&lt;!&ndash; [END gcm_receiver] &ndash;&gt;-->
-
-        <!--&lt;!&ndash; [START twinpush_services] &ndash;&gt;-->
-        <!--<service-->
-            <!--android:name="com.twincoders.twinpush.sdk.services.NotificationIntentService"-->
-            <!--android:exported="false">-->
-            <!--<intent-filter>-->
-                <!--<action android:name="com.google.android.c2dm.intent.RECEIVE" />-->
-            <!--</intent-filter>-->
-        <!--</service>-->
-
-        <!--<service-->
-            <!--android:name="com.twincoders.twinpush.sdk.services.RegistrationIntentService"-->
-            <!--android:exported="false">-->
-        <!--</service>-->
-        <!-- [END twinpush_services] -->
+        <!-- [START twinpush_services] -->
         <service
             android:name="com.twincoders.twinpush.sdk.services.TwinPushInstanceIdService">
             <intent-filter>
@@ -70,6 +45,7 @@
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
+        <!-- [END twinpush_services] -->
 
     </application>
 

@@ -12,6 +12,7 @@ import android.widget.Toast;
 
 import com.twincoders.twinpush.sdk.TwinPushSDK;
 import com.twincoders.twinpush.sdk.activities.RichNotificationActivity;
+import com.twincoders.twinpush.sdk.demo.services.RegistrationReceiver;
 import com.twincoders.twinpush.sdk.entities.RegistrationMode;
 import com.twincoders.twinpush.sdk.entities.TwinPushOptions;
 import com.twincoders.twinpush.sdk.logging.Strings;
@@ -66,9 +67,10 @@ public class MainActivity extends ParentActivity {
         // Setup TwinPush SDK
         TwinPushOptions options = new TwinPushOptions();                // Initialize options
         options.twinPushAppId =     "1e207f83310fe964";                 // - APP ID
-        options.twinPushApiKey =    "74e6011f0669d1324b3f764d66f74f67"; // - API Key
+//        options.twinPushApiKey =    "74e6011f0669d1324b3f764d66f74f67"; // - API Key
         options.subdomain =         "app";                              // - Application subdomain
-        //options.registrationMode = RegistrationMode.EXTERNAL;
+        options.registrationMode = RegistrationMode.EXTERNAL;
+        options.registrationReceiver = RegistrationReceiver.class;
         TwinPushSDK.getInstance(this).setup(options);                   // Call setup
 
         // Show previous values when present
