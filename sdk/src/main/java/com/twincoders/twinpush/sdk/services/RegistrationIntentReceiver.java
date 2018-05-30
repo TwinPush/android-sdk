@@ -3,6 +3,7 @@ package com.twincoders.twinpush.sdk.services;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.support.annotation.NonNull;
 import android.support.v4.content.LocalBroadcastManager;
 
@@ -25,6 +26,13 @@ public abstract class RegistrationIntentReceiver extends BroadcastReceiver {
         }
     }
 
+    /**
+     * Method that will be called when a registration intent is received. The process should
+     * start the external registration on TwinPush and call TwinPush.onRegistrationSuccess once
+     * finished
+     * @param context Current application context
+     * @param info Complete registration info
+     */
     public abstract void onRegistrationIntent(Context context, RegistrationInfo info);
 
     /**
@@ -55,6 +63,19 @@ public abstract class RegistrationIntentReceiver extends BroadcastReceiver {
         LocalBroadcastManager.getInstance(context).sendBroadcast(registrationIntent);
     }
 
+    /**
+     * Helper method that registers the current receiver for local registration broadcast events.
+     */
+    public void registerReceiver(Context context) {
+        LocalBroadcastManager.getInstance(context).registerReceiver(this,
+                new IntentFilter(RegistrationIntentReceiver.REGISTER_REQUEST_INTENT));
+    }
 
+    /**
+     * Unregister the current receiver so it will no longer receive registration intents
+     */
+    public void unregisterReceiver(Context context) {
+        LocalBroadcastManager.getInstance(context).unregisterReceiver(this);
+    }
 
 }

@@ -6,7 +6,6 @@ import android.app.Activity;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.Location;
@@ -20,7 +19,6 @@ import android.provider.Settings.Secure;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
-import android.support.v4.content.LocalBroadcastManager;
 
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.FirebaseOptions;
@@ -563,17 +561,6 @@ public class DefaultTwinPushSDK extends TwinPushSDK implements LocationListener 
             String subdomain = options.subdomain;
             String serverHost = options.serverHost;
             RegistrationMode registrationMode = options.registrationMode;
-
-            if (options.registrationReceiver != null) {
-                try {
-                    RegistrationIntentReceiver receiver = options.registrationReceiver.newInstance();
-                    LocalBroadcastManager.getInstance(getContext()).registerReceiver(receiver,
-                            new IntentFilter(RegistrationIntentReceiver.REGISTER_REQUEST_INTENT));
-                } catch (Exception ex) {
-                    Ln.e(ex, "Error while trying to create regitration receiver instance");
-                }
-            }
-
             boolean validHost = Strings.notEmpty(subdomain) || Strings.notEmpty(serverHost);
 
             if (registrationMode != null) {

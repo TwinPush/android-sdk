@@ -16,7 +16,5 @@ public class TwinPushOptions {
     public String serverHost = null;
     /* If set to true, the SDK will not make the registration request to the TwinPush API. Instead, it will notify the intent via broadcast**/
     public RegistrationMode registrationMode = RegistrationMode.INTERNAL;
-    /* Class for the registration receiver */
-    public Class<? extends RegistrationIntentReceiver> registrationReceiver = null;
 
 }
