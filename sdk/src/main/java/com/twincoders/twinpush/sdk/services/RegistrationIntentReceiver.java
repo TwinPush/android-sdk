@@ -9,20 +9,25 @@ import android.support.v4.content.LocalBroadcastManager;
 
 import com.twincoders.twinpush.sdk.entities.RegistrationInfo;
 import com.twincoders.twinpush.sdk.logging.Ln;
+import com.twincoders.twinpush.sdk.logging.Strings;
 
 public abstract class RegistrationIntentReceiver extends BroadcastReceiver {
 
-    public final static String REGISTER_REQUEST_INTENT = "com.twinpush.ON_REGISTER_REQUEST";
+    private final static String REGISTER_REQUEST_INTENT = "com.twinpush.ON_REGISTER_REQUEST";
     private final static String REGISTER_INFO_EXTRA = "REGISTER_INFO_EXTRA";
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        Ln.i("Registration intent received");
-        RegistrationInfo info = getRegistrationInfoFromIntent(intent);
-        if (info != null) {
-            onRegistrationIntent(context, info);
+        if (Strings.equals(intent.getAction(), REGISTER_REQUEST_INTENT)) {
+            Ln.d("Registration intent received");
+            RegistrationInfo info = getRegistrationInfoFromIntent(intent);
+            if (info != null) {
+                onRegistrationIntent(context, info);
+            } else {
+                Ln.e("Can not proceed with external registration: registration info is null");
+            }
         } else {
-            Ln.e("Can not proceed with external registration: registration info is null");
+            Ln.w("Received intent with unknown action: %s", intent.getAction());
         }
     }
 
