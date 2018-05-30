@@ -54,7 +54,7 @@ Include this dependency in your `build.gradle` file to reference this library in
 
 ```groovy
 dependencies {
-    compile 'com.twinpush.android:sdk:2.4.3'
+    compile 'com.twinpush.android:sdk:2.5.0'
 }
 ```
 
@@ -383,7 +383,7 @@ twinPush.updateLocation(LocationPrecision.HIGH);
 As described in the [official documentation](http://developer.android.com/design/patterns/notifications.html), Android offers a variety of ways to display notifications to the user.
 
 ![](http://developer.android.com/design/media/notifications_pattern_expandable.png)
-> _Example of default Android expanded and contracted layouts (source: [Android Developers](http://developer.android.com/))_
+_Image: Example of default Android expanded and contracted layouts (source: [Android Developers](http://developer.android.com/))_
 
 By default, TwinPush will display the notification message in both contracted and expanded layouts, and will show the application icon for the notifications. By overriding the default TwinPush behavior, you can stack notifications, change the icon displayed on each and broadly, improve and customize the way in which messages are displayed to the user.
 
@@ -410,6 +410,57 @@ public class MyIntentService extends NotificationIntentService {
     </intent-filter>
 </service>
 ```
+
+### External registration
+
+It is possible to implement an indirect device registration to TwinPush through an external module. This allows the developer to control the registration process and allows to remove the TwinPush API Key from the application, including an additional security layer.
+
+Using the external registration mode will change the default TwinPush behavior: when the SDK `register` method is called, the library will obtain the Push token and the device information but, instead of launching the request with this data to the TwinPush platform directly, it will raise a local broadcast intent with it.
+
+With this new behavior, it is possible to intercept this intent and make an indirect registration to TwinPush platform through an external module. Once registered though this external piece, the SDK will be notified setting up the Device ID. Once done, the rest of the SDK will keep the default behavior, correctly reporting to TwinPush the usage statistics and other information as notification openings.
+
+#### Setup
+
+The first step is to change setup to set the external registration mode. TwinPush API Key is no longer required if the SDK is not going to launch the _register device_ request:
+
+```java
+public void onCreate(Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+    // Setup TwinPush SDK
+    TwinPushOptions options = new TwinPushOptions();        // Initialize options
+    options.twinPushAppId =     "7687xxxxxxxxxxxx";         // - APP ID
+    options.subdomain =         "mycompany";                // - Application subdomain
+    options.registrationMode =  RegistrationMode.EXTERNAL;  // - External registration
+    TwinPushSDK.getInstance(this).setup(options);           // Call setup
+    /* Your code goes here... */
+}
+```
+#### Register receiver
+
+The next step is to create a receiver that will catch the registration broadcast intent. The SDK offers an abstract implementation `RegistrationIntentReceiver` that solves the intent processing and registration info parsing.
+
+Using this class, the only required method to implement is `onRegistrationIntent`, that will be called when an intent with correct information is received.
+
+Then, the only step left is registering the receiver to the LocalBroadcastManager to start getting intents:
+
+```java
+// Instance anonymous class (or create your own implementation)
+RegistrationIntentReceiver receiver = new RegistrationIntentReceiver() {
+    @Override
+    public void onRegistrationIntent(Context context, RegistrationInfo info) {
+        this.unregisterReceiver(context);
+        // Obtain Device ID through external registration
+        String deviceID = "obtained-id"; 
+        // Notify TwinPush SDK that the registration has been successful
+        TwinPushSDK.getInstance(context).onRegistrationSuccess(deviceID, info);
+    }
+};
+// Register to broadcast intents
+receiver.registerReceiver(getContext());
+// Invoque register method
+TwinPushSDK.getInstance(this).register();
+```
+
 
 ### Alternative Firebase setup
 

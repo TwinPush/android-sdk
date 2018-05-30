@@ -1,8 +1,11 @@
 # TwinPush Android SDK Release Notes
 
+## 2.5.0 - 2018-05-30
+
+* Implemented external registration through local broadcast intent
+
 ## 2.4.3 - 2018-05-18
 * Fixed issue that could cause consecutive registration requests to not be correctly launched after a first error
-
 
 ## 2.4.2 - 2017-10-24
 * Migrated push service from GCM to **Firebase**
