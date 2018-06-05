@@ -1,5 +1,9 @@
 # TwinPush Android SDK Release Notes
 
+## 2.5.1 - 2018-06-05
+
+* Included SDK method to obtain current application badge count
+
 ## 2.5.0 - 2018-05-30
 
 * Implemented external registration through local broadcast intent

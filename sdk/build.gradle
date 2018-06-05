@@ -4,8 +4,8 @@ apply plugin: 'com.android.library'
 apply plugin: 'com.github.dcendents.android-maven'
 apply plugin: 'com.jfrog.bintray'
 
-def libraryVersion = '2.5.0'
-def libraryVersionCode = 2500
+def libraryVersion = '2.5.1'
+def libraryVersionCode = 2501
 
 // Maven group and version
 version = libraryVersion

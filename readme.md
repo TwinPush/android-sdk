@@ -54,7 +54,7 @@ Include this dependency in your `build.gradle` file to reference this library in
 
 ```groovy
 dependencies {
-    compile 'com.twinpush.android:sdk:2.5.0'
+    compile 'com.twinpush.android:sdk:2.5.1'
 }
 ```
 
@@ -378,16 +378,11 @@ twinPush.updateLocation(LocationPrecision.HIGH);
 
 ## Customize behavior
 
-### Custom notification layouts
+### On notification received
 
-As described in the [official documentation](http://developer.android.com/design/patterns/notifications.html), Android offers a variety of ways to display notifications to the user.
+It is possible to _intercept_ the event that is produced when a notificaion is received on the device. This option offers the chance to change the default behavior of displaying the notification on the Android Notifications Center with the standard BigText style.
 
-![](http://developer.android.com/design/media/notifications_pattern_expandable.png)
-_Image: Example of default Android expanded and contracted layouts (source: [Android Developers](http://developer.android.com/))_
-
-By default, TwinPush will display the notification message in both contracted and expanded layouts, and will show the application icon for the notifications. By overriding the default TwinPush behavior, you can stack notifications, change the icon displayed on each and broadly, improve and customize the way in which messages are displayed to the user.
-
-It is possible to modify the way in which notifications are shown through TwinPush by following the steps below:
+To execute your own code when a notification is received you can follow the steps below:
 
 * Create a class that extends [NotificationIntentService](https://github.com/TwinPush/android-sdk/blob/master/sdk/src/com/twincoders/twinpush/sdk/services/NotificationIntentService.java) and override the `displayNotification` method to display the notification in the desired way:
 
@@ -395,7 +390,10 @@ It is possible to modify the way in which notifications are shown through TwinPu
 public class MyIntentService extends NotificationIntentService {
     @Override
     protected void displayNotification(Context context, PushNotification notification) {
-        // Use your custom layout to display notification
+        // TODO: Execute your code obtaining info from the Push Notification
+        ...
+        // Use default code to display notification (or build your own method)
+        super.displayNotification(context, notification);
     }
 }
 ```
@@ -410,6 +408,70 @@ public class MyIntentService extends NotificationIntentService {
     </intent-filter>
 </service>
 ```
+
+### Custom notification layouts
+
+As described in the [official documentation](http://developer.android.com/design/patterns/notifications.html), Android offers a variety of ways to display notifications to the user.
+
+![](http://developer.android.com/design/media/notifications_pattern_expandable.png)
+_Image: Example of default Android expanded and contracted layouts (source: [Android Developers](http://developer.android.com/))_
+
+By default, TwinPush will display the notification message in both contracted and expanded layouts, and will show the application icon for the notifications. By overriding the default TwinPush behavior, you can stack notifications, change the icon displayed on each and broadly, improve and customize the way in which messages are displayed to the user.
+
+To change the default behavior of displaying notificaiton, implement your own `NotificationIntentService` as descrived above and include your code in the `displayNotification` method:
+
+```java
+public class MyIntentService extends NotificationIntentService {
+    @Override
+    protected void displayNotification(Context context, PushNotification notification) {
+        // TODO: Use your customized method to display or process the notification
+    }
+}
+```
+
+### Badge count management
+
+The badge count is the indicator that is usually used in Android to show that there are pending or unread messages in an application. This is a tipical behavior of iOS devices that has been imported from various Android manufacturers.
+
+![](https://i.imgur.com/XpGVAUn.png?)
+
+In TwinPush, the badge count value is linked to the device, and (in most cases) it will be increased when a notification is received.
+
+#### Get badge count
+
+To obtain the current badge count for the device, you can use the `getBadgeCount` method of TwinPush SDK:
+
+```java
+TwinPushSDK twinPush = TwinPushSDK.getInstance(getContext());
+twinPush.getBadgeCount(new GetBadgeCountRequest.Listener() {
+    @Override
+    public void onSuccess(int badgeCount) {
+        Ln.i("Obtained badge: %d", badgeCount);
+        // TODO Show or process badge
+    }
+
+    @Override
+    public void onError(Exception exception) {
+        Ln.e(exception);
+    }
+});
+```
+
+**Note**: To refresh the application badge count just after receiving a notification, you could include the `getBadgeCount` call in the `displayNotification` method of your custom `NotificationIntentService` (see _On notification received_ above).
+
+#### Set badge count
+
+In order to change the value for the device badge count stored in TwinPush platform, you have to use the `setBadgeCount` method:
+
+```java
+int newBadge = 0;
+TwinPushSDK twinPush = TwinPushSDK.getInstance(getContext());
+twinPush.setBadgeCount(newBadge);
+```
+
+**Important:** Since it is not a native Android behavior and every manufacturer requires a different implementation, TwinPush does not offer a method to directly display the badge count in the application icon. Instead, TwinPush offers the functionality to keep and autoincrease the associated value, but it is the integrator responsability to display it if required. 
+
+However there are [third party libraries](https://github.com/leolin310148/ShortcutBadger) that can help to obtain an homogeneous with a simple implementation.
 
 ### External registration
 

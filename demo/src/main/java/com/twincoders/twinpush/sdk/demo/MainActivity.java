@@ -66,7 +66,7 @@ public class MainActivity extends ParentActivity {
         TwinPushOptions options = new TwinPushOptions();                // Initialize options
         options.twinPushAppId =     "xxxxxxxxxxxxxxxx";                 // - APP ID
         options.twinPushApiKey =    "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"; // - API Key
-        options.subdomain =         "mysubdomail";                      // - Application subdomain
+        options.subdomain =         "mysubdomain";                      // - Application subdomain
         twinPush.setup(options);                                        // Call setup
 
         // Show previous values when present
