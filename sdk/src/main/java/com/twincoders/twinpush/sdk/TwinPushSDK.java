@@ -12,6 +12,7 @@ import com.twincoders.twinpush.sdk.communications.requests.notifications.GetInbo
 import com.twincoders.twinpush.sdk.communications.requests.notifications.GetInboxSummaryRequest;
 import com.twincoders.twinpush.sdk.communications.requests.notifications.GetNotificationDetailsRequest;
 import com.twincoders.twinpush.sdk.communications.requests.notifications.GetNotificationsRequest;
+import com.twincoders.twinpush.sdk.communications.requests.register.GetBadgeCountRequest;
 import com.twincoders.twinpush.sdk.entities.InboxNotification;
 import com.twincoders.twinpush.sdk.entities.LocationPrecision;
 import com.twincoders.twinpush.sdk.entities.RegistrationInfo;
@@ -131,6 +132,21 @@ public abstract class TwinPushSDK {
      * @param listener Listener to notify callback
      */
     public abstract void deleteNotification(InboxNotification notification, TwinRequest.DefaultListener listener);
+
+    /* Badge count */
+
+    /**
+     * Method that set the selected badge count for the current device in the TwinPush platform
+     * @param badgeCount Value to set
+     */
+    public abstract void setBadgeCount(int badgeCount);
+
+    /**
+     * Method to asynchronously obtain badge count associated to the current device in TwinPush
+     * platform. The badge count can be used to show the pending received notifications in the device
+     * @param listener Lister where the badge count will be notified vía callback
+     */
+    public abstract void getBadgeCount(GetBadgeCountRequest.Listener listener);
     
     /* Properties */
     /**

@@ -32,6 +32,7 @@ import com.twincoders.twinpush.sdk.communications.requests.notifications.GetInbo
 import com.twincoders.twinpush.sdk.communications.requests.notifications.GetNotificationDetailsRequest;
 import com.twincoders.twinpush.sdk.communications.requests.notifications.GetNotificationsRequest;
 import com.twincoders.twinpush.sdk.communications.requests.notifications.GetNotificationsRequest.Listener;
+import com.twincoders.twinpush.sdk.communications.requests.register.GetBadgeCountRequest;
 import com.twincoders.twinpush.sdk.communications.requests.register.RegisterRequest;
 import com.twincoders.twinpush.sdk.entities.InboxNotification;
 import com.twincoders.twinpush.sdk.entities.LocationPrecision;
@@ -247,6 +248,18 @@ public class DefaultTwinPushSDK extends TwinPushSDK implements LocationListener 
     @Override
     public void deleteNotification(InboxNotification notification, DefaultListener listener) {
         getRequestFactory().deleteNotification(notification, listener);
+    }
+
+    /* Badge count */
+
+    @Override
+    public void setBadgeCount(int badgeCount) {
+        getRequestFactory().setBadgeCount(badgeCount, getDefaultListener("Set badge count"));
+    }
+
+    @Override
+    public void getBadgeCount(GetBadgeCountRequest.Listener listener) {
+        getRequestFactory().getBadgeCount(listener);
     }
 
     /* Properties */

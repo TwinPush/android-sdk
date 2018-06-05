@@ -15,7 +15,9 @@ import com.twincoders.twinpush.sdk.communications.requests.notifications.GetNoti
 import com.twincoders.twinpush.sdk.communications.requests.notifications.GetNotificationsRequest.Listener;
 import com.twincoders.twinpush.sdk.communications.requests.properties.ClearCustomPropertiesRequest;
 import com.twincoders.twinpush.sdk.communications.requests.properties.SetCustomPropertyRequest;
+import com.twincoders.twinpush.sdk.communications.requests.register.GetBadgeCountRequest;
 import com.twincoders.twinpush.sdk.communications.requests.register.RegisterRequest;
+import com.twincoders.twinpush.sdk.communications.requests.register.SetBadgeCountRequest;
 import com.twincoders.twinpush.sdk.communications.requests.statistics.CloseAppRequest;
 import com.twincoders.twinpush.sdk.communications.requests.statistics.OpenAppRequest;
 import com.twincoders.twinpush.sdk.communications.requests.statistics.OpenNotificationRequest;
@@ -98,6 +100,20 @@ public class TwinPushRequestFactory {
 
     public TwinPushRequest deleteNotification(InboxNotification inboxNotification, DefaultListener listener) {
         TwinPushRequest request = new DeleteInboxNotificationRequest(getAppId(), getDeviceId(), inboxNotification.getNotification().getId(), listener);
+        launch(request);
+        return request;
+    }
+
+    /* Badge count */
+
+	public TwinPushRequest setBadgeCount(int badgeCount, DefaultListener listener) {
+        TwinPushRequest request = new SetBadgeCountRequest(getAppId(), getDeviceId(), badgeCount, listener);
+        launch(request);
+        return request;
+    }
+
+    public TwinPushRequest getBadgeCount(GetBadgeCountRequest.Listener listener) {
+        TwinPushRequest request = new GetBadgeCountRequest(getAppId(), getDeviceId(), listener);
         launch(request);
         return request;
     }
