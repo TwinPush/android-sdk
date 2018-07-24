@@ -1,16 +1,18 @@
 package com.twincoders.twinpush.sdk.services;
 
 import android.app.Notification;
-import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v4.app.NotificationCompat;
+import android.support.v4.app.NotificationManagerCompat;
 
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 import com.twincoders.twinpush.sdk.R;
+import com.twincoders.twinpush.sdk.TwinPushSDK;
 import com.twincoders.twinpush.sdk.logging.Ln;
+import com.twincoders.twinpush.sdk.logging.Strings;
 import com.twincoders.twinpush.sdk.notifications.PushNotification;
 
 import org.json.JSONException;
@@ -31,6 +33,8 @@ public class NotificationIntentService extends FirebaseMessagingService {
 	
 	public final static String ON_NOTIFICATION_OPENED_ACTION = "con.twincoders.twinpush.sdk.PUSH_NOTIFICATION_OPENED";
 	public final static String EXTRA_NOTIFICATION = "notification";
+
+	public final static String PROPERTY_CHANNEL_ID = "tp_channel_id";
 	
     public NotificationIntentService() {
         super();
@@ -44,9 +48,11 @@ public class NotificationIntentService extends FirebaseMessagingService {
 		if (message.getNotification() != null) {
 			super.onMessageReceived(message);
 		} else {
+            // Ensure default channel creation to avoid issues on recently updated Android 8 devices
+            TwinPushSDK.getInstance(this).createNotificationChannel();
+            // Obtain Push Notification object from message data
 			PushNotification notification = getNotification(message.getData());
-
-			// notifies user
+			// Display Notification
 			displayNotification(getBaseContext(), notification);
 		}
     }
@@ -65,21 +71,26 @@ public class NotificationIntentService extends FirebaseMessagingService {
 			int stringId = context.getApplicationInfo().labelRes;
 			title = context.getString(stringId);
 		}
-		
-		// Create notification
-		Notification push = new NotificationCompat.Builder(context)
-        .setContentTitle(title)
-        .setContentText(notification.getMessage())
-        .setTicker(notification.getMessage())
-        .setSmallIcon(R.drawable.ic_tp_notification)
-        .setDefaults(Notification.DEFAULT_LIGHTS | Notification.DEFAULT_VIBRATE | Notification.DEFAULT_SOUND)
-		.setContentIntent(pendingIntent)
-		.setAutoCancel(true)
-		.setStyle(new NotificationCompat.BigTextStyle().bigText(notification.getMessage()))
-		.build();
-		
-		NotificationManager manager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-		manager.notify(notification.getId().hashCode(), push);
+
+		String channelId = notification.getCustomProperties().get(PROPERTY_CHANNEL_ID);
+        if (Strings.isEmpty(channelId)) channelId = getString(R.string.twinPush_default_channel_id);
+        if (channelId != null) {
+            // Create notification
+            Notification push = new NotificationCompat.Builder(context, channelId)
+                    .setContentTitle(title)
+                    .setContentText(notification.getMessage())
+                    .setTicker(notification.getMessage())
+                    .setSmallIcon(R.drawable.ic_tp_notification)
+                    .setDefaults(Notification.DEFAULT_LIGHTS | Notification.DEFAULT_VIBRATE | Notification.DEFAULT_SOUND)
+                    .setContentIntent(pendingIntent)
+                    .setAutoCancel(true)
+                    .setStyle(new NotificationCompat.BigTextStyle().bigText(notification.getMessage()))
+                    .build();
+
+            NotificationManagerCompat.from(this).notify(notification.getId().hashCode(), push);
+        } else {
+            Ln.e("ERROR: Notification not displayed. Notification channel can not be null");
+        }
 	}
     
     /**

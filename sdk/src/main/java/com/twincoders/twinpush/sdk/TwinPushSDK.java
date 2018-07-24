@@ -266,6 +266,13 @@ public abstract class TwinPushSDK {
     public abstract boolean setup(TwinPushOptions options);
 
     /**
+     * Creates or updates the default channel for TwinPush notifications using the values set
+     * on string resources. This method is automatically called on TwinPush setup and before any
+     * notification is displayed to ensure that the channel exists
+     */
+    public abstract void createNotificationChannel();
+
+    /**
      * @return Last alias used to register this device
      */
     public abstract String getDeviceAlias();

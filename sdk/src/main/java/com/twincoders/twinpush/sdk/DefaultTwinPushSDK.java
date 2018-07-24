@@ -3,6 +3,8 @@ package com.twincoders.twinpush.sdk;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
@@ -575,7 +577,6 @@ public class DefaultTwinPushSDK extends TwinPushSDK implements LocationListener 
             String serverHost = options.serverHost;
             RegistrationMode registrationMode = options.registrationMode;
             boolean validHost = Strings.notEmpty(subdomain) || Strings.notEmpty(serverHost);
-
             if (registrationMode != null) {
                 if (Strings.notEmpty(appId)) {
                     if (Strings.notEmpty(apiKey) || registrationMode != RegistrationMode.INTERNAL) {
@@ -589,6 +590,7 @@ public class DefaultTwinPushSDK extends TwinPushSDK implements LocationListener 
                                 setSubdomain(options.subdomain);
                             }
                             resetSSLChecks();
+                            createNotificationChannel();
                             return true;
                         } else {
                             Ln.e("TwinPush Setup Error: subdomain or serverHost are required");
@@ -606,6 +608,18 @@ public class DefaultTwinPushSDK extends TwinPushSDK implements LocationListener 
             Ln.e("TwinPush Setup Error: options object is null");
         }
         return false;
+    }
+
+    public void createNotificationChannel() {
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+            NotificationChannel channel =
+                    new NotificationChannel(
+                            getContext().getString(R.string.twinPush_default_channel_id),
+                            getContext().getString(R.string.twinPush_default_channel_name),
+                            getContext().getResources().getInteger(R.integer.twinPush_default_channel_importance));
+            NotificationManager manager = (NotificationManager) getContext().getSystemService(Context.NOTIFICATION_SERVICE);
+            manager.createNotificationChannel(channel);
+        }
     }
 
     private TwinPushRequestFactory getRequestFactory() {

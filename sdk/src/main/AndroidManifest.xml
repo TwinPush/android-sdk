@@ -12,6 +12,13 @@
             android:name=".services.RegistrationIntentReceiver"
             android:enabled="true"
             android:exported="false"></receiver>
+
+        <meta-data
+            android:name="com.google.firebase.messaging.default_notification_channel_id"
+            android:value="@string/twinPush_default_channel_id"/>
+        <meta-data
+            android:name="com.google.firebase.messaging.default_notification_icon"
+            android:resource="@drawable/ic_tp_notification" />
     </application>
 
 </manifest>

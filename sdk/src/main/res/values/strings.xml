@@ -3,5 +3,9 @@
     <!-- Customizable firebase app -->
     <string name="fcmProjectNumber"/>
     <string name="fcmMobileAppId"/>
-    <string name="fcmApiKey"/>>
+    <string name="fcmApiKey"/>
+    <!-- Default notifications channel -->
+    <string name="twinPush_default_channel_id">default_channel</string>
+    <string name="twinPush_default_channel_name">Notificaciones</string>
+    <integer name="twinPush_default_channel_importance">3</integer>
 </resources>

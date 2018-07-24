@@ -17,4 +17,7 @@
         <item>Separated</item>
     </string-array>
 
+    <!-- Customize notifications channel name -->
+    <string name="twinPush_default_channel_name">Avisos</string>
+
 </resources>
