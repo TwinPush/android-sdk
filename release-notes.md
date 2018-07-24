@@ -1,5 +1,9 @@
 # TwinPush Android SDK Release Notes
 
+## 2.6.0 - 2018-07-24
+
+* Implemented default notifications channel to ensure Android 8 compatibility
+
 ## 2.5.1 - 2018-06-05
 
 * Included SDK method to obtain current application badge count
