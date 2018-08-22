@@ -1,5 +1,11 @@
 # TwinPush Android SDK Release Notes
 
+## 2.7.0 - 2018-08-22
+
+* Updated Firebase library version to 17.3.0
+* TwinPushInstanceIdService is no longer needed to be declared con manifest
+
+
 ## 2.6.0 - 2018-07-24
 
 * Implemented default notifications channel to ensure Android 8 compatibility

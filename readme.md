@@ -54,22 +54,15 @@ Include this dependency in your `build.gradle` file to reference this library in
 
 ```groovy
 dependencies {
-    compile 'com.twinpush.android:sdk:2.6.0'
+    compile 'com.twinpush.android:sdk:2.7.0'
 }
 ```
 
 ### Configuring Android manifest
 
-Inside the _application_ node include the following services:
+Inside the _application_ node include the following service:
 
 ```xml
-<service
-    android:name="com.twincoders.twinpush.sdk.services.TwinPushInstanceIdService">
-    <intent-filter>
-        <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
-    </intent-filter>
-</service>
-
 <service
     android:name="com.twincoders.twinpush.sdk.services.NotificationIntentService">
     <intent-filter>
