@@ -155,4 +155,20 @@ public class NotificationIntentService extends FirebaseMessagingService {
 		}
 		return propertiesMap;
 	}
+
+    @Override
+    public void onNewToken(String s) {
+        super.onNewToken(s);
+        Ln.d("TwinPush on new token called");
+
+        TwinPushSDK twinPush = TwinPushSDK.getInstance(getApplicationContext());
+
+        // Get updated InstanceID token.
+        Ln.d("FCM Token created: " + s);
+
+        // Refresh register if needed
+        if (twinPush.isDeviceRegistered()) {
+            twinPush.register();
+        }
+    }
 }
