@@ -36,11 +36,10 @@ public class TwinPushRequestFactory {
 	private static TwinPushRequestFactory sharedInstance = null;
 	
 	/* Properties */
-	TwinRequestLauncher requestLauncher;
-	String token = null;
-	TwinPushSDK twinpush;
+	private TwinRequestLauncher requestLauncher;
+	private TwinPushSDK twinpush;
 	
-	private List<TwinPushRequest> pendingRequests = new ArrayList<TwinPushRequest>();
+	private List<TwinPushRequest> pendingRequests = new ArrayList<>();
 	private boolean stopRequests = false;
 	
 	

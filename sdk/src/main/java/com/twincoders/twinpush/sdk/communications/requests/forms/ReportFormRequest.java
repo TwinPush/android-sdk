@@ -1,11 +1,11 @@
 package com.twincoders.twinpush.sdk.communications.requests.forms;
 
-import java.util.Map;
+import com.twincoders.twinpush.sdk.communications.requests.TwinPushRequest;
+import com.twincoders.twinpush.sdk.notifications.PushNotification;
 
 import org.json.JSONObject;
 
-import com.twincoders.twinpush.sdk.communications.requests.TwinPushRequest;
-import com.twincoders.twinpush.sdk.notifications.PushNotification;
+import java.util.Map;
 
 public class ReportFormRequest extends TwinPushRequest {
 	

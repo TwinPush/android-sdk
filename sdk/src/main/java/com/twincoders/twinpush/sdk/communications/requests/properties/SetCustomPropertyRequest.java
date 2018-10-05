@@ -1,9 +1,9 @@
 package com.twincoders.twinpush.sdk.communications.requests.properties;
 
-import org.json.JSONObject;
-
 import com.twincoders.twinpush.sdk.communications.requests.TwinPushRequest;
 import com.twincoders.twinpush.sdk.entities.PropertyType;
+
+import org.json.JSONObject;
 
 public class SetCustomPropertyRequest extends TwinPushRequest {
 

@@ -81,7 +81,7 @@ public abstract class TwinPushRequest extends RESTJSONRequest {
 				onSuccess(response);
 			} else {
 				JSONObject errorsJson = response.getJSONObject(ERRORS_KEY);
-				String errorMessage = null;
+				String errorMessage;
 				Object errorMessageObj = errorsJson.get(ERROR_MESSAGE_KEY);
 				if (errorMessageObj instanceof String) {
 					errorMessage = (String) errorMessageObj;
@@ -103,7 +103,7 @@ public abstract class TwinPushRequest extends RESTJSONRequest {
 		}
 	}
 	
-	protected String getNullableString(JSONObject json, String name) throws JSONException {
+	private String getNullableString(JSONObject json, String name) throws JSONException {
 		return json.has(name) && !json.isNull(name) ? json.getString(name) : null;
 	}
 	
@@ -151,8 +151,8 @@ public abstract class TwinPushRequest extends RESTJSONRequest {
         return n;
 	}
 	
-	protected Map<String, String> getCustomPropertiesMap(JSONObject json) {
-		Map<String, String> propertiesMap = new HashMap<String, String>();
+	private Map<String, String> getCustomPropertiesMap(JSONObject json) {
+		Map<String, String> propertiesMap = new HashMap<>();
 		Iterator<?> iter = json.keys();
 		while (iter.hasNext()) {
 			String key = (String) iter.next();
@@ -167,9 +167,9 @@ public abstract class TwinPushRequest extends RESTJSONRequest {
 		}
 		return propertiesMap;
     }
-	
-	protected List<String> getTags(JSONArray json) {
-		List<String> tags = new ArrayList<String>();
+
+	private List<String> getTags(JSONArray json) {
+		List<String> tags = new ArrayList<>();
 		try {
 			for (int i=0; i<json.length(); i++) {
 				String tag = json.getString(i);
@@ -190,8 +190,8 @@ public abstract class TwinPushRequest extends RESTJSONRequest {
 		return n;
 	}
 
-    SimpleDateFormat dateFormat = null;
-    protected Date parseDate(String dateString) {
+	private SimpleDateFormat dateFormat = null;
+	private Date parseDate(String dateString) {
         Date date = null;
         if (dateString != null) {
             if (dateFormat == null) {

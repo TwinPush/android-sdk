@@ -1,11 +1,11 @@
 package com.twincoders.twinpush.sdk.logging;
 
-import java.text.SimpleDateFormat;
-import java.util.Locale;
-
 import android.content.Context;
 import android.content.pm.ApplicationInfo;
 import android.util.Log;
+
+import java.text.SimpleDateFormat;
+import java.util.Locale;
 
 /**
  * A more natural android logging facility.

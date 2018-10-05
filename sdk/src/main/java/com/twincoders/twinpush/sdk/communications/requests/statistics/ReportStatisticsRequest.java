@@ -1,11 +1,11 @@
 package com.twincoders.twinpush.sdk.communications.requests.statistics;
 
-import java.util.HashMap;
-import java.util.Map;
+import com.twincoders.twinpush.sdk.communications.requests.TwinPushRequest;
 
 import org.json.JSONObject;
 
-import com.twincoders.twinpush.sdk.communications.requests.TwinPushRequest;
+import java.util.HashMap;
+import java.util.Map;
 
 public class ReportStatisticsRequest extends TwinPushRequest {
 

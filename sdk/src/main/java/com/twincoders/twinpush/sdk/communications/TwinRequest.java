@@ -1,8 +1,9 @@
 package com.twincoders.twinpush.sdk.communications;
 
-import java.util.List;
+import com.android.volley.Request;
 
-import com.twincoders.twinpush.sdk.communications.asyhttp.AsyncHttpClient;
+import java.util.List;
+import java.util.Map;
 
 public interface TwinRequest {
 
@@ -10,24 +11,24 @@ public interface TwinRequest {
     /**
      *  Object that will handle request error
      */
-    public interface ErrorListener {
-        public void onError(Exception exception);
+    interface ErrorListener {
+        void onError(Exception exception);
     }
     /**
      * Object that will handle request success
      */
-    public interface DefaultListener extends ErrorListener{
-        public void onSuccess();
+    interface DefaultListener extends ErrorListener{
+        void onSuccess();
     }
     
-    public interface OnRequestFinishListener {
-    	public void onRequestFinish();
+    interface OnRequestFinishListener {
+    	void onRequestFinish();
     }
 
     /**
      * Available methods for request sending
      */
-    public enum HttpMethod {
+    enum HttpMethod {
         GET, POST, DELETE
     }
     
@@ -46,27 +47,25 @@ public interface TwinRequest {
      */
     void addParam(TwinRequestParam param);
     
-    /**
-     * Name of the request. Used to identify the method to call depending on request type
-     * @return Request name
-     */
-	String getName();
-	
 	/**
 	 * List of parameters included to the request, maintaining original order.
 	 * @return Request parameters
 	 */
 	List<TwinRequestParam> getParams();
+
+    /**
+     * Map with key-value of custom headers for the request
+     * @return Headers map
+     */
+    Map<String, String> getHeaders();
 	
 	/**
 	 * Sets the request launcher to notify launch or cancel request events
-	 * @param requestLauncher
 	 */
 	void setRequestLauncher(TwinRequestLauncher requestLauncher);
 	
 	/**
 	 * request launcher to notify launch or cancel request events
-	 * @return
 	 */
 	TwinRequestLauncher getRequestLauncher(); 
 	
@@ -76,10 +75,6 @@ public interface TwinRequest {
 	 */
 	String getURL();
 
-	/**
-	 * 
-	 * @return
-	 */
     Boolean isCanceled();
 
     /**
@@ -106,13 +101,11 @@ public interface TwinRequest {
     
     /**
      * Method called when the request obtains a response
-     * @param response
      */
     void onResponseProcess(String response);
     
     /**
      * Method called when an error occurs while processing the request
-     * @param exception
      */
     void onRequestError(Exception exception);
     
@@ -127,23 +120,15 @@ public interface TwinRequest {
      * @return String defining type for the body content
      */
     String getContentType();
-    
-    /**
-     * Method that will be executed to finish setup of HTTP Client
-     * @param client
-     */
-    void onSetupClient(AsyncHttpClient client);
-    
+
     /**
      * Method that define if the request should be executed or if its execution should be only simulated
-     * @return
      */
     boolean isDummy();
     
     /**
      * Method that defines if a HTTP response status code is valid. If the response is false, the system will return 'Connection error' message.
      * This method will only be called when the status code is not 200, so it is not necessary to handle it. Default response is 'false'.
-     * @param httpResponseStatusCode
      * @return true if the code is valid, false otherwise
      */
     boolean isHttpResponseStatusValid(int httpResponseStatusCode);
@@ -153,5 +138,11 @@ public interface TwinRequest {
      * @param listener
      */
     void addOnRequestFinishListener(OnRequestFinishListener listener);
+
+    /**
+     * Obtains the volley request associated with the TwinRequest
+     * @return Volley request
+     */
+    Request getRequest();
 	
 }

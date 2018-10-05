@@ -1,7 +1,5 @@
 package com.twincoders.twinpush.sdk.entities;
 
-import com.twincoders.twinpush.sdk.services.RegistrationIntentReceiver;
-
 public class TwinPushOptions {
 
     public final static String DEFAULT_SUBDOMAIN = "app";

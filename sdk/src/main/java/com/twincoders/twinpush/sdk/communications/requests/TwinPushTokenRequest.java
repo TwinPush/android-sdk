@@ -1,7 +1,9 @@
 package com.twincoders.twinpush.sdk.communications.requests;
 
 import com.twincoders.twinpush.sdk.TwinPushSDK;
-import com.twincoders.twinpush.sdk.communications.asyhttp.AsyncHttpClient;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public abstract class TwinPushTokenRequest extends TwinPushRequest {
 	
@@ -11,13 +13,15 @@ public abstract class TwinPushTokenRequest extends TwinPushRequest {
 
 	private static final String TOKEN_KEY = "X-TwinPush-REST-API-Token";
 	
-	@Override
-	public void onSetupClient(AsyncHttpClient client) {
-		super.onSetupClient(client);
-		client.addHeader(TOKEN_KEY, getApiToken());
-	}
-	
-	protected String getApiToken() {
+	private String getApiToken() {
 		return TwinPushSDK.getInstance(getRequestLauncher().getContext()).getApiKey();
+	}
+
+	@Override
+	public Map<String, String> getHeaders() {
+		Map<String, String> headers = new HashMap<>();
+		headers.putAll(super.getHeaders());
+		headers.put(TOKEN_KEY, getApiToken());
+		return headers;
 	}
 }

@@ -1,16 +1,16 @@
 package com.twincoders.twinpush.sdk.communications;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import android.net.Uri;
+
+import com.twincoders.twinpush.sdk.logging.Ln;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import android.net.Uri;
-
-import com.twincoders.twinpush.sdk.logging.Ln;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 public abstract class RESTRequest extends DefaultRequest {
 

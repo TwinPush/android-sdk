@@ -1,5 +1,10 @@
 package com.twincoders.twinpush.sdk.util;
 
+import android.annotation.SuppressLint;
+import android.util.Base64;
+
+import com.twincoders.twinpush.sdk.logging.Ln;
+
 import java.io.UnsupportedEncodingException;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
@@ -16,11 +21,6 @@ import javax.crypto.SecretKey;
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
 import javax.crypto.spec.PBEParameterSpec;
-
-import android.annotation.SuppressLint;
-import android.util.Base64;
-
-import com.twincoders.twinpush.sdk.logging.Ln;
 
 public class StringEncrypter {
 

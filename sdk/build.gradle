@@ -37,7 +37,7 @@ dependencies {
 
     compile 'com.google.firebase:firebase-messaging:17.3.0'
     compile "com.android.support:support-v4:26.1.0"
-    compile "cz.msebera.android:httpclient:4.4.1.1"
+    compile 'com.android.volley:volley:1.1.1'
     // Encrypted shared preferences
     compile 'com.scottyab:secure-preferences-lib:0.1.4'
 }

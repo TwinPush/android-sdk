@@ -1,10 +1,10 @@
 package com.twincoders.twinpush.sdk.forms;
 
-import java.util.Map;
-
 import android.content.Context;
 
 import com.twincoders.twinpush.sdk.notifications.PushNotification;
+
+import java.util.Map;
 
 public abstract class TwinFormsSDK {
 	

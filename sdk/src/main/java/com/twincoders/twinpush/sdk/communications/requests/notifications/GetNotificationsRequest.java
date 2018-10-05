@@ -1,16 +1,16 @@
 package com.twincoders.twinpush.sdk.communications.requests.notifications;
 
-import java.util.ArrayList;
-import java.util.List;
+import com.twincoders.twinpush.sdk.communications.DefaultRequestParam;
+import com.twincoders.twinpush.sdk.communications.requests.TwinPushRequest;
+import com.twincoders.twinpush.sdk.logging.Ln;
+import com.twincoders.twinpush.sdk.notifications.PushNotification;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import com.twincoders.twinpush.sdk.communications.DefaultRequestParam;
-import com.twincoders.twinpush.sdk.communications.requests.TwinPushRequest;
-import com.twincoders.twinpush.sdk.logging.Ln;
-import com.twincoders.twinpush.sdk.notifications.PushNotification;
+import java.util.ArrayList;
+import java.util.List;
 
 public class GetNotificationsRequest extends TwinPushRequest {
 

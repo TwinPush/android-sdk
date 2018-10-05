@@ -1,8 +1,8 @@
 package com.twincoders.twinpush.sdk.communications.requests.properties;
 
-import org.json.JSONObject;
-
 import com.twincoders.twinpush.sdk.communications.requests.TwinPushRequest;
+
+import org.json.JSONObject;
 
 public class ClearCustomPropertiesRequest extends TwinPushRequest {
 

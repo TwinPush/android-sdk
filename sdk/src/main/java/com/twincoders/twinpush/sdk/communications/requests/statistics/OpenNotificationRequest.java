@@ -1,9 +1,8 @@
 package com.twincoders.twinpush.sdk.communications.requests.statistics;
 
-import org.json.JSONObject;
-
 import com.twincoders.twinpush.sdk.communications.requests.TwinPushRequest;
-import com.twincoders.twinpush.sdk.notifications.PushNotification;
+
+import org.json.JSONObject;
 
 public class OpenNotificationRequest extends TwinPushRequest {
 	

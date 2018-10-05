@@ -1,7 +1,5 @@
 package com.twincoders.twinpush.sdk.forms;
 
-import java.util.Map;
-
 import android.content.Context;
 import android.content.SharedPreferences;
 
@@ -10,6 +8,8 @@ import com.twincoders.twinpush.sdk.communications.TwinPushRequestFactory;
 import com.twincoders.twinpush.sdk.communications.requests.TwinPushRequest;
 import com.twincoders.twinpush.sdk.communications.requests.forms.ReportFormRequest;
 import com.twincoders.twinpush.sdk.notifications.PushNotification;
+
+import java.util.Map;
 
 public class DefaultTwinFormsSDK extends TwinFormsSDK {
 	

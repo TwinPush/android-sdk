@@ -16,10 +16,6 @@
 
 package com.twincoders.twinpush.sdk.util;
 
-import java.util.List;
-
-import com.twincoders.twinpush.sdk.logging.Ln;
-
 import android.Manifest;
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
@@ -32,6 +28,10 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.support.v4.app.ActivityCompat;
+
+import com.twincoders.twinpush.sdk.logging.Ln;
+
+import java.util.List;
 
 /**
  * Optimized implementation of Last Location Finder for devices running Gingerbread  

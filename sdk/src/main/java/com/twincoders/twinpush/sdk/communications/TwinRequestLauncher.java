@@ -9,13 +9,7 @@ public interface TwinRequestLauncher {
 	 * @return Context
 	 */
 	Context getContext();
-	
-	/**
-	 * Establish the request timeout time, in seconds
-	 * @param timeOutSeconds
-	 */
-	void setTimeOutSeconds(int timeOutSeconds);
-	
+
 	/**
 	 * Adds a request to execution queue
 	 */
