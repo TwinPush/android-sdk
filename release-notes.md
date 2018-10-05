@@ -1,5 +1,10 @@
 # TwinPush Android SDK Release Notes
 
+## 2.7.1 - 2018-10-05
+
+* Updated communications module library using volley
+
+
 ## 2.7.0 - 2018-08-22
 
 * Updated Firebase library version to 17.3.0
