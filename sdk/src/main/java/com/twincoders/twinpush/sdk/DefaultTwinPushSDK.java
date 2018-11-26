@@ -826,11 +826,12 @@ public class DefaultTwinPushSDK extends TwinPushSDK implements LocationListener 
         return firebase;
     }
 
+    private final static String FIREBASE_DEFAULT_APP_NAME = "[DEFAULT]";
     private boolean isDefaultFirebaseInitialized() {
         boolean hasBeenInitialized=false;
         List<FirebaseApp> firebaseApps = FirebaseApp.getApps(getContext());
         for(FirebaseApp app : firebaseApps){
-            if(app.getName().equals(FirebaseApp.DEFAULT_APP_NAME)){
+            if(app.getName().equals(FIREBASE_DEFAULT_APP_NAME)){
                 hasBeenInitialized=true;
             }
         }
