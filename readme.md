@@ -54,7 +54,7 @@ Include this dependency in your `build.gradle` file to reference this library in
 
 ```groovy
 dependencies {
-    compile 'com.twinpush.android:sdk:2.7.1'
+    compile 'com.twinpush.android:sdk:2.7.2'
 }
 ```
 
@@ -277,8 +277,8 @@ To do this, you have to make a call to `setProperty` method of `TwinPushSDK`.
 
 ```java
 TwinPushSDK twinPush = TwinPushSDK.getInstance(this);
-twinPush.setProperty("age", getAge());
-twinPush.setProperty("gender", getGender());
+twinPush.setProperty("age", 48);
+twinPush.setProperty("first-name", "Franklin");
 ```
 
 This method takes to parameters:
@@ -287,6 +287,22 @@ This method takes to parameters:
 * Value to be assigned to the device. If sending null, it will delete previously submitted information for this attribute.
 
 The system automatically recognizes the type of data to be sent.
+
+#### Enum values
+
+TwinPush also offers the option to create properties whose values are included in a small set of options. These types of properties with bounded values can be used to categorize and segment users.
+
+To create this kind of properties, you have to use the `setEnumProperty` method of `TwinPushSDK`:
+
+```java
+TwinPushSDK twinPush = TwinPushSDK.getInstance(this);
+twinPush.setEnumProperty("gender", "male");
+twinPush.setEnumProperty("client-type", "vip");
+```
+
+This method has the same input values and behavior than `setProperty`.
+
+#### Clear properties
 
 You can also delete all information sent by a device performing a call to `clearProperties`:
 
