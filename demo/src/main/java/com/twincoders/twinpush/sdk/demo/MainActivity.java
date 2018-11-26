@@ -106,7 +106,7 @@ public class MainActivity extends ParentActivity {
                 // Set custom properties to TwinPush
                 twinPush.clearProperties();
                 twinPush.setProperty("age", getAge());
-                twinPush.setProperty("status", getStatus());
+                twinPush.setEnumProperty("Estado civil", getStatus());
                 // Store properties locally
                 SharedPreferences.Editor preferences = getPreferences().edit();
                 if (getStatus() != null) {

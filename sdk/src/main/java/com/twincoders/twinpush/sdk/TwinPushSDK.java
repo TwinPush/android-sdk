@@ -185,6 +185,13 @@ public abstract class TwinPushSDK {
     public abstract void setProperty(String name, Double value);
 
     /**
+     * Set the selected value to a enum custom property for the current device
+     * @param name Name of the custom property
+     * @param value Value to set. If null, previous value will be deleted.
+     */
+    public abstract void setEnumProperty(String name, String value);
+
+    /**
      * Clears the properties registered for the current device
      */
     public abstract void clearProperties();

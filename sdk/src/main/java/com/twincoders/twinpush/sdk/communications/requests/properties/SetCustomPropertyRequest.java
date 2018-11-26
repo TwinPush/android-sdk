@@ -1,5 +1,8 @@
 package com.twincoders.twinpush.sdk.communications.requests.properties;
 
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+
 import com.twincoders.twinpush.sdk.communications.requests.TwinPushRequest;
 import com.twincoders.twinpush.sdk.entities.PropertyType;
 
@@ -14,16 +17,13 @@ public class SetCustomPropertyRequest extends TwinPushRequest {
 	private final static String NAME_KEY = "name";
 	private final static String VALUE_TYPE_KEY = "type";
 	private final static String VALUE_KEY = "value";
-	/* Property types */
-	private final static String TYPE_STRING = "string";
-	private final static String TYPE_BOOLEAN = "boolean";
-	private final static String TYPE_INTEGER = "integer";
-	private final static String TYPE_FLOAT = "float";
-	
+
 	/* Properties */
-	DefaultListener listener;
+	private DefaultListener listener;
 	
-	public SetCustomPropertyRequest(String applicationId, String deviceId, String name, PropertyType valueType, Object value, DefaultListener listener) {
+	public SetCustomPropertyRequest(String applicationId, String deviceId, @NonNull String name,
+									@NonNull PropertyType valueType, @Nullable Object value,
+									DefaultListener listener) {
 		super(applicationId, deviceId);
 		this.listener = listener;
 		this.httpMethod = HttpMethod.POST;
@@ -31,7 +31,7 @@ public class SetCustomPropertyRequest extends TwinPushRequest {
 		addSegmentParam(ACTION_SEGMENT);
 		// Parameters
 		addParam(NAME_KEY, name);
-		addParam(VALUE_TYPE_KEY, getTypeString(valueType));
+		addParam(VALUE_TYPE_KEY, valueType.getValueType());
 		addParam(VALUE_KEY, value);
 	}
 	
@@ -42,17 +42,6 @@ public class SetCustomPropertyRequest extends TwinPushRequest {
 	
 	public DefaultListener getListener() {
 		return listener;
-	}
-	
-	private String getTypeString(PropertyType valueType) {
-		String type = null;
-		switch(valueType) {
-		case STRING:  type = TYPE_STRING;  break;
-		case BOOLEAN: type = TYPE_BOOLEAN; break;
-		case INTEGER: type = TYPE_INTEGER; break;
-		case FLOAT:   type = TYPE_FLOAT;   break;
-		}
-		return type;
 	}
 
 }
