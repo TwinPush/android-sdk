@@ -700,6 +700,7 @@ public class DefaultTwinPushSDK extends TwinPushSDK implements LocationListener 
     @Override
     public void onStatusChanged(String provider, int status, Bundle extras) {}
 
+    @Override
     public boolean isDeviceRegistered() {
         return getDeviceId() != null;
     }
