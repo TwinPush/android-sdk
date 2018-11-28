@@ -14,12 +14,12 @@ def gitUrl = 'https://github.com/TwinPush/android-sdk.git'   // Git repository U
 group = "com.twinpush.android"                               // Maven Group ID for the artifact
 
 android {
-    compileSdkVersion 26
+    compileSdkVersion 27
     buildToolsVersion "28.0.3"
 
     defaultConfig {
         minSdkVersion 14
-        targetSdkVersion 26
+        targetSdkVersion 27
         versionName libraryVersion
         versionCode libraryVersionCode
     }
@@ -32,14 +32,14 @@ android {
 }
 
 dependencies {
-    api fileTree(dir: 'libs', include: ['*.jar'])
-    testImplementation 'junit:junit:4.12'
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+    testCompile 'junit:junit:4.12'
 
-    api 'com.google.firebase:firebase-messaging:17.3.4'
-    api "com.android.support:support-v4:26.1.0"
-    api 'com.android.volley:volley:1.1.1'
+    compile 'com.google.firebase:firebase-messaging:17.3.4'
+    compile "com.android.support:support-v4:27.1.1"
+    compile 'com.android.volley:volley:1.1.1'
     // Encrypted shared preferences
-    api 'com.scottyab:secure-preferences-lib:0.1.4'
+    compile 'com.scottyab:secure-preferences-lib:0.1.4'
 }
 
 
