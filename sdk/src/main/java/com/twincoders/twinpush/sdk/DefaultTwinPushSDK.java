@@ -162,6 +162,13 @@ public class DefaultTwinPushSDK extends TwinPushSDK implements LocationListener 
         });
     }
 
+    @Override
+    public void unregister() {
+        setDeviceId(null);
+        setDeviceAlias(null);
+        setRegistrationHash(null);
+    }
+
     public void onRegistrationSuccess(@NonNull String deviceId, @NonNull RegistrationInfo info) {
         setDeviceId(deviceId);
         setDeviceAlias(deviceAlias);

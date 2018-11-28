@@ -80,6 +80,11 @@ public abstract class TwinPushSDK {
      * @param info Registration info for current device
      */
     public abstract void onRegistrationSuccess(@NonNull String deviceId, @NonNull RegistrationInfo info);
+
+    /**
+     * Clears the local registration info of the current device from TwinPush platform
+     */
+    public abstract void unregister();
     
 	/* Obtain notifications methods */
 
