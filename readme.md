@@ -54,7 +54,7 @@ Include this dependency in your `build.gradle` file to reference this library in
 
 ```groovy
 dependencies {
-    implementation 'com.twinpush.android:sdk:2.7.3'
+    implementation 'com.twinpush.android:sdk:2.7.4'
 }
 ```
 

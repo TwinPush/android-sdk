@@ -1,9 +1,11 @@
 # TwinPush Android SDK Release Notes
 
-## 2.7.3 - 2018-11-28
+## 2.7.4 - 2018-11-28
 
 * Included SDK method to create custom properties with enum values
 * Updated gradle build tools to 3.2.1 and buildToolsVersion to 28.0.3
+* Updated target SDK to v27
+* Updated Android Support V4 dependency to latest version: 27.1.1
 
 ## 2.7.1 - 2018-10-05
 
