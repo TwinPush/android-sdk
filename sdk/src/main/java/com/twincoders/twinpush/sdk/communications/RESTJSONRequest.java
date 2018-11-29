@@ -5,6 +5,7 @@ import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.android.volley.toolbox.HttpHeaderParser;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.twincoders.twinpush.sdk.logging.Ln;
 
@@ -65,7 +66,22 @@ public abstract class RESTJSONRequest extends RESTRequest {
 					@Override
 					public void onErrorResponse(VolleyError error) {
                         Ln.i(error, "ERROR %s", error.getMessage());
-						onRequestError(error);
+                        Exception exception = error;
+						NetworkResponse response = error.networkResponse;
+						// Try to obtain a more comprehensive error when possible
+						try {
+							String jsonString =
+									new String(
+											response.data,
+											HttpHeaderParser.parseCharset(response.headers, "UTF-8"));
+
+							JSONObject json = new JSONObject(jsonString);
+							String message = json.getJSONObject("errors").getString("message");
+							exception = new Exception(message);
+						} catch (Exception ex) {
+							Ln.e(ex, "Could not obtain error details from body");
+						}
+						onRequestError(exception);
                         notifyFinishListeners();
 					}
 				}) {
