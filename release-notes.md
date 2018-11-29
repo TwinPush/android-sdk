@@ -1,6 +1,6 @@
 # TwinPush Android SDK Release Notes
 
-## 2.7.5 - 2018-11-28
+## 2.7.6 - 2018-11-29
 
 * Included SDK method `setEnumProperty` to create custom properties with enum values
 * Included SDK method `unregister` that clears the device registration info stored locally
@@ -8,6 +8,7 @@
 * Updated gradle build tools to 3.2.1 and buildToolsVersion to 28.0.3
 * Updated target SDK to v27
 * Updated Android Support V4 dependency to latest version: 27.1.1
+* Improved communications error handling to include detailed message on returned exceptions
 
 ## 2.7.1 - 2018-10-05
 
