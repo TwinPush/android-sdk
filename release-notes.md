@@ -1,5 +1,10 @@
 # TwinPush Android SDK Release Notes
 
+## 2.7.7 - 2019-04-29
+
+* Device info will be cleared when `app_id` is changed on `setup` method call
+* Registration listener will also be called after external registration when present
+
 ## 2.7.6 - 2018-11-29
 
 * Included SDK method `setEnumProperty` to create custom properties with enum values
