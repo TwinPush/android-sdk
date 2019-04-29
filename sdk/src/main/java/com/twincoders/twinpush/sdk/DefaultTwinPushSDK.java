@@ -109,7 +109,7 @@ public class DefaultTwinPushSDK extends TwinPushSDK implements LocationListener 
         locationFinder.setChangedLocationListener(this);
     }
 
-	/* Public API Methods */
+    /* Public API Methods */
 
     @Override
     public void register() {
@@ -314,7 +314,7 @@ public class DefaultTwinPushSDK extends TwinPushSDK implements LocationListener 
         }
     }
 
-	/* Location */
+    /* Location */
 
     public void setLocation(double latitude, double longitude) {
         Location location = new Location("USER_ENTRY");
@@ -398,7 +398,7 @@ public class DefaultTwinPushSDK extends TwinPushSDK implements LocationListener 
         return getSharedPreferences().getBoolean(PREF_MONITOR_LOCATION_CHANGES, false);
     }
 
-	/* Use statistics */
+    /* Use statistics */
 
     public void activityStart(Activity activity) {
         if (openedActivities.isEmpty()) {
@@ -583,15 +583,19 @@ public class DefaultTwinPushSDK extends TwinPushSDK implements LocationListener 
     public boolean setup(TwinPushOptions options) {
         if (options != null) {
             String appId = options.twinPushAppId;
-            String apiKey = options.twinPushApiKey;
             String subdomain = options.subdomain;
             String serverHost = options.serverHost;
             RegistrationMode registrationMode = options.registrationMode;
             boolean validHost = Strings.notEmpty(subdomain) || Strings.notEmpty(serverHost);
-            if (registrationMode != null) {
-                if (Strings.notEmpty(appId)) {
+            if (Strings.notEmpty(appId)) {
+                if (registrationMode != null) {
                     if (Strings.notEmpty(apiKey) || registrationMode != RegistrationMode.INTERNAL) {
                         if (validHost) {
+                            // If AppId has changed, clear previous data to avoid conflict
+                            String prevAppId = getAppId();
+                            if (Strings.notEmpty(prevAppId) && !Strings.equals(appId, prevAppId)) {
+                                unregister();
+                            }
                             setAppId(options.twinPushAppId);
                             setApiKey(options.twinPushApiKey);
                             setRegistrationMode(options.registrationMode);
@@ -609,11 +613,12 @@ public class DefaultTwinPushSDK extends TwinPushSDK implements LocationListener 
                     } else {
                         Ln.e("TwinPush Setup Error: API Key is required for Internal registrarion mode");
                     }
+
                 } else {
-                    Ln.e("TwinPush Setup Error: App ID info is missing");
+                    Ln.e("TwinPush Setup Error: registration mode can not be null");
                 }
             } else {
-                Ln.e("TwinPush Setup Error: registration mode can not be null");
+                Ln.e("TwinPush Setup Error: App ID info is missing");
             }
         } else {
             Ln.e("TwinPush Setup Error: options object is null");
@@ -705,7 +710,7 @@ public class DefaultTwinPushSDK extends TwinPushSDK implements LocationListener 
         return getDeviceId() != null;
     }
 
-	/* Security */
+    /* Security */
 
     private void resetSSLChecks() {
         // Reset SSL Checks
