@@ -91,10 +91,11 @@ public class DefaultTwinPushSDK extends TwinPushSDK implements LocationListener 
     private static final String PREF_SSL_SUBJECT = "PREF_SSL_SUBJECT";
 
     /* Private properties */
-    private Context _context = null;
+    private Context _context;
     private TwinPushRequest registerRequest = null;
     private List<Activity> openedActivities = new ArrayList<>();
-    private LastLocationFinder locationFinder = null;
+    private LastLocationFinder locationFinder;
+    private OnRegistrationListener registrationListener = null;
 
     /* Properties */
     private String deviceAlias = null;
@@ -123,6 +124,7 @@ public class DefaultTwinPushSDK extends TwinPushSDK implements LocationListener 
 
     @Override
     public void register(final String deviceAlias, final OnRegistrationListener listener) {
+        this.registrationListener = listener;
         // Run in background
         AsyncTask.execute(new Runnable() {
             @Override
@@ -142,21 +144,21 @@ public class DefaultTwinPushSDK extends TwinPushSDK implements LocationListener 
                         Ln.d("Using registration mode: %s", registrationMode);
                         switch (registrationMode) {
                             case INTERNAL:
-                                launchRegistrationRequest(info, listener);
+                                launchRegistrationRequest(info);
                                 break;
                             case EXTERNAL:
                                 RegistrationIntentReceiver.launchExternalRegistrationIntent(getContext(), info);
                                 break;
                             default:
-                                registerError(new Exception("Registration mode not supported: " + registrationMode), listener);
+                                registerError(new Exception("Registration mode not supported: " + registrationMode));
                                 break;
                         }
                     } else {
                         Ln.d("Registration info did not change since last registration");
-                        notifySuccess(deviceAlias, listener);
+                        notifySuccess(deviceAlias);
                     }
                 } else {
-                    registerError(new Exception("Application ID is not setup in TwinPush SDK"), listener);
+                    registerError(new Exception("Application ID is not setup in TwinPush SDK"));
                 }
             }
         });
@@ -174,9 +176,10 @@ public class DefaultTwinPushSDK extends TwinPushSDK implements LocationListener 
         setDeviceAlias(deviceAlias);
         setRegistrationHash(encrypt(info.toString()));
         Ln.i("Device successfully registered on TwinPush (deviceId:%s, alias:%s)", deviceId, info.getDeviceAlias());
+        notifySuccess(info.getDeviceAlias());
     }
 
-    private void launchRegistrationRequest(final RegistrationInfo info, @Nullable final OnRegistrationListener listener) {
+    private void launchRegistrationRequest(final RegistrationInfo info) {
         if (getApiKey() != null) {
             if (registerRequest != null) {
                 registerRequest.cancel();
@@ -188,44 +191,45 @@ public class DefaultTwinPushSDK extends TwinPushSDK implements LocationListener 
                                 @Override
                                 public void onError(Exception exception) {
                                     registerRequest = null;
-                                    registerError(exception, listener);
+                                    registerError(exception);
                                 }
 
                                 @Override
                                 public void onRegistrationSuccess(String deviceId, String deviceAlias) {
                                     registerRequest = null;
                                     DefaultTwinPushSDK.this.onRegistrationSuccess(deviceId, info);
-                                    notifySuccess(deviceAlias, listener);
                                 }
                             });
         } else {
-            registerError(new Exception("API Key is not setup in TwinPush SDK"), listener);
+            registerError(new Exception("API Key is not setup in TwinPush SDK"));
         }
     }
 
-    private void notifySuccess(final String deviceAlias, final OnRegistrationListener listener) {
-        if (listener != null) {
+    private void notifySuccess(final String deviceAlias) {
+        if (registrationListener != null) {
             Handler mainHandler = new Handler(Looper.getMainLooper());
             mainHandler.post(new Runnable() {
                 @Override
                 public void run() {
-                    listener.onRegistrationSuccess(deviceAlias);
+                    registrationListener.onRegistrationSuccess(deviceAlias);
+                    registrationListener = null;
                 }
             });
         }
     }
 
-    private void registerError(final Exception e, final OnRegistrationListener listener) {
+    private void registerError(final Exception e) {
         // Sender ID is not setup
         Ln.e(e);
-        if (listener != null) {
+        if (registrationListener != null) {
             Handler mainHandler = new Handler(Looper.getMainLooper());
             mainHandler.post(new Runnable() {
                 @Override
                 public void run() {
-                    listener.onRegistrationError(e);
+                    registrationListener.onRegistrationError(e);
                 }
             });
+            registrationListener = null;
         }
     }
 
@@ -372,7 +376,9 @@ public class DefaultTwinPushSDK extends TwinPushSDK implements LocationListener 
         if (ContextCompat.checkSelfPermission(getContext(), android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
                 || ContextCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             LocationManager locationManager = (LocationManager) getContext().getSystemService(Context.LOCATION_SERVICE);
-            locationManager.removeUpdates(getBackgroundLocationIntent());
+            if (locationManager != null) {
+                locationManager.removeUpdates(getBackgroundLocationIntent());
+            }
         }
     }
 
@@ -380,11 +386,13 @@ public class DefaultTwinPushSDK extends TwinPushSDK implements LocationListener 
         if (ContextCompat.checkSelfPermission(getContext(), android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
                 || ContextCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             LocationManager locationManager = (LocationManager) getContext().getSystemService(Context.LOCATION_SERVICE);
-            locationManager.requestLocationUpdates(
-                    LocationManager.PASSIVE_PROVIDER,
-                    getLocationMinUpdateTime(),
-                    getLocationMinUpdateDistance(),
-                    getBackgroundLocationIntent());
+            if (locationManager != null) {
+                locationManager.requestLocationUpdates(
+                        LocationManager.PASSIVE_PROVIDER,
+                        getLocationMinUpdateTime(),
+                        getLocationMinUpdateDistance(),
+                        getBackgroundLocationIntent());
+            }
         } else {
             Ln.e("Could not start location updates, required permissions not found");
         }
@@ -410,9 +418,7 @@ public class DefaultTwinPushSDK extends TwinPushSDK implements LocationListener 
     }
 
     public void activityStop(Activity activity) {
-        if (openedActivities.contains(activity)) {
-            openedActivities.remove(activity);
-        }
+        openedActivities.remove(activity);
         if (openedActivities.isEmpty()) {
             onApplicationClose();
         }
@@ -634,7 +640,9 @@ public class DefaultTwinPushSDK extends TwinPushSDK implements LocationListener 
                             getContext().getString(R.string.twinPush_default_channel_name),
                             getContext().getResources().getInteger(R.integer.twinPush_default_channel_importance));
             NotificationManager manager = (NotificationManager) getContext().getSystemService(Context.NOTIFICATION_SERVICE);
-            manager.createNotificationChannel(channel);
+            if (manager != null) {
+                manager.createNotificationChannel(channel);
+            }
         }
     }
 
