@@ -394,7 +394,7 @@ It is possible to _intercept_ the event that is produced when a notificaion is r
 
 To execute your own code when a notification is received you can follow the steps below:
 
-* Create a class that extends [NotificationIntentService](https://github.com/TwinPush/android-sdk/blob/master/sdk/src/com/twincoders/twinpush/sdk/services/NotificationIntentService.java) and override the `displayNotification` method to display the notification in the desired way:
+* Create a class that extends [NotificationIntentService](https://github.com/TwinPush/android-sdk/blob/master/sdk/src/main/java/com/twincoders/twinpush/sdk/services/NotificationIntentService.java) and override the `displayNotification` method to display the notification in the desired way:
 
 ```java
 public class MyIntentService extends NotificationIntentService {
