@@ -595,7 +595,7 @@ public class DefaultTwinPushSDK extends TwinPushSDK implements LocationListener 
             boolean validHost = Strings.notEmpty(subdomain) || Strings.notEmpty(serverHost);
             if (Strings.notEmpty(appId)) {
                 if (registrationMode != null) {
-                    if (Strings.notEmpty(apiKey) || registrationMode != RegistrationMode.INTERNAL) {
+                    if (Strings.notEmpty(options.twinPushApiKey) || registrationMode != RegistrationMode.INTERNAL) {
                         if (validHost) {
                             // If AppId has changed, clear previous data to avoid conflict
                             String prevAppId = getAppId();
