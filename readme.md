@@ -54,7 +54,7 @@ Include this dependency in your `build.gradle` file to reference this library in
 
 ```groovy
 dependencies {
-    implementation 'com.twinpush.android:sdk:2.7.7'
+    implementation 'com.twinpush.android:sdk:2.7.8'
 }
 ```
 
@@ -65,7 +65,7 @@ Inside the _application_ node include the following service:
 ```xml
 <service
     android:name="com.twincoders.twinpush.sdk.services.NotificationIntentService"
-    exported="false">
+    android:exported="false">
     <intent-filter>
         <action android:name="com.google.firebase.MESSAGING_EVENT" />
     </intent-filter>
