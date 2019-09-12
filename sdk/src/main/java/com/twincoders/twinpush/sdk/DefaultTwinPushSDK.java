@@ -300,6 +300,10 @@ public class DefaultTwinPushSDK extends TwinPushSDK implements LocationListener 
         setProperty(name, value, PropertyType.ENUM);
     }
 
+    public void setProperty(String name, List<String> value) {
+        setProperty(name, value, PropertyType.ENUM_LIST);
+    }
+
     private void setProperty(final String name, final Object value, PropertyType type) {
         if (isDeviceRegistered()) {
             DefaultListener listener = getDefaultListener(String.format("Set property '%s' = '%s'", name, value == null? "null" : value.toString()));
