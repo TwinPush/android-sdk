@@ -54,7 +54,7 @@ Include this dependency in your `build.gradle` file to reference this library in
 
 ```groovy
 dependencies {
-    implementation 'com.twinpush.android:sdk:2.7.8'
+    implementation 'com.twinpush.android:sdk:2.8.0'
 }
 ```
 
@@ -293,7 +293,7 @@ The system automatically recognizes the type of data to be sent.
 
 TwinPush also offers the option to create properties whose values are included in a small set of options. These types of properties with bounded values can be used to categorize and segment users.
 
-To create this kind of properties, you have to use the `setEnumProperty` method of `TwinPushSDK`:
+To create this kind of properties, you have to use the `setEnumProperty` method of `TwinPushSDK`, that has the same input values and behavior than `setProperty`:
 
 ```java
 TwinPushSDK twinPush = TwinPushSDK.getInstance(this);
@@ -301,7 +301,12 @@ twinPush.setEnumProperty("gender", "male");
 twinPush.setEnumProperty("client-type", "vip");
 ```
 
-This method has the same input values and behavior than `setProperty`.
+It is also possible to define a list of values for a enum device property. This way, the device will match the filters that affect to any of the selected values. To do so, use the method `setProperty` method with an object of type `List<String>` as value parameter: 
+
+```java
+TwinPushSDK twinPush = TwinPushSDK.getInstance(this);
+twinPush.setProperty("Social", Arrays.asList("Facebook", "Twitter"));
+```
 
 #### Clear properties
 

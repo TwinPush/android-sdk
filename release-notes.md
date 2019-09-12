@@ -1,5 +1,9 @@
 # TwinPush Android SDK Release Notes
 
+## 2.8.0 - 2019-09-12
+
+* Now it is possible to send Enum List custom properties for device using `setProperty` method
+
 ## 2.7.7 - 2019-04-29
 
 * Device info will be cleared when `app_id` is changed on `setup` method call
