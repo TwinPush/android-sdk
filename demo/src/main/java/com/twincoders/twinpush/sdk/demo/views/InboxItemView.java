@@ -9,6 +9,7 @@ import android.widget.TextView;
 import com.twincoders.twinpush.sdk.controllers.NotificationListItemView;
 import com.twincoders.twinpush.sdk.demo.R;
 import com.twincoders.twinpush.sdk.entities.InboxNotification;
+import com.twincoders.twinpush.sdk.logging.Strings;
 
 import java.text.SimpleDateFormat;
 
@@ -39,7 +40,7 @@ public class InboxItemView extends LinearLayout implements NotificationListItemV
         this.notification = notification;
         String title = notification.getNotification().getTitle();
         String message = notification.getNotification().getMessage();
-        boolean containsTitle = title.trim().length() > 0;
+        boolean containsTitle = Strings.notEmpty(title);
         titleTxt.setVisibility(containsTitle ? View.VISIBLE : View.GONE);
         titleTxt.setText(title);
         messageTxt.setText(message);
