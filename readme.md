@@ -54,7 +54,7 @@ Include this dependency in your `build.gradle` file to reference this library in
 
 ```groovy
 dependencies {
-    implementation 'com.twinpush.android:sdk:2.8.0'
+    implementation 'com.twinpush.android:sdk:3.0.0'
 }
 ```
 
@@ -268,7 +268,7 @@ TwinPushSDK.getInstance(this).deleteNotification(notification, new TwinRequest.D
 });
 ```
 
-The Demo Application contains an [Inbox Activity](https://github.com/TwinPush/android-sdk/blob/master/demo/src/main/java/com/twincoders/twinpush/sdk/demo/InboxActivity.java) that implements a fully functional example of the User Inbox using a [ReciclerView](http://developer.android.com/intl/es/reference/android/support/v7/widget/RecyclerView.html) adapter.
+The Demo Application contains an [Inbox Activity](https://github.com/TwinPush/android-sdk/blob/master/demo/src/main/java/com/twincoders/twinpush/sdk/demo/InboxActivity.java) that implements a fully functional example of the User Inbox using a [ReciclerView](https://developer.android.com/guide/topics/ui/layout/recyclerview) adapter.
 
 ### Sending user information
 
