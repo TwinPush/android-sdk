@@ -1,6 +1,6 @@
 package com.twincoders.twinpush.sdk.demo.adapters;
 
-import android.support.v7.widget.RecyclerView;
+import androidx.recyclerview.widget.RecyclerView;
 import android.view.View;
 
 import com.twincoders.twinpush.sdk.demo.R;

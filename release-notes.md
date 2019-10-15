@@ -1,5 +1,12 @@
 # TwinPush Android SDK Release Notes
 
+## 3.0.0 - 2019-10-15
+
+* Updated compile SDK version to 29
+* Increased `minSdkVersion` to 16 as required for Firebase library
+* Updated firebase library version to 20 
+* Migrated to Android X
+
 ## 2.8.0 - 2019-09-12
 
 * Now it is possible to send Enum List custom properties for device using `setProperty` method

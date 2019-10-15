@@ -3,8 +3,8 @@ package com.twincoders.twinpush.sdk;
 import android.app.Activity;
 import android.content.Context;
 import android.location.Location;
-import android.support.annotation.NonNull;
-import android.support.annotation.WorkerThread;
+import androidx.annotation.NonNull;
+import androidx.annotation.WorkerThread;
 
 import com.google.firebase.FirebaseApp;
 import com.twincoders.twinpush.sdk.communications.TwinRequest;
