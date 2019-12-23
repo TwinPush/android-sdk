@@ -1,5 +1,9 @@
 # TwinPush Android SDK Release Notes
 
+## 3.0.1 - 2019-12-23
+
+* Fixed race condition that could lead to runtime exception when registration returns error
+
 ## 3.0.0 - 2019-10-15
 
 * Updated compile SDK version to 29
