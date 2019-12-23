@@ -227,9 +227,9 @@ public class DefaultTwinPushSDK extends TwinPushSDK implements LocationListener 
                 @Override
                 public void run() {
                     registrationListener.onRegistrationError(e);
+                    registrationListener = null;
                 }
             });
-            registrationListener = null;
         }
     }
 
