@@ -461,6 +461,21 @@ public class DefaultTwinPushSDK extends TwinPushSDK implements LocationListener 
         }
     }
 
+    @Override
+    public void onNotificationReceived(PushNotification notification) {
+        if (notification != null) {
+            onNotificationReceived(notification.getId());
+        }
+    }
+
+    @Override
+    public void onNotificationReceived(String notificationId) {
+        if (notificationId != null) {
+            DefaultListener listener = getDefaultListener(String.format("On Notification Received: %s", notificationId));
+            getRequestFactory().onReceivedNotification(notificationId, listener);
+        }
+    }
+
     /* Storage */
     private Map<String, SharedPreferences> sharedPreferencesMap = new TreeMap<>();
 

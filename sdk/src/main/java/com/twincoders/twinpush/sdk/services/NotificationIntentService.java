@@ -52,6 +52,8 @@ public class NotificationIntentService extends FirebaseMessagingService {
             TwinPushSDK.getInstance(this).createNotificationChannel();
             // Obtain Push Notification object from message data
 			PushNotification notification = getNotification(message.getData());
+			// Notify notification received
+			TwinPushSDK.getInstance(this).onNotificationReceived(notification);
 			// Display Notification
 			displayNotification(getBaseContext(), notification);
 		}
