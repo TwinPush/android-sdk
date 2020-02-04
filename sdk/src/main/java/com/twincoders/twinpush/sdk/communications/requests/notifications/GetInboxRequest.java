@@ -1,5 +1,6 @@
 package com.twincoders.twinpush.sdk.communications.requests.notifications;
 
+import com.twincoders.twinpush.sdk.communications.DefaultRequestParam;
 import com.twincoders.twinpush.sdk.communications.requests.TwinPushRequest;
 import com.twincoders.twinpush.sdk.entities.InboxNotification;
 import com.twincoders.twinpush.sdk.logging.Ln;
@@ -22,20 +23,24 @@ public class GetInboxRequest extends TwinPushRequest {
 	/* Parameters */
 	private final static String PAGE_KEY = "page";
 	private final static String RESULTS_PER_PAGE_KEY = "per_page";
+	private final static String TAGS_KEY = "tags";
+	private final static String NO_TAGS_KEY = "no_tags";
 	/* Response fields */
 	private final static String RESPONSE_TOTAL_PAGES_KEY = "total_pages";
 	private final static String RESPONSE_NOTIF_ARRAY_KEY = "objects";
 
 	/* Properties */
-	Listener listener;
+	private Listener listener;
 
-	public GetInboxRequest(String applicationId, String deviceId, int page, int resultsPerPage, Listener listener) {
+	public GetInboxRequest(String applicationId, String deviceId, List<String> tags, List<String> noTags, int page, int resultsPerPage, Listener listener) {
 		super(applicationId, deviceId);
 		this.listener = listener;
 		this.httpMethod = HttpMethod.GET;
 		// Segments
 		addSegmentParam(SEGMENT);
 		// Parameters
+        if (tags != null) addParam(DefaultRequestParam.arrayParam(TAGS_KEY, tags));
+        if (noTags != null) addParam(DefaultRequestParam.arrayParam(NO_TAGS_KEY, noTags));
 		// Increase page value so first page is 1 
 		addParam(PAGE_KEY, String.valueOf(page+1));
 		addParam(RESULTS_PER_PAGE_KEY, String.valueOf(resultsPerPage));

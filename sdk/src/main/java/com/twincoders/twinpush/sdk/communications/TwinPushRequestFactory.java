@@ -80,8 +80,8 @@ public class TwinPushRequestFactory {
 		return request;
 	}
 
-	public TwinPushRequest getUserInbox(int page, int resultsPerPage, GetInboxRequest.Listener listener) {
-		TwinPushRequest request = new GetInboxRequest(getAppId(), getDeviceId(), page, resultsPerPage, listener);
+	public TwinPushRequest getUserInbox(int page, int resultsPerPage, List<String> tags, List<String> noTags, GetInboxRequest.Listener listener) {
+		TwinPushRequest request = new GetInboxRequest(getAppId(), getDeviceId(), tags, noTags, page, resultsPerPage, listener);
 		launch(request);
 		return request;
 	}

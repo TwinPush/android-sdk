@@ -245,7 +245,12 @@ public class DefaultTwinPushSDK extends TwinPushSDK implements LocationListener 
 
     @Override
     public void getUserInbox(int page, int resultsPerPage, GetInboxRequest.Listener listener) {
-        getRequestFactory().getUserInbox(page, resultsPerPage, listener);
+        getRequestFactory().getUserInbox(page, resultsPerPage, null, null, listener);
+    }
+
+    @Override
+    public void getUserInbox(int page, int resultsPerPage, List<String> tags, List<String> noTags, GetInboxRequest.Listener listener) {
+        getRequestFactory().getUserInbox(page, resultsPerPage, tags, noTags, listener);
     }
 
     @Override

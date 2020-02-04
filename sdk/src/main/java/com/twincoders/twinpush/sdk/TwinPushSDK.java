@@ -117,6 +117,17 @@ public abstract class TwinPushSDK {
     public abstract void getUserInbox(int page, int resultsPerPage, GetInboxRequest.Listener listener);
 
     /**
+     * Method to obtain notifications sent to current user identified by alias.
+     * The request will fail if no alias is associated with the current device.
+     * @param page Page to obtain notifications from. First page is 0
+     * @param resultsPerPage Number of results to obtain per page
+     * @param tags List of the tags that the notifications must contain to be returned
+     * @param noTags List of the tags that the notifications must not contain to be returned
+     * @param listener Listener object to notify result to
+     */
+    public abstract void getUserInbox(int page, int resultsPerPage, List<String> tags, List<String> noTags, GetInboxRequest.Listener listener);
+
+    /**
      * Method to obtain a summary with the total and unopened counts of the notifications sent to
      * current user identified by alias.
      * The request will fail if no alias is associated with the current device.
