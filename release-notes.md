@@ -1,5 +1,9 @@
 # TwinPush Android SDK Release Notes
 
+## 3.1.0 - 2020-02-04
+
+* Included tag filtering for getUserInbox method
+
 ## 3.0.1 - 2019-12-23
 
 * Fixed race condition that could lead to runtime exception when registration returns error
