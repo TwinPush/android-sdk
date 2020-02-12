@@ -289,7 +289,7 @@ public abstract class TwinPushSDK {
 
     /**
      * Notifies that the device has received a notification
-     * @param notification opened notification
+     * @param notification received notification
      */
     public abstract void onNotificationReceived(PushNotification notification);
 
@@ -419,4 +419,10 @@ public abstract class TwinPushSDK {
      */
     @WorkerThread
     public abstract String getFirebaseInstanceIdToken();
+
+    /**
+     * Obtains if Push acknowledgement report is enabled in the current SDK setup.
+     * @return true if Push acknowledgement is enabled
+     */
+    public abstract boolean isPushAckEnabled();
 }

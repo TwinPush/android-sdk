@@ -48,12 +48,13 @@ public class NotificationIntentService extends FirebaseMessagingService {
 		if (message.getNotification() != null) {
 			super.onMessageReceived(message);
 		} else {
+			TwinPushSDK twinpush = TwinPushSDK.getInstance(this);
             // Ensure default channel creation to avoid issues on recently updated Android 8 devices
-            TwinPushSDK.getInstance(this).createNotificationChannel();
+			twinpush.createNotificationChannel();
             // Obtain Push Notification object from message data
 			PushNotification notification = getNotification(message.getData());
-			// Notify notification received
-			TwinPushSDK.getInstance(this).onNotificationReceived(notification);
+			// Send push notification acknowledgement if enabled
+			if (twinpush.isPushAckEnabled()) twinpush.onNotificationReceived(notification);
 			// Display Notification
 			displayNotification(getBaseContext(), notification);
 		}

@@ -19,7 +19,6 @@ import android.os.Handler;
 import android.os.Looper;
 import android.provider.Settings.Secure;
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 
 import com.google.firebase.FirebaseApp;
@@ -73,6 +72,7 @@ public class DefaultTwinPushSDK extends TwinPushSDK implements LocationListener 
     private static final String PREF_TWINPUSH_APP_ID = "TWINPUSH_APP_ID";
     private static final String PREF_TWINPUSH_SUBDOMAIN = "TWINPUSH_SUBDOMAIN";
     private static final String PREF_TWINPUSH_CUSTOM_HOST = "TWINPUSH_CUSTOM_HOST";
+    private static final String PREF_PUSH_ACK_ENABLED = "PUSH_ACK_ENABLED";
     private static final String DEFAULT_SUBDOMAIN = "app";
     private static final String DEFAULT_HOST = "https://%s.twinpush.com";
     // Location constants
@@ -629,6 +629,7 @@ public class DefaultTwinPushSDK extends TwinPushSDK implements LocationListener 
                             setAppId(options.twinPushAppId);
                             setApiKey(options.twinPushApiKey);
                             setRegistrationMode(options.registrationMode);
+                            setPushAckEnabled(options.pushAckEnabled);
                             if (options.serverHost != null) {
                                 setServerHost(options.serverHost);
                             } else {
@@ -837,6 +838,19 @@ public class DefaultTwinPushSDK extends TwinPushSDK implements LocationListener 
         return RegistrationMode.fromId(getSharedPreferences().
                 getInt(PREF_REGISTRATION_MODE, RegistrationMode.INTERNAL.getId())
         );
+    }
+
+    private void setPushAckEnabled(boolean pushAckEnabled) {
+        if (pushAckEnabled) {
+            getSharedPreferences().edit().putBoolean(PREF_PUSH_ACK_ENABLED, pushAckEnabled).apply();
+        } else {
+            getSharedPreferences().edit().remove(PREF_PUSH_ACK_ENABLED).apply();
+        }
+    }
+
+    @Override
+    public boolean isPushAckEnabled() {
+        return getSharedPreferences().getBoolean(PREF_PUSH_ACK_ENABLED, false);
     }
 
     /* Customizable Firebase instance */
