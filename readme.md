@@ -391,6 +391,30 @@ twinPush.setLocation(40.383, -3.717);
 twinPush.updateLocation(LocationPrecision.HIGH);
 ```
 
+### Push notifications acknowledgement
+
+As an optional behavior, that needs to be enabled at license level, it is possible to obtain an acknowledgement when a push notification is received on a device.
+
+This behavior allows to know with precission which devices has received a given notification and the date of reception for every single one.
+
+To enable this function at SDK level, it is only required to set the `pushAckEnabled` setup parameter to `true`:
+
+```java
+public void onCreate(Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+    // Setup TwinPush SDK
+    TwinPushOptions options = new TwinPushOptions();              // Initialize options
+    options.twinPushAppId =   "7687xxxxxxxxxxxx";                 // - APP ID
+    options.twinPushApiKey =  "c5caxxxxxxxxxxxxxxxxxxxxxxxx1592"; // - API Key
+    options.subdomain =       "mycompany";                        // - Application subdomain
+    options.pushAckEnabled =  true;                               // - Push acknowledgement
+    TwinPushSDK.getInstance(this).setup(options);                 // Call setup
+    /* Your code goes here... */
+}
+```
+
+When a push notification is received, the SDK will automatically report the acknowledgement to the TwinPush API for the pair notification-device.
+
 ## Customize behavior
 
 ### On notification received
