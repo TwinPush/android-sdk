@@ -1,5 +1,9 @@
 # TwinPush Android SDK Release Notes
 
+## 3.2.0 - 2020-02-04
+
+* Implemented optional push acknowledgement on notification received 
+
 ## 3.1.0 - 2020-02-04
 
 * Included tag filtering for getUserInbox method
