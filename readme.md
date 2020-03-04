@@ -450,7 +450,7 @@ public class MyIntentService extends NotificationIntentService {
 
 ### Custom notification layouts
 
-As described in the [official documentation](http://developer.android.com/design/patterns/notifications.html), Android offers a variety of ways to display notifications to the user.
+As described in the [official documentation](https://developer.android.com/training/notify-user/expanded), Android offers a variety of ways to display notifications to the user.
 
 ![](http://developer.android.com/design/media/notifications_pattern_expandable.png)
 _Image: Example of default Android expanded and contracted layouts (source: [Android Developers](http://developer.android.com/))_
