@@ -66,22 +66,7 @@ public abstract class RESTJSONRequest extends RESTRequest {
 					@Override
 					public void onErrorResponse(VolleyError error) {
                         Ln.i(error, "ERROR %s", error.getMessage());
-                        Exception exception = error;
-						NetworkResponse response = error.networkResponse;
-						// Try to obtain a more comprehensive error when possible
-						try {
-							String jsonString =
-									new String(
-											response.data,
-											HttpHeaderParser.parseCharset(response.headers, "UTF-8"));
-
-							JSONObject json = new JSONObject(jsonString);
-							String message = json.getJSONObject("errors").getString("message");
-							exception = new Exception(message);
-						} catch (Exception ex) {
-							Ln.e(ex, "Could not obtain error details from body");
-						}
-						onRequestError(exception);
+						onRequestError(new TwinPushException(error));
                         notifyFinishListeners();
 					}
 				}) {
