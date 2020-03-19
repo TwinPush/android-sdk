@@ -54,7 +54,8 @@ public class NotificationIntentService extends FirebaseMessagingService {
             // Obtain Push Notification object from message data
 			PushNotification notification = getNotification(message.getData());
 			// Send push notification acknowledgement if enabled
-			if (twinpush.isPushAckEnabled()) twinpush.onNotificationReceived(notification);
+			if (twinpush.isPushAckEnabled() && NotificationManagerCompat.from(getBaseContext()).areNotificationsEnabled())
+				twinpush.onNotificationReceived(notification);
 			// Display Notification
 			displayNotification(getBaseContext(), notification);
 		}
