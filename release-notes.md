@@ -1,5 +1,10 @@
 # TwinPush Android SDK Release Notes
 
+## 3.2.1 - 2020-03-19
+
+* Notification push acknowledgement will only be sent when notifications are enabled on the device
+* TwinPush API response errors will be wrapped in a TwinPushException object with additional info
+
 ## 3.2.0 - 2020-02-04
 
 * Implemented optional push acknowledgement on notification received 
