@@ -1,5 +1,9 @@
 # TwinPush Android SDK Release Notes
 
+## 3.2.2 - 2020-07-02
+
+* Included callback listener for generic setProperty and for clearProperties SDK methods
+
 ## 3.2.1 - 2020-03-19
 
 * Notification push acknowledgement will only be sent when notifications are enabled on the device
