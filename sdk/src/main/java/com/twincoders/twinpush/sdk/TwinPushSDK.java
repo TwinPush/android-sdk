@@ -15,6 +15,7 @@ import com.twincoders.twinpush.sdk.communications.requests.notifications.GetNoti
 import com.twincoders.twinpush.sdk.communications.requests.register.GetBadgeCountRequest;
 import com.twincoders.twinpush.sdk.entities.InboxNotification;
 import com.twincoders.twinpush.sdk.entities.LocationPrecision;
+import com.twincoders.twinpush.sdk.entities.PropertyType;
 import com.twincoders.twinpush.sdk.entities.RegistrationInfo;
 import com.twincoders.twinpush.sdk.entities.TwinPushOptions;
 import com.twincoders.twinpush.sdk.notifications.PushNotification;
@@ -215,9 +216,26 @@ public abstract class TwinPushSDK {
     public abstract void setProperty(String name, List<String> value);
 
     /**
+     * Generic method to set the property value for the given property.
+     *
+     * @param name Name of the custom property
+     * @param value Value to set. If null, previous value will be deleted.
+     * @param type Property type
+     * @param listener Listener to notify callback
+     */
+    public abstract void setProperty(final String name, final Object value, PropertyType type, TwinRequest.DefaultListener listener);
+
+    /**
      * Clears the properties registered for the current device
      */
     public abstract void clearProperties();
+
+
+    /**
+     * Clears the properties registered for the current device
+     * @param listener Listener to notify callback
+     */
+    public abstract void clearProperties(TwinRequest.DefaultListener listener);
     
     /* Location */
 

@@ -18,6 +18,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.provider.Settings.Secure;
+
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 
@@ -282,48 +283,52 @@ public class DefaultTwinPushSDK extends TwinPushSDK implements LocationListener 
 
     /* Properties */
     public void setProperty(String name, String value) {
-        setProperty(name, value, PropertyType.STRING);
+        setProperty(name, value, PropertyType.STRING, null);
     }
 
     public void setProperty(String name, Boolean value) {
-        setProperty(name, value, PropertyType.BOOLEAN);
+        setProperty(name, value, PropertyType.BOOLEAN, null);
     }
 
     public void setProperty(String name, Integer value) {
-        setProperty(name, value, PropertyType.INTEGER);
+        setProperty(name, value, PropertyType.INTEGER, null);
     }
 
     public void setProperty(String name, Float value) {
-        setProperty(name, value, PropertyType.FLOAT);
+        setProperty(name, value, PropertyType.FLOAT, null);
     }
 
     public void setProperty(String name, Double value) {
-        setProperty(name, value, PropertyType.FLOAT);
+        setProperty(name, value, PropertyType.FLOAT, null);
     }
 
     public void setEnumProperty(String name, String value) {
-        setProperty(name, value, PropertyType.ENUM);
+        setProperty(name, value, PropertyType.ENUM, null);
     }
 
     public void setProperty(String name, List<String> value) {
-        setProperty(name, value, PropertyType.ENUM_LIST);
+        setProperty(name, value, PropertyType.ENUM_LIST, null);
     }
 
-    private void setProperty(final String name, final Object value, PropertyType type) {
+    public void setProperty(final String name, final Object value, PropertyType type, DefaultListener listener) {
+        DefaultListener requestListener = listener != null ? listener : getDefaultListener(String.format("Set property '%s' = '%s'", name, value == null ? "null" : value.toString()));
         if (isDeviceRegistered()) {
-            DefaultListener listener = getDefaultListener(String.format("Set property '%s' = '%s'", name, value == null? "null" : value.toString()));
-            getRequestFactory().setCustomProperty(name, type, value, listener);
+            getRequestFactory().setCustomProperty(name, type, value, requestListener);
         } else {
-            Ln.w("Not launching 'Set custom property': Device unregistered");
+            requestListener.onError(new Exception("Not launching 'Set custom property': Device unregistered"));
         }
     }
 
     public void clearProperties() {
+        this.clearProperties(null);
+    }
+
+    public void clearProperties(DefaultListener listener) {
+        DefaultListener requestListener = listener != null ? listener : getDefaultListener("Clear properties");
         if (isDeviceRegistered()) {
-            DefaultListener listener = getDefaultListener("Clear properties");
-            getRequestFactory().clearCustomProperties(listener);
+            getRequestFactory().clearCustomProperties(requestListener);
         } else {
-            Ln.w("Not launching 'Clear custom properties': Device unregistered");
+            requestListener.onError(new Exception("Not launching 'Clear custom properties': Device unregistered"));
         }
     }
 
@@ -505,26 +510,20 @@ public class DefaultTwinPushSDK extends TwinPushSDK implements LocationListener 
     private void securePreferences(SharedPreferences securePreferences, SharedPreferences oldPrefs) {
         // Migrates values stored in old preferences to secured preferences
         SharedPreferences.Editor editor = securePreferences.edit();
-        if( !oldPrefs.getAll().isEmpty() )
-        {
+        if (!oldPrefs.getAll().isEmpty()) {
             // Move everything over.
-            for(Map.Entry<String, ?> entry : oldPrefs.getAll().entrySet())
-            {
+            for (Map.Entry<String, ?> entry : oldPrefs.getAll().entrySet()) {
                 Object value = entry.getValue();
 
-                if( value instanceof String ) {
+                if (value instanceof String) {
                     editor.putString(entry.getKey(), (String) value);
-                }
-                else if( value instanceof Integer ) {
+                } else if (value instanceof Integer) {
                     editor.putInt(entry.getKey(), (Integer) value);
-                }
-                else if( value instanceof Long ) {
+                } else if (value instanceof Long) {
                     editor.putLong(entry.getKey(), (Long) value);
-                }
-                else if( value instanceof Float ) {
+                } else if (value instanceof Float) {
                     editor.putFloat(entry.getKey(), (Float) value);
-                }
-                else if( value instanceof Boolean ) {
+                } else if (value instanceof Boolean) {
                     editor.putBoolean(entry.getKey(), (Boolean) value);
                 }
             }
@@ -730,13 +729,16 @@ public class DefaultTwinPushSDK extends TwinPushSDK implements LocationListener 
     }
 
     @Override
-    public void onProviderDisabled(String provider) {}
+    public void onProviderDisabled(String provider) {
+    }
 
     @Override
-    public void onProviderEnabled(String provider) {}
+    public void onProviderEnabled(String provider) {
+    }
 
     @Override
-    public void onStatusChanged(String provider, int status, Bundle extras) {}
+    public void onStatusChanged(String provider, int status, Bundle extras) {
+    }
 
     @Override
     public boolean isDeviceRegistered() {
@@ -770,16 +772,16 @@ public class DefaultTwinPushSDK extends TwinPushSDK implements LocationListener 
 
     public Map<String, String> getSSLIssuerChecks() {
         Map<String, String> map = new HashMap<>();
-        for( Entry<?, ?> entry : getSharedPreferences(PREF_SSL_ISSUER).getAll().entrySet() ) {
-            map.put( entry.getKey().toString(), entry.getValue().toString() );
+        for (Entry<?, ?> entry : getSharedPreferences(PREF_SSL_ISSUER).getAll().entrySet()) {
+            map.put(entry.getKey().toString(), entry.getValue().toString());
         }
         return map;
     }
 
     public Map<String, String> getSSLSubjectChecks() {
         Map<String, String> map = new HashMap<>();
-        for( Entry<?, ?> entry : getSharedPreferences(PREF_SSL_SUBJECT).getAll().entrySet() ) {
-            map.put( entry.getKey().toString(), entry.getValue().toString() );
+        for (Entry<?, ?> entry : getSharedPreferences(PREF_SSL_SUBJECT).getAll().entrySet()) {
+            map.put(entry.getKey().toString(), entry.getValue().toString());
         }
         return map;
     }
@@ -856,10 +858,11 @@ public class DefaultTwinPushSDK extends TwinPushSDK implements LocationListener 
     /* Customizable Firebase instance */
     private FirebaseApp firebase = null;
     private final static String FIREBASE_NAME = "twinpush";
+
     @Override
     public FirebaseApp getFirebaseApp() {
         if (firebase == null) {
-            String firebaseAppId =  getContext().getString(R.string.fcmMobileAppId);
+            String firebaseAppId = getContext().getString(R.string.fcmMobileAppId);
             if (Strings.notEmpty(firebaseAppId)) {
                 // Manually configure Firebase Options
                 FirebaseOptions options = new FirebaseOptions.Builder()
@@ -890,12 +893,13 @@ public class DefaultTwinPushSDK extends TwinPushSDK implements LocationListener 
     }
 
     private final static String FIREBASE_DEFAULT_APP_NAME = "[DEFAULT]";
+
     private boolean isDefaultFirebaseInitialized() {
-        boolean hasBeenInitialized=false;
+        boolean hasBeenInitialized = false;
         List<FirebaseApp> firebaseApps = FirebaseApp.getApps(getContext());
-        for(FirebaseApp app : firebaseApps){
-            if(app.getName().equals(FIREBASE_DEFAULT_APP_NAME)){
-                hasBeenInitialized=true;
+        for (FirebaseApp app : firebaseApps) {
+            if (app.getName().equals(FIREBASE_DEFAULT_APP_NAME)) {
+                hasBeenInitialized = true;
             }
         }
         return hasBeenInitialized;
