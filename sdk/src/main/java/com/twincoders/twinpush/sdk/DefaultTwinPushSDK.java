@@ -212,8 +212,10 @@ public class DefaultTwinPushSDK extends TwinPushSDK implements LocationListener 
             mainHandler.post(new Runnable() {
                 @Override
                 public void run() {
-                    registrationListener.onRegistrationSuccess(deviceAlias);
-                    registrationListener = null;
+                    if (registrationListener != null) {
+                        registrationListener.onRegistrationSuccess(deviceAlias);
+                        registrationListener = null;
+                    }
                 }
             });
         }
@@ -227,8 +229,10 @@ public class DefaultTwinPushSDK extends TwinPushSDK implements LocationListener 
             mainHandler.post(new Runnable() {
                 @Override
                 public void run() {
-                    registrationListener.onRegistrationError(e);
-                    registrationListener = null;
+                    if (registrationListener != null) {
+                        registrationListener.onRegistrationError(e);
+                        registrationListener = null;
+                    }
                 }
             });
         }
