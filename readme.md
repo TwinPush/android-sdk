@@ -32,6 +32,10 @@ The remaining steps are automatically handled by the TwinPush SDK.
 
 **NOTE:** If your can not setup Firebase through the `google-services.json` file in your project, you can still use the [alternative method](#alternative-firebase-setup) using string resources.
 
+## Setup Huawei HMS Push Kit
+
+https://developer.huawei.com/consumer/en/codelab/HMSPreparation/index.html#0
+
 ## Register your application in TwinPush
 
 The next step is to setup the TwinPush application. This can be done through the [TwinPush console](https://app.twinpush.com):
