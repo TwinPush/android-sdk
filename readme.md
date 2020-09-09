@@ -35,6 +35,7 @@ The remaining steps are automatically handled by the TwinPush SDK.
 ## Setup Huawei HMS Push Kit
 
 https://developer.huawei.com/consumer/en/codelab/HMSPreparation/index.html#0
+https://developer.huawei.com/consumer/en/doc/development/AppGallery-connect-Guides/agc-get-started#sdkversion
 
 ## Register your application in TwinPush
 
