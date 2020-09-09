@@ -577,6 +577,7 @@ In the following table you have the relation between the fields from the JSON fi
 
 | String resource    | `google-services.json` |
 |--------------------|------------------------|
+| `fcmProjectId`     | `project_info.project_id` |
 | `fcmProjectNumber` | `project_info.project_number` |
 | `fcmMobileAppId`   | `client.client_info.mobilesdk_app_id` |
 | `fcmApiKey`        | `client.api_key.current_key` |
@@ -585,6 +586,7 @@ An example resources file could be as following (e.g. `res/values/firebase.xml`)
 
 ```xml
 <resources>
+  <string name="fcmProjectId">myapplication</string>
   <string name="fcmProjectNumber">181234567890</string>
   <string name="fcmMobileAppId">1:181234567890:android:0c15ec0987654321</string>
   <string name="fcmApiKey">AIzaSyDCOSDluQ5hmu4ZduNbOWB01PcDllww6_o</string>

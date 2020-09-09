@@ -871,6 +871,7 @@ public class DefaultTwinPushSDK extends TwinPushSDK implements LocationListener 
                 // Manually configure Firebase Options
                 FirebaseOptions options = new FirebaseOptions.Builder()
                         .setApplicationId(firebaseAppId)
+                        .setProjectId(getContext().getString(R.string.fcmProjectId))
                         .setApiKey(getContext().getString(R.string.fcmApiKey))
                         .setGcmSenderId(getContext().getString(R.string.fcmProjectNumber))
                         .build();
@@ -910,12 +911,12 @@ public class DefaultTwinPushSDK extends TwinPushSDK implements LocationListener 
     }
 
     public String getFirebaseInstanceIdToken() {
-        FirebaseApp firebaseApp = getFirebaseApp();
         try {
+            FirebaseApp firebaseApp = getFirebaseApp();
             return FirebaseInstanceId.getInstance(firebaseApp).getToken(
                     firebaseApp.getOptions().getGcmSenderId(),
                     "FCM");
-        } catch (IOException ex) {
+        } catch (Exception ex) {
             Ln.e(ex, "Error while trying to obtain Firebase Token");
             return null;
         }
