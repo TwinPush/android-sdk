@@ -16,7 +16,7 @@ To use this service, it is necessary to access to the [Firebase Console](https:/
  2. Write down the **Server Key** from the Settings -> Cloud Messaging section of project
  3. Create an Android Application
  4. Setup Firebase in your Android project and include the required `google-services.json` file
- 
+
 This action can be easily done following these steps through an assistant in the Tools -> Firebase menu of Android Studio:
 
 ![](http://i.imgur.com/cD7Z8iT.png)
@@ -34,8 +34,14 @@ The remaining steps are automatically handled by the TwinPush SDK.
 
 ## Setup Huawei HMS Push Kit
 
-https://developer.huawei.com/consumer/en/codelab/HMSPreparation/index.html#0
-https://developer.huawei.com/consumer/en/doc/development/AppGallery-connect-Guides/agc-get-started#sdkversion
+To allow using HMS to send Push notification to send Push Notifications to modern Huawei devices, you will need to follow the [Getting Started With Android](https://developer.huawei.com/consumer/en/doc/development/AppGallery-connect-Guides/agc-get-started#sdkversion) guide to create the Android Project on AppGallery and setup your application.
+
+![](https://communityfile-drcn.op.hicloud.com/FileServer/getFile/cmtyPub/011/111/111/0000000000011111111.20200422103205.39325176976447498076730625373748:50511023031301:2800:93D8E208342660CA1AC8A17F88E034A8F0296BBE08B7F180FC1D0F6B59E1FDEE.gif)
+
+If you need more detailed instructions, you can always:
+* Follow the official [Preparations for Integrating HUAWEI HMS Core guide](https://developer.huawei.com/consumer/en/codelab/HMSPreparation/index.html#0) to create the proyect and enable Push Services.
+* Read the alternative instructions on the  [Configuring App Information in AppGallery Connect](https://developer.huawei.com/consumer/en/doc/development/HMSCore-Guides/android-config-agc-0000001050170137) documentation.
+* Follow the information on the [Integrating the HMS Coder SDK](https://developer.huawei.com/consumer/en/doc/development/HMSCore-Guides/android-integrating-sdk-0000001050040084) instructions for SDK integration.
 
 ## Register your application in TwinPush
 

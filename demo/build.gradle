@@ -3,7 +3,7 @@ apply plugin: 'com.huawei.agconnect'
 
 android {
     compileSdkVersion 30
-    buildToolsVersion '28.0.3'
+    buildToolsVersion '29.0.2'
 
     defaultConfig {
         applicationId "com.twincoders.twinpush.sdk.demo"
@@ -26,12 +26,13 @@ dependencies {
 
     implementation project(':sdk')
     implementation 'androidx.appcompat:appcompat:1.2.0'
-    implementation 'com.google.android.material:material:1.2.0'
+    implementation 'com.google.android.material:material:1.2.1'
     implementation 'androidx.recyclerview:recyclerview:1.1.0'
     implementation 'androidx.cardview:cardview:1.0.0'
     implementation 'com.github.ganfra:material-spinner:2.0.0'
-    implementation 'com.google.firebase:firebase-messaging:20.2.4'
+    implementation 'com.google.firebase:firebase-messaging:21.0.0'
     // Huawei HMS
     implementation 'com.huawei.agconnect:agconnect-core:1.4.1.300'
+    implementation 'com.huawei.agconnect:agconnect-appmessaging:1.4.1.300'
     testImplementation 'junit:junit:4.12'
 }
