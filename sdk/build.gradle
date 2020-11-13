@@ -4,8 +4,8 @@ apply plugin: 'com.android.library'
 apply plugin: 'com.github.dcendents.android-maven'
 apply plugin: 'com.jfrog.bintray'
 
-def libraryVersion = '3.2.2'
-def libraryVersionCode = 30202
+def libraryVersion = '3.3.0'
+def libraryVersionCode = 30300
 
 // Maven group and version
 version = libraryVersion
@@ -42,7 +42,6 @@ dependencies {
     compile 'com.scottyab:secure-preferences-lib:0.1.4'
     // Huawei HMS
     implementation 'com.huawei.agconnect:agconnect-core:1.4.1.300'
-    implementation 'com.huawei.agconnect:agconnect-appmessaging:1.4.1.300'
     implementation 'com.huawei.hms:push:5.0.2.300'
 }
 

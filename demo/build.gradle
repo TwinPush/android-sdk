@@ -33,6 +33,5 @@ dependencies {
     implementation 'com.google.firebase:firebase-messaging:21.0.0'
     // Huawei HMS
     implementation 'com.huawei.agconnect:agconnect-core:1.4.1.300'
-    implementation 'com.huawei.agconnect:agconnect-appmessaging:1.4.1.300'
     testImplementation 'junit:junit:4.12'
 }

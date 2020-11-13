@@ -47,12 +47,11 @@ public class RegistrationInfo implements Serializable {
     public static RegistrationInfo fromContext(Context context, String udid, String deviceAlias, String pushToken) {
         RegistrationInfo info = new RegistrationInfo();
         try {
-            PackageInfo packageInfo = context.getPackageManager().getPackageInfo(context.getPackageName(), 0);
-            info.appVersion = packageInfo.versionName;
+            info.appVersion = context.getPackageManager().getPackageInfo(context.getPackageName(), 0).versionName;;
+            info.sdkVersion = context.getPackageManager().getPackageInfo(BuildConfig.LIBRARY_PACKAGE_NAME, 0).versionName;
         } catch (PackageManager.NameNotFoundException e) {
             Ln.e(e, "Could not obtain application version");
         }
-        info.sdkVersion = BuildConfig.VERSION_NAME;
         info.udid = udid;
         info.deviceAlias = deviceAlias;
         info.pushToken = pushToken;

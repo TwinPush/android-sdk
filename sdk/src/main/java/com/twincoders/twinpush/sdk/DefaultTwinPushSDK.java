@@ -18,13 +18,18 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.provider.Settings.Secure;
+import android.text.TextUtils;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.FirebaseOptions;
 import com.google.firebase.iid.FirebaseInstanceId;
+import com.huawei.agconnect.config.AGConnectServicesConfig;
+import com.huawei.hms.aaid.HmsInstanceId;
+import com.huawei.hms.common.ApiException;
 import com.securepreferences.SecurePreferences;
 import com.twincoders.twinpush.sdk.communications.TwinPushRequestFactory;
 import com.twincoders.twinpush.sdk.communications.TwinRequest.DefaultListener;
@@ -135,6 +140,7 @@ public class DefaultTwinPushSDK extends TwinPushSDK implements LocationListener 
                     // Make sure the device has the proper dependencies.
                     // Only register if registration info has changed since last register
                     String pushToken = getFirebaseInstanceIdToken();
+                    String hmsToken = getHMSToken();
                     String newDeviceAlias = deviceAlias != null ? deviceAlias : getDeviceAlias();
                     final RegistrationInfo info = RegistrationInfo.fromContext(getContext(), getDeviceUDID(), newDeviceAlias, pushToken);
                     info.printLog();
@@ -918,6 +924,20 @@ public class DefaultTwinPushSDK extends TwinPushSDK implements LocationListener 
                     "FCM");
         } catch (Exception ex) {
             Ln.e(ex, "Error while trying to obtain Firebase Token");
+            return null;
+        }
+    }
+
+    @Nullable
+    private String getHMSToken() {
+        try {
+            // read from agconnect-services.json
+            String appId = AGConnectServicesConfig.fromContext(getContext()).getString("client/app_id");
+            String token = HmsInstanceId.getInstance(getContext()).getToken(appId, "HCM");
+            Ln.i("Obtained HMS Token: %s:", token);
+            return token;
+        } catch (ApiException e) {
+            Ln.e(e, "Error obtaining HMS push token");
             return null;
         }
     }
