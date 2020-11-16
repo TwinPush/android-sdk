@@ -1,15 +1,41 @@
 package com.twincoders.twinpush.sdk.services;
 
+import android.app.PendingIntent;
+import android.content.Context;
+
+import androidx.core.app.NotificationManagerCompat;
+
 import com.huawei.hms.push.HmsMessageService;
 import com.huawei.hms.push.RemoteMessage;
 import com.twincoders.twinpush.sdk.TwinPushSDK;
 import com.twincoders.twinpush.sdk.logging.Ln;
+import com.twincoders.twinpush.sdk.notifications.PushNotification;
 
-public class TpHmsMessageService extends HmsMessageService {
+import java.util.Map;
+
+public class TpHmsMessageService extends HmsMessageService implements PushReceiverService {
+
+    protected final DefaultNotificationService defaultService = new DefaultNotificationService();
 
     @Override
-    public void onMessageReceived(RemoteMessage remoteMessage) {
-        super.onMessageReceived(remoteMessage);
+    public void onMessageReceived(RemoteMessage message) {
+        Ln.i("Received message");
+
+        // Check if message contains a notification payload.
+        if (message.getNotification() != null) {
+            super.onMessageReceived(message);
+        } else {
+            TwinPushSDK twinpush = TwinPushSDK.getInstance(this);
+            // Ensure default channel creation to avoid issues on recently updated Android 8 devices
+            twinpush.createNotificationChannel();
+            // Obtain Push Notification object from message data
+            PushNotification notification = getNotification(message.getDataOfMap());
+            // Send push notification acknowledgement if enabled
+            if (twinpush.isPushAckEnabled() && NotificationManagerCompat.from(getBaseContext()).areNotificationsEnabled())
+                twinpush.onNotificationReceived(notification);
+            // Display Notification
+            displayNotification(getBaseContext(), notification);
+        }
     }
 
     @Override
@@ -32,5 +58,23 @@ public class TpHmsMessageService extends HmsMessageService {
     public void onTokenError(Exception e) {
         Ln.e(e, "Error obtaining Huawei Push Token");
         super.onTokenError(e);
+    }
+
+
+    // Push receiver service implementation
+
+    @Override
+    public void displayNotification(Context context, PushNotification notification) {
+        defaultService.displayNotification(context, notification, getContentIntent(context, notification));
+    }
+
+    @Override
+    public PendingIntent getContentIntent(Context context, PushNotification notification) {
+        return defaultService.getContentIntent(context, notification);
+    }
+
+    @Override
+    public PushNotification getNotification(Map<String, String> data) {
+        return defaultService.getNotification(data);
     }
 }

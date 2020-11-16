@@ -25,7 +25,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
-public class NotificationIntentService extends FirebaseMessagingService {
+public class NotificationIntentService extends FirebaseMessagingService implements PushReceiverService {
 
 	public final static String ON_NOTIFICATION_OPENED_ACTION = "con.twincoders.twinpush.sdk.PUSH_NOTIFICATION_OPENED";
 	public final static String EXTRA_NOTIFICATION = "notification";
@@ -59,33 +59,6 @@ public class NotificationIntentService extends FirebaseMessagingService {
 		}
     }
 
-    /**
-     * Method that displays the obtained message in the Android notifications center
-     * @param context Application center
-     * @param notification Notification to be displayed
-     */
-    protected void displayNotification(Context context, PushNotification notification) {
-		defaultService.displayNotification(context, notification, getContentIntent(context, notification));
-	}
-    
-    /**
-     * Obtains the content intent for a given notification. This intent will be launched when the user clicks on the notification 
-     * @param context Application context
-     * @param notification PushNotification object with the information of the received message
-     * @return Content intent for the given notification
-     */
-    protected PendingIntent getContentIntent(Context context, PushNotification notification) {
-		return defaultService.getContentIntent(context, notification);
-    }
-
-	/**
-	 * Creates an instance of a PushNotification object with the info contained in the message intent
-	 * @param data Bundle containing the push notification info
-	 * @return PushNotification object retrieved from message
-	 */
-	protected PushNotification getNotification(Map<String, String> data) {
-		return defaultService.getNotification(data);
-	}
     @Override
     public void onNewToken(@NonNull String s) {
         super.onNewToken(s);
@@ -101,4 +74,21 @@ public class NotificationIntentService extends FirebaseMessagingService {
             twinPush.register();
         }
     }
+
+    // Push receiver service implementation
+
+	@Override
+    public void displayNotification(Context context, PushNotification notification) {
+		defaultService.displayNotification(context, notification, getContentIntent(context, notification));
+	}
+
+	@Override
+	public PendingIntent getContentIntent(Context context, PushNotification notification) {
+		return defaultService.getContentIntent(context, notification);
+	}
+
+	@Override
+	public PushNotification getNotification(Map<String, String> data) {
+		return defaultService.getNotification(data);
+	}
 }
