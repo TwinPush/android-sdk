@@ -5,6 +5,8 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Build;
 
+import androidx.annotation.NonNull;
+
 import com.twincoders.twinpush.sdk.BuildConfig;
 import com.twincoders.twinpush.sdk.TwinPushSDK;
 import com.twincoders.twinpush.sdk.logging.Ln;
@@ -16,6 +18,8 @@ import java.util.Map;
 
 public class RegistrationInfo implements Serializable {
 
+    /* Platform for registration device */
+    private Platform platform = Platform.ANDROID;
     /* TwinPush SDK Version */
     private String sdkVersion = null;
     /* Client Application Version */
@@ -44,7 +48,7 @@ public class RegistrationInfo implements Serializable {
     private String appID = null;
 
 
-    public static RegistrationInfo fromContext(Context context, String udid, String deviceAlias, String pushToken) {
+    public static RegistrationInfo fromContext(Context context, @NonNull Platform platform, String udid, String deviceAlias, String pushToken) {
         RegistrationInfo info = new RegistrationInfo();
         try {
             info.appVersion = context.getPackageManager().getPackageInfo(context.getPackageName(), 0).versionName;;
@@ -52,6 +56,7 @@ public class RegistrationInfo implements Serializable {
         } catch (PackageManager.NameNotFoundException e) {
             Ln.e(e, "Could not obtain application version");
         }
+        info.platform = platform;
         info.udid = udid;
         info.deviceAlias = deviceAlias;
         info.pushToken = pushToken;
@@ -85,6 +90,7 @@ public class RegistrationInfo implements Serializable {
         Ln.d("===      TwinPush Registration info      ===");
         Ln.d("============================================");
         Ln.d("TwinPush App ID: %s", appID);
+        Ln.d("Platform:        %s", platform.getKey());
         Ln.d("App Version:     %s", appVersion);
         Ln.d("SDK Version:     %s", sdkVersion);
         Ln.d("Android Version: %s (API %d)", osVersion, osVersionInt);
@@ -99,6 +105,7 @@ public class RegistrationInfo implements Serializable {
     private Map<String, Object> toMap() {
         Map<String, Object> map = new LinkedHashMap<>();
         map.put("app_id", appID);
+        map.put("platform", platform.getKey());
         map.put("app_version", appVersion);
         map.put("sdk_version", sdkVersion);
         map.put("os_version", osVersion);
@@ -113,6 +120,7 @@ public class RegistrationInfo implements Serializable {
         return map;
     }
 
+    @Override
     public String toString() {
         StringBuilder builder = new StringBuilder();
         for (Map.Entry<String, Object> entry : toMap().entrySet()) {
@@ -125,6 +133,14 @@ public class RegistrationInfo implements Serializable {
     }
 
     /* Boiler plate */
+
+    /**
+     * Obtains the registration platform
+     */
+    @NonNull
+    public Platform getPlatform() {
+        return platform;
+    }
 
     /**
      * Obtains the current TwinPush SDK Version

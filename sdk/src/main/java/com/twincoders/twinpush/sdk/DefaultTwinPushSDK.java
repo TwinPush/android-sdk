@@ -24,11 +24,13 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 
+import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.FirebaseOptions;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.huawei.agconnect.config.AGConnectServicesConfig;
 import com.huawei.hms.aaid.HmsInstanceId;
+import com.huawei.hms.api.HuaweiMobileServicesUtil;
 import com.huawei.hms.common.ApiException;
 import com.securepreferences.SecurePreferences;
 import com.twincoders.twinpush.sdk.communications.TwinPushRequestFactory;
@@ -43,6 +45,7 @@ import com.twincoders.twinpush.sdk.communications.requests.register.GetBadgeCoun
 import com.twincoders.twinpush.sdk.communications.requests.register.RegisterRequest;
 import com.twincoders.twinpush.sdk.entities.InboxNotification;
 import com.twincoders.twinpush.sdk.entities.LocationPrecision;
+import com.twincoders.twinpush.sdk.entities.Platform;
 import com.twincoders.twinpush.sdk.entities.PropertyType;
 import com.twincoders.twinpush.sdk.entities.RegistrationInfo;
 import com.twincoders.twinpush.sdk.entities.RegistrationMode;
@@ -139,10 +142,20 @@ public class DefaultTwinPushSDK extends TwinPushSDK implements LocationListener 
                 if (appId != null) {
                     // Make sure the device has the proper dependencies.
                     // Only register if registration info has changed since last register
-                    String pushToken = getFirebaseInstanceIdToken();
-                    String hmsToken = getHMSToken();
+                    String pushToken = null;
+                    Platform platform = Platform.ANDROID;
+                    if (GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(getContext())
+                            != com.google.android.gms.common.ConnectionResult.SUCCESS) {
+                        pushToken = getFirebaseInstanceIdToken();
+                    } else if (HuaweiMobileServicesUtil.isHuaweiMobileServicesAvailable(getContext())
+                            != com.huawei.hms.api.ConnectionResult.SUCCESS) {
+                        pushToken = getHMSToken();
+                        platform = Platform.HUAWEI;
+                    }
                     String newDeviceAlias = deviceAlias != null ? deviceAlias : getDeviceAlias();
-                    final RegistrationInfo info = RegistrationInfo.fromContext(getContext(), getDeviceUDID(), newDeviceAlias, pushToken);
+                    final RegistrationInfo info =
+                            RegistrationInfo.fromContext(getContext(), platform,
+                                    getDeviceUDID(), newDeviceAlias, pushToken);
                     info.printLog();
                     final String registrationHash = encrypt(info.toString());
                     if (!isDeviceRegistered() || !Strings.equals(registrationHash, getRegistrationHash())) {
