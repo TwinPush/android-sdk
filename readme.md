@@ -38,6 +38,12 @@ To allow using HMS to send Push notification to send Push Notifications to moder
 
 ![](https://communityfile-drcn.op.hicloud.com/FileServer/getFile/cmtyPub/011/111/111/0000000000011111111.20200422103205.39325176976447498076730625373748:50511023031301:2800:93D8E208342660CA1AC8A17F88E034A8F0296BBE08B7F180FC1D0F6B59E1FDEE.gif)
 
+You will need to include the signing certificate SHA256 fingerprint on the AppGallery Connect.
+
+To obtain the debug signing fingerprint use:
+
+    keytool -list -v -keystore ~/.android/debug.keystore -alias androiddebugkey -storepass android -keypass android
+
 If you need more detailed instructions, you can always:
 * Follow the official [Preparations for Integrating HUAWEI HMS Core guide](https://developer.huawei.com/consumer/en/codelab/HMSPreparation/index.html#0) to create the proyect and enable Push Services.
 * Read the alternative instructions on the  [Configuring App Information in AppGallery Connect](https://developer.huawei.com/consumer/en/doc/development/HMSCore-Guides/android-config-agc-0000001050170137) documentation.

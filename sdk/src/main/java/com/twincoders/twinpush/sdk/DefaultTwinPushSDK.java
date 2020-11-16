@@ -19,6 +19,7 @@ import android.os.Handler;
 import android.os.Looper;
 import android.provider.Settings.Secure;
 import android.text.TextUtils;
+import android.util.Pair;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -82,6 +83,7 @@ public class DefaultTwinPushSDK extends TwinPushSDK implements LocationListener 
     private static final String PREF_TWINPUSH_SUBDOMAIN = "TWINPUSH_SUBDOMAIN";
     private static final String PREF_TWINPUSH_CUSTOM_HOST = "TWINPUSH_CUSTOM_HOST";
     private static final String PREF_PUSH_ACK_ENABLED = "PUSH_ACK_ENABLED";
+    private static final String PREF_PREFERRED_PLATFORM = "PREFERRED_PLATFORM";
     private static final String DEFAULT_SUBDOMAIN = "app";
     private static final String DEFAULT_HOST = "https://%s.twinpush.com";
     // Location constants
@@ -142,16 +144,10 @@ public class DefaultTwinPushSDK extends TwinPushSDK implements LocationListener 
                 if (appId != null) {
                     // Make sure the device has the proper dependencies.
                     // Only register if registration info has changed since last register
-                    String pushToken = null;
-                    Platform platform = Platform.ANDROID;
-                    if (GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(getContext())
-                            != com.google.android.gms.common.ConnectionResult.SUCCESS) {
-                        pushToken = getFirebaseInstanceIdToken();
-                    } else if (HuaweiMobileServicesUtil.isHuaweiMobileServicesAvailable(getContext())
-                            != com.huawei.hms.api.ConnectionResult.SUCCESS) {
-                        pushToken = getHMSToken();
-                        platform = Platform.HUAWEI;
-                    }
+                    Pair<Platform, String> platformToken = getPlatformAndToken();
+                    String pushToken = platformToken.second;
+                    Platform platform = platformToken.first;
+
                     String newDeviceAlias = deviceAlias != null ? deviceAlias : getDeviceAlias();
                     final RegistrationInfo info =
                             RegistrationInfo.fromContext(getContext(), platform,
@@ -652,6 +648,7 @@ public class DefaultTwinPushSDK extends TwinPushSDK implements LocationListener 
                             setApiKey(options.twinPushApiKey);
                             setRegistrationMode(options.registrationMode);
                             setPushAckEnabled(options.pushAckEnabled);
+                            setPreferredPlatform(options.preferredPlatform);
                             if (options.serverHost != null) {
                                 setServerHost(options.serverHost);
                             } else {
@@ -873,6 +870,21 @@ public class DefaultTwinPushSDK extends TwinPushSDK implements LocationListener 
         }
     }
 
+    @NonNull
+    private Platform getPreferredPlatform() {
+        try {
+            return Platform.valueOf(
+                    getSharedPreferences().getString(PREF_PREFERRED_PLATFORM,
+                            Platform.ANDROID.toString()));
+        } catch (Exception exception) {
+            return Platform.ANDROID;
+        }
+    }
+
+    private void setPreferredPlatform(@NonNull Platform platform) {
+        getSharedPreferences().edit().putString(PREF_PREFERRED_PLATFORM, platform.toString()).apply();
+    }
+
     @Override
     public boolean isPushAckEnabled() {
         return getSharedPreferences().getBoolean(PREF_PUSH_ACK_ENABLED, false);
@@ -953,5 +965,41 @@ public class DefaultTwinPushSDK extends TwinPushSDK implements LocationListener 
             Ln.e(e, "Error obtaining HMS push token");
             return null;
         }
+    }
+
+    private Pair<Platform, String> getPlatformAndToken() {
+        List<Platform> availablePlatforms = new ArrayList<>();
+        if (isGoogleServicesAvailable()) availablePlatforms.add(Platform.ANDROID);
+        if (isHuaweiServicesAvailable()) availablePlatforms.add(Platform.HUAWEI);
+        final Platform preferredPlatform = getPreferredPlatform();
+        final Platform selectedPlatform;
+        final String pushToken;
+        if (availablePlatforms.isEmpty()) {
+            selectedPlatform = preferredPlatform;
+            pushToken = null;
+        } else {
+            if (availablePlatforms.contains(getPreferredPlatform())) {
+                selectedPlatform = getPreferredPlatform();
+            } else {
+                selectedPlatform = availablePlatforms.get(0);
+            }
+            switch (selectedPlatform) {
+                case HUAWEI: pushToken = getHMSToken(); break;
+                case ANDROID:
+                default: pushToken = getFirebaseInstanceIdToken(); break;
+            }
+        }
+        return new Pair<>(selectedPlatform, pushToken);
+
+    }
+
+    private boolean isGoogleServicesAvailable() {
+        return GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(getContext()) ==
+                com.google.android.gms.common.ConnectionResult.SUCCESS;
+    }
+
+    private boolean isHuaweiServicesAvailable() {
+        return HuaweiMobileServicesUtil.isHuaweiMobileServicesAvailable(getContext()) ==
+                com.huawei.hms.api.ConnectionResult.SUCCESS;
     }
 }
