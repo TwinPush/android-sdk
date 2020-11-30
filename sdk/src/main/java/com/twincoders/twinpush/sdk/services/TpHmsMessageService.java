@@ -22,9 +22,7 @@ public class TpHmsMessageService extends HmsMessageService implements PushReceiv
         Ln.i("Received message");
 
         // Check if message contains a notification payload.
-        if (message.getNotification() != null) {
-            super.onMessageReceived(message);
-        } else {
+        if (message.getDataOfMap().containsKey(DefaultNotificationService.EXTRA_NOTIFICATION_MESSAGE)) {
             TwinPushSDK twinpush = TwinPushSDK.getInstance(this);
             // Ensure default channel creation to avoid issues on recently updated Android 8 devices
             twinpush.createNotificationChannel();
@@ -35,6 +33,9 @@ public class TpHmsMessageService extends HmsMessageService implements PushReceiv
                 twinpush.onNotificationReceived(notification);
             // Display Notification
             displayNotification(getBaseContext(), notification);
+        } else {
+            Ln.i("Attribute 'message' not found in payload, calling parent method");
+            super.onMessageReceived(message);
         }
     }
 
@@ -42,12 +43,9 @@ public class TpHmsMessageService extends HmsMessageService implements PushReceiv
     public void onNewToken(String s) {
         super.onNewToken(s);
         Ln.d("TwinPush Huawei HMS on new token called");
-
         TwinPushSDK twinPush = TwinPushSDK.getInstance(getApplicationContext());
-
         // Get updated InstanceID token.
         Ln.d("Huawei HMS Token created: " + s);
-
         // Refresh register if needed
         if (twinPush.isDeviceRegistered()) {
             twinPush.register();
