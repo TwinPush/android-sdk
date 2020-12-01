@@ -112,6 +112,7 @@ To Setup TwinPush SDK you will need the following information:
 * **TwinPush API Key**: TwinPush Application API Key displayed in Settings section
 * **Subdomain**: Server subdomain where the application is deployed. Can be obtained in the Settings section of the TwinPush platform.
   
+
 ![Notification example](http://i.imgur.com/y2wSepym.jpg)
 
 To initialize the SDK you will ussually override the `onCreate` method of main activity and call `setup` method from the TwinPush SDK, that accepts a `TwinPushOptions` object as  parameter that will hold the required information.
@@ -182,7 +183,7 @@ When your application receives a Push notification, it will be shown in the stat
 
 This intent contains the following data:
 
-* Action: `NotificationIntentService.ON_NOTIFICATION_RECEIVED_ACTION`
+* Action: `NotificationIntentService.ON_NOTIFICATION_OPENED_ACTION`
 * Extras:
   * `NotificationIntentService.EXTRA_NOTIFICATION`: Serialized object of class PushNotification that contains the information of the received notification.
 
@@ -225,7 +226,7 @@ void checkPushNotification(Intent intent) {
     
         if (notification != null && notification.isRichNotification()) {
             Intent richIntent = new Intent(this, RichNotificationActivity.class);
-            richIntent.putExtra(    NotificationIntentService.EXTRA_NOTIFICATION, notification);
+            richIntent.putExtra(NotificationIntentService.EXTRA_NOTIFICATION, notification);
             startActivity(richIntent);
         }
     }
@@ -455,7 +456,7 @@ It is possible to _intercept_ the event that is produced when a notificaion is r
 
 To execute your own code when a notification is received you can follow the steps below:
 
-* Create a class that extends [NotificationIntentService](https://github.com/TwinPush/android-sdk/blob/master/sdk/src/main/java/com/twincoders/twinpush/sdk/services/NotificationIntentService.java) and override the `displayNotification` method to display the notification in the desired way:
+* Create a class that extends [NotificationIntentService](https://github.com/TwinPush/android-sdk/blob/master/sdk/src/main/java/com/twincoders/twinpush/sdk/services/NotificationIntentService.java) for Firebase and [TpHmsMessageService](https://github.com/TwinPush/android-sdk/blob/master/sdk/src/main/java/com/twincoders/twinpush/sdk/services/TpHmsMessageService.java) for Huawei and override the `displayNotification` method to display the notification in the desired way:
 
 ```java
 public class MyIntentService extends NotificationIntentService {
@@ -469,13 +470,20 @@ public class MyIntentService extends NotificationIntentService {
 }
 ```
 
-* Replace the `NotificationIntentService` declaration with your own implementation in the Manifest file:
+* Replace the `NotificationIntentService` and `TpHmsMessageService` declarations with your own implementations in the Manifest file:
 
 ```xml
 <service
-    android:name="my_app_package.services.MyIntentService">
+    android:name="my_app_package.MyFirebaseIntentService"
+    android:exported="false">
     <intent-filter>
         <action android:name="com.google.firebase.MESSAGING_EVENT" />
+    </intent-filter>
+</service>
+<service android:name="my_app_package.MyHuaweiIntentService"
+    android:exported="false">
+    <intent-filter>
+        <action android:name="com.huawei.push.action.MESSAGING_EVENT"/>
     </intent-filter>
 </service>
 ```
@@ -489,7 +497,7 @@ _Image: Example of default Android expanded and contracted layouts (source: [And
 
 By default, TwinPush will display the notification message in both contracted and expanded layouts, and will show the application icon for the notifications. By overriding the default TwinPush behavior, you can stack notifications, change the icon displayed on each and broadly, improve and customize the way in which messages are displayed to the user.
 
-To change the default behavior of displaying notificaiton, implement your own `NotificationIntentService` as descrived above and include your code in the `displayNotification` method:
+To change the default behavior of displaying notificaiton, implement your own `NotificationIntentService` for Firebase and `TpHmsMessageService` for Huawei as described above and include your code in the `displayNotification` method:
 
 ```java
 public class MyIntentService extends NotificationIntentService {
