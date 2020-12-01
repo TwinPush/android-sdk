@@ -86,7 +86,7 @@ dependencies {
 
 ### Configuring Android manifest
 
-Inside the _application_ node include the following service:
+Inside the _application_ node include the following services for both Firebase and Huawei:
 
 ```xml
 <service
@@ -94,6 +94,12 @@ Inside the _application_ node include the following service:
     android:exported="false">
     <intent-filter>
         <action android:name="com.google.firebase.MESSAGING_EVENT" />
+    </intent-filter>
+</service>
+<service android:name="com.twincoders.twinpush.sdk.services.TpHmsMessageService"
+    android:exported="false">
+    <intent-filter>
+        <action android:name="com.huawei.push.action.MESSAGING_EVENT"/>
     </intent-filter>
 </service>
 ```

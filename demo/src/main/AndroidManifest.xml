@@ -32,12 +32,14 @@
 
         <!-- [START twinpush_services] -->
         <service
-            android:name="com.twincoders.twinpush.sdk.services.NotificationIntentService">
+            android:name="com.twincoders.twinpush.sdk.services.NotificationIntentService"
+            android:exported="false">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
-        <service android:name="com.twincoders.twinpush.sdk.services.TpHmsMessageService">
+        <service android:name="com.twincoders.twinpush.sdk.services.TpHmsMessageService"
+            android:exported="false">
             <intent-filter>
                 <action android:name="com.huawei.push.action.MESSAGING_EVENT"/>
             </intent-filter>
