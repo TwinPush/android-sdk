@@ -1,5 +1,9 @@
 # TwinPush Android SDK Release Notes
 
+## 3.3.1 - 2020-12-02
+
+- Included Huawei Messaging Services integration
+
 ## 3.2.2 - 2020-07-02
 
 * Included callback listener for generic setProperty and for clearProperties SDK methods
