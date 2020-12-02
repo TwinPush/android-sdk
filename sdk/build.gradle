@@ -22,6 +22,8 @@ android {
         targetSdkVersion 30
         versionName libraryVersion
         versionCode libraryVersionCode
+        buildConfigField 'int', 'VERSION_CODE', "${libraryVersionCode}"
+        buildConfigField 'String', 'VERSION_NAME', "\"${libraryVersion}\""
     }
     buildTypes {
         release {
@@ -65,19 +67,19 @@ task sourcesJar(type: Jar) {
     classifier = 'sources'
 }
 
-task javadoc(type: Javadoc) {
-    source = android.sourceSets.main.java.srcDirs
-    classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
-    failOnError false
-}
+//task javadoc(type: Javadoc) {
+    //source = android.sourceSets.main.java.srcDirs
+    //classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
+    //failOnError false
+//}
 
-task javadocJar(type: Jar, dependsOn: javadoc) {
-    classifier = 'javadoc'
-    from javadoc.destinationDir
+//task javadocJar(type: Jar, dependsOn: javadoc) {
+    //classifier = 'javadoc'
+    //from javadoc.destinationDir
     //options.encoding = 'UTF-8'
-}
+//}
 artifacts {
-    archives javadocJar
+    //archives javadocJar
     archives sourcesJar
 }
 

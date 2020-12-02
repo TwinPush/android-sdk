@@ -52,10 +52,10 @@ public class RegistrationInfo implements Serializable {
         RegistrationInfo info = new RegistrationInfo();
         try {
             info.appVersion = context.getPackageManager().getPackageInfo(context.getPackageName(), 0).versionName;;
-            info.sdkVersion = context.getPackageManager().getPackageInfo(BuildConfig.LIBRARY_PACKAGE_NAME, 0).versionName;
         } catch (PackageManager.NameNotFoundException e) {
             Ln.e(e, "Could not obtain application version");
         }
+        info.sdkVersion = BuildConfig.VERSION_NAME;
         info.platform = platform;
         info.udid = udid;
         info.deviceAlias = deviceAlias;
