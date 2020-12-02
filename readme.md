@@ -34,20 +34,23 @@ The remaining steps are automatically handled by the TwinPush SDK.
 
 ## Setup Huawei HMS Push Kit
 
-To allow using HMS to send Push notification to send Push Notifications to modern Huawei devices, you will need to follow the [Getting Started With Android](https://developer.huawei.com/consumer/en/doc/development/AppGallery-connect-Guides/agc-get-started#sdkversion) guide to create the Android Project on AppGallery and setup your application.
+To allow using HMS to send Push notification to send Push Notifications to modern Huawei devices, you will need to follow the following steps:
+
+1. [Setup your App information in AppGallery Connect](https://developer.huawei.com/consumer/en/doc/development/HMSCore-Guides/android-config-agc-0000001050170137)
+2. [Integrate the HMS Core SDK](https://developer.huawei.com/consumer/en/doc/development/HMSCore-Guides/android-integrating-sdk-0000001050040084)
+
+Make sure to enable _Push Kit_, from _Grow_ menu of your project before downloading your **agconnect-services.json** file.
 
 ![](https://communityfile-drcn.op.hicloud.com/FileServer/getFile/cmtyPub/011/111/111/0000000000011111111.20200422103205.39325176976447498076730625373748:50511023031301:2800:93D8E208342660CA1AC8A17F88E034A8F0296BBE08B7F180FC1D0F6B59E1FDEE.gif)
 
-You will need to include the signing certificate SHA256 fingerprint on the AppGallery Connect.
-
-To obtain the debug signing fingerprint use:
+You will need to include the signing certificate SHA256 fingerprint on the AppGallery Connect. In order to be able to test push notifications in debug application, you will have to obtain the debug signing fingerprint using:
 
     keytool -list -v -keystore ~/.android/debug.keystore -alias androiddebugkey -storepass android -keypass android
 
 If you need more detailed instructions, you can always:
 * Follow the official [Preparations for Integrating HUAWEI HMS Core guide](https://developer.huawei.com/consumer/en/codelab/HMSPreparation/index.html#0) to create the proyect and enable Push Services.
 * Read the alternative instructions on the  [Configuring App Information in AppGallery Connect](https://developer.huawei.com/consumer/en/doc/development/HMSCore-Guides/android-config-agc-0000001050170137) documentation.
-* Follow the information on the [Integrating the HMS Coder SDK](https://developer.huawei.com/consumer/en/doc/development/HMSCore-Guides/android-integrating-sdk-0000001050040084) instructions for SDK integration.
+* Follow the information on the [Getting Started With Android](https://developer.huawei.com/consumer/en/doc/development/AppGallery-connect-Guides/agc-get-started) instructions for project creation and basic SDK integration.
 
 ## Register your application in TwinPush
 
