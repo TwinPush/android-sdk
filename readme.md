@@ -34,7 +34,7 @@ The remaining steps are automatically handled by the TwinPush SDK.
 
 ## Setup Huawei HMS Push Kit
 
-To start using HMS to send Push notification to modern Huawei devices, you can follow the steps below:
+To start using HMS to send Push notifications to modern Huawei devices, you can follow the steps below:
 
 1. [Setup your App information in AppGallery Connect](https://developer.huawei.com/consumer/en/doc/development/HMSCore-Guides/android-config-agc-0000001050170137)
 2. [Integrate the HMS Core SDK](https://developer.huawei.com/consumer/en/doc/development/HMSCore-Guides/android-integrating-sdk-0000001050040084)
