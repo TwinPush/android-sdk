@@ -4,8 +4,8 @@ apply plugin: 'com.android.library'
 apply plugin: 'com.github.dcendents.android-maven'
 apply plugin: 'com.jfrog.bintray'
 
-def libraryVersion = '3.2.2'
-def libraryVersionCode = 30202
+def libraryVersion = '3.3.0'
+def libraryVersionCode = 30300
 
 // Maven group and version
 version = libraryVersion
@@ -14,14 +14,16 @@ def gitUrl = 'https://github.com/TwinPush/android-sdk.git'   // Git repository U
 group = "com.twinpush.android"                               // Maven Group ID for the artifact
 
 android {
-    compileSdkVersion 29
-    buildToolsVersion "28.0.3"
+    compileSdkVersion 30
+    buildToolsVersion "29.0.2"
 
     defaultConfig {
         minSdkVersion 16
-        targetSdkVersion 29
+        targetSdkVersion 30
         versionName libraryVersion
         versionCode libraryVersionCode
+        buildConfigField 'int', 'VERSION_CODE', "${libraryVersionCode}"
+        buildConfigField 'String', 'VERSION_NAME', "\"${libraryVersion}\""
     }
     buildTypes {
         release {
@@ -35,11 +37,14 @@ dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     testCompile 'junit:junit:4.12'
 
-    compile 'com.google.firebase:firebase-messaging:20.2.1'
+    compile 'com.google.firebase:firebase-messaging:21.0.0'
     compile 'androidx.legacy:legacy-support-v4:1.0.0'
     compile 'com.android.volley:volley:1.1.1'
     // Encrypted shared preferences
     compile 'com.scottyab:secure-preferences-lib:0.1.4'
+    // Huawei HMS
+    implementation 'com.huawei.agconnect:agconnect-core:1.4.1.300'
+    implementation 'com.huawei.hms:push:5.0.2.300'
 }
 
 
@@ -62,19 +67,19 @@ task sourcesJar(type: Jar) {
     classifier = 'sources'
 }
 
-task javadoc(type: Javadoc) {
-    source = android.sourceSets.main.java.srcDirs
-    classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
-    failOnError false
-}
+//task javadoc(type: Javadoc) {
+    //source = android.sourceSets.main.java.srcDirs
+    //classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
+    //failOnError false
+//}
 
-task javadocJar(type: Jar, dependsOn: javadoc) {
-    classifier = 'javadoc'
-    from javadoc.destinationDir
+//task javadocJar(type: Jar, dependsOn: javadoc) {
+    //classifier = 'javadoc'
+    //from javadoc.destinationDir
     //options.encoding = 'UTF-8'
-}
+//}
 artifacts {
-    archives javadocJar
+    //archives javadocJar
     archives sourcesJar
 }
 

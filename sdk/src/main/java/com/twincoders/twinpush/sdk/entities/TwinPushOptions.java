@@ -17,5 +17,7 @@ public class TwinPushOptions {
     /* If set to true, the NotificationIntentService will acknowledge to the TwinPush API when a notification is received.
     * For this function to properly work, it also has to be enabled for the current app license */
     public boolean pushAckEnabled = false;
+    /* Preferred platform in case that the device can be registered as multiple*/
+    public Platform preferredPlatform = Platform.ANDROID;
 
 }

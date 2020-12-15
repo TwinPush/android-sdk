@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- Customizable firebase app -->
+    <string name="fcmProjectId"/>
     <string name="fcmProjectNumber"/>
     <string name="fcmMobileAppId"/>
     <string name="fcmApiKey"/>

@@ -18,13 +18,21 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.provider.Settings.Secure;
+import android.text.TextUtils;
+import android.util.Pair;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 
+import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.FirebaseOptions;
 import com.google.firebase.iid.FirebaseInstanceId;
+import com.huawei.agconnect.config.AGConnectServicesConfig;
+import com.huawei.hms.aaid.HmsInstanceId;
+import com.huawei.hms.api.HuaweiMobileServicesUtil;
+import com.huawei.hms.common.ApiException;
 import com.securepreferences.SecurePreferences;
 import com.twincoders.twinpush.sdk.communications.TwinPushRequestFactory;
 import com.twincoders.twinpush.sdk.communications.TwinRequest.DefaultListener;
@@ -38,6 +46,7 @@ import com.twincoders.twinpush.sdk.communications.requests.register.GetBadgeCoun
 import com.twincoders.twinpush.sdk.communications.requests.register.RegisterRequest;
 import com.twincoders.twinpush.sdk.entities.InboxNotification;
 import com.twincoders.twinpush.sdk.entities.LocationPrecision;
+import com.twincoders.twinpush.sdk.entities.Platform;
 import com.twincoders.twinpush.sdk.entities.PropertyType;
 import com.twincoders.twinpush.sdk.entities.RegistrationInfo;
 import com.twincoders.twinpush.sdk.entities.RegistrationMode;
@@ -74,6 +83,7 @@ public class DefaultTwinPushSDK extends TwinPushSDK implements LocationListener 
     private static final String PREF_TWINPUSH_SUBDOMAIN = "TWINPUSH_SUBDOMAIN";
     private static final String PREF_TWINPUSH_CUSTOM_HOST = "TWINPUSH_CUSTOM_HOST";
     private static final String PREF_PUSH_ACK_ENABLED = "PUSH_ACK_ENABLED";
+    private static final String PREF_PREFERRED_PLATFORM = "PREFERRED_PLATFORM";
     private static final String DEFAULT_SUBDOMAIN = "app";
     private static final String DEFAULT_HOST = "https://%s.twinpush.com";
     // Location constants
@@ -134,9 +144,14 @@ public class DefaultTwinPushSDK extends TwinPushSDK implements LocationListener 
                 if (appId != null) {
                     // Make sure the device has the proper dependencies.
                     // Only register if registration info has changed since last register
-                    String pushToken = getFirebaseInstanceIdToken();
+                    Pair<Platform, String> platformToken = getPlatformAndToken();
+                    String pushToken = platformToken.second;
+                    Platform platform = platformToken.first;
+
                     String newDeviceAlias = deviceAlias != null ? deviceAlias : getDeviceAlias();
-                    final RegistrationInfo info = RegistrationInfo.fromContext(getContext(), getDeviceUDID(), newDeviceAlias, pushToken);
+                    final RegistrationInfo info =
+                            RegistrationInfo.fromContext(getContext(), platform,
+                                    getDeviceUDID(), newDeviceAlias, pushToken);
                     info.printLog();
                     final String registrationHash = encrypt(info.toString());
                     if (!isDeviceRegistered() || !Strings.equals(registrationHash, getRegistrationHash())) {
@@ -633,6 +648,7 @@ public class DefaultTwinPushSDK extends TwinPushSDK implements LocationListener 
                             setApiKey(options.twinPushApiKey);
                             setRegistrationMode(options.registrationMode);
                             setPushAckEnabled(options.pushAckEnabled);
+                            setPreferredPlatform(options.preferredPlatform);
                             if (options.serverHost != null) {
                                 setServerHost(options.serverHost);
                             } else {
@@ -854,6 +870,21 @@ public class DefaultTwinPushSDK extends TwinPushSDK implements LocationListener 
         }
     }
 
+    @NonNull
+    private Platform getPreferredPlatform() {
+        try {
+            return Platform.valueOf(
+                    getSharedPreferences().getString(PREF_PREFERRED_PLATFORM,
+                            Platform.ANDROID.toString()));
+        } catch (Exception exception) {
+            return Platform.ANDROID;
+        }
+    }
+
+    private void setPreferredPlatform(@NonNull Platform platform) {
+        getSharedPreferences().edit().putString(PREF_PREFERRED_PLATFORM, platform.toString()).apply();
+    }
+
     @Override
     public boolean isPushAckEnabled() {
         return getSharedPreferences().getBoolean(PREF_PUSH_ACK_ENABLED, false);
@@ -871,6 +902,7 @@ public class DefaultTwinPushSDK extends TwinPushSDK implements LocationListener 
                 // Manually configure Firebase Options
                 FirebaseOptions options = new FirebaseOptions.Builder()
                         .setApplicationId(firebaseAppId)
+                        .setProjectId(getContext().getString(R.string.fcmProjectId))
                         .setApiKey(getContext().getString(R.string.fcmApiKey))
                         .setGcmSenderId(getContext().getString(R.string.fcmProjectNumber))
                         .build();
@@ -910,14 +942,64 @@ public class DefaultTwinPushSDK extends TwinPushSDK implements LocationListener 
     }
 
     public String getFirebaseInstanceIdToken() {
-        FirebaseApp firebaseApp = getFirebaseApp();
         try {
+            FirebaseApp firebaseApp = getFirebaseApp();
             return FirebaseInstanceId.getInstance(firebaseApp).getToken(
                     firebaseApp.getOptions().getGcmSenderId(),
                     "FCM");
-        } catch (IOException ex) {
+        } catch (Exception ex) {
             Ln.e(ex, "Error while trying to obtain Firebase Token");
             return null;
         }
+    }
+
+    @Nullable
+    private String getHMSToken() {
+        try {
+            // read from agconnect-services.json
+            String appId = AGConnectServicesConfig.fromContext(getContext()).getString("client/app_id");
+            String token = HmsInstanceId.getInstance(getContext()).getToken(appId, "HCM");
+            Ln.i("Obtained HMS Token: %s:", token);
+            return token;
+        } catch (ApiException e) {
+            Ln.e(e, "Error obtaining HMS push token");
+            return null;
+        }
+    }
+
+    private Pair<Platform, String> getPlatformAndToken() {
+        List<Platform> availablePlatforms = new ArrayList<>();
+        if (isGoogleServicesAvailable()) availablePlatforms.add(Platform.ANDROID);
+        if (isHuaweiServicesAvailable()) availablePlatforms.add(Platform.HUAWEI);
+        final Platform preferredPlatform = getPreferredPlatform();
+        final Platform selectedPlatform;
+        final String pushToken;
+        if (availablePlatforms.isEmpty()) {
+            selectedPlatform = preferredPlatform;
+            pushToken = null;
+        } else {
+            if (availablePlatforms.contains(getPreferredPlatform())) {
+                selectedPlatform = getPreferredPlatform();
+            } else {
+                selectedPlatform = availablePlatforms.get(0);
+            }
+            switch (selectedPlatform) {
+                case HUAWEI: pushToken = getHMSToken(); break;
+                case ANDROID:
+                default: pushToken = getFirebaseInstanceIdToken(); break;
+            }
+        }
+        return new Pair<>(selectedPlatform, pushToken);
+
+    }
+
+    private boolean isGoogleServicesAvailable() {
+        return GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(getContext()) ==
+                com.google.android.gms.common.ConnectionResult.SUCCESS;
+    }
+
+    private boolean isHuaweiServicesAvailable() {
+        return HuaweiMobileServicesUtil.isHuaweiMobileServicesAvailable(getContext()) ==
+                com.huawei.hms.api.ConnectionResult.SUCCESS;
     }
 }

@@ -15,7 +15,6 @@
             android:windowSoftInputMode="adjustNothing">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -32,12 +31,19 @@
 
 
         <!-- [START twinpush_services] -->
-        <service
-            android:name="com.twincoders.twinpush.sdk.services.NotificationIntentService">
-            <intent-filter>
-                <action android:name="com.google.firebase.MESSAGING_EVENT" />
-            </intent-filter>
-        </service>
+<service
+    android:name="com.twincoders.twinpush.sdk.services.NotificationIntentService"
+    android:exported="false">
+    <intent-filter>
+        <action android:name="com.google.firebase.MESSAGING_EVENT" />
+    </intent-filter>
+</service>
+<service android:name="com.twincoders.twinpush.sdk.services.TpHmsMessageService"
+    android:exported="false">
+    <intent-filter>
+        <action android:name="com.huawei.push.action.MESSAGING_EVENT"/>
+    </intent-filter>
+</service>
         <!-- [END twinpush_services] -->
 
     </application>

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- Customizable firebase app -->
+    <string name="fcmProjectId">twinpushsdk</string>
     <string name="fcmProjectNumber">181313479905</string>
     <string name="fcmMobileAppId">1:181313479905:android:0c15ec0f6440f032</string>
     <string name="fcmApiKey">AIzaSyDCOSDluQ5hmu4ZduNbOWB01PcDllww6_o</string>
