@@ -68,7 +68,7 @@ And then, for Firebase Cloud Messaging:
 
 For Huawei Mobile Services:
 
-1. Locate the _Huaweu Mobile Services (HMS)_ section
+1. Locate the _Huawei Mobile Services (HMS)_ section
 2. Click on Setup HMS
 3. Enter the ID and secret of the Oauth 2.0 client credential for your project, which you can find in the *Credentials* section of the [AppGallery Connect console](https://developer.huawei.com/consumer/en/console#/serviceCards/).
 
