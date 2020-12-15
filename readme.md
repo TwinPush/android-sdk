@@ -47,7 +47,7 @@ You will need to include the signing certificate SHA256 fingerprint on the AppGa
 
     keytool -list -v -keystore ~/.android/debug.keystore -alias androiddebugkey -storepass android -keypass android
 
-n case you need more documentation, you can:
+In case you need more detailed information, you have the following resources available:
 
 - Follow the official [Preparations for Integrating HUAWEI HMS Core guide](https://developer.huawei.com/consumer/en/codelab/HMSPreparation/index.html#0) to create the project and enable Push Services.
 - Read the alternative instructions on the  [Configuring App Information in AppGallery Connect](https://developer.huawei.com/consumer/en/doc/development/HMSCore-Guides/android-config-agc-0000001050170137) documentation.
