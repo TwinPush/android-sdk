@@ -47,10 +47,11 @@ You will need to include the signing certificate SHA256 fingerprint on the AppGa
 
     keytool -list -v -keystore ~/.android/debug.keystore -alias androiddebugkey -storepass android -keypass android
 
-If you need more detailed instructions, you can always:
-* Follow the official [Preparations for Integrating HUAWEI HMS Core guide](https://developer.huawei.com/consumer/en/codelab/HMSPreparation/index.html#0) to create the proyect and enable Push Services.
-* Read the alternative instructions on the  [Configuring App Information in AppGallery Connect](https://developer.huawei.com/consumer/en/doc/development/HMSCore-Guides/android-config-agc-0000001050170137) documentation.
-* Follow the information on the [Getting Started With Android](https://developer.huawei.com/consumer/en/doc/development/AppGallery-connect-Guides/agc-get-started) instructions for project creation and basic SDK integration.
+n case you need more documentation, you can:
+
+- Follow the official [Preparations for Integrating HUAWEI HMS Core guide](https://developer.huawei.com/consumer/en/codelab/HMSPreparation/index.html#0) to create the project and enable Push Services.
+- Read the alternative instructions on the  [Configuring App Information in AppGallery Connect](https://developer.huawei.com/consumer/en/doc/development/HMSCore-Guides/android-config-agc-0000001050170137) documentation.
+- Follow the information on the [Getting Started With Android](https://developer.huawei.com/consumer/en/doc/development/AppGallery-connect-Guides/agc-get-started) instructions for project creation and basic SDK integration.
 
 ## Register your application in TwinPush
 
