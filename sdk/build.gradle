@@ -12,10 +12,11 @@ version = libraryVersion
 def siteUrl = 'https://github.com/TwinPush/android-sdk'      // Homepage URL of the library
 def gitUrl = 'https://github.com/TwinPush/android-sdk.git'   // Git repository URL
 group = "com.twinpush.android"                               // Maven Group ID for the artifact
+archivesBaseName = "sdk"
 
 android {
     compileSdkVersion 30
-    buildToolsVersion "29.0.2"
+    buildToolsVersion '30.0.2'
 
     defaultConfig {
         minSdkVersion 16
@@ -37,14 +38,14 @@ dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     testCompile 'junit:junit:4.12'
 
-    compile 'com.google.firebase:firebase-messaging:21.0.0'
+    compile 'com.google.firebase:firebase-messaging:21.1.0'
     compile 'androidx.legacy:legacy-support-v4:1.0.0'
-    compile 'com.android.volley:volley:1.1.1'
+    compile 'com.android.volley:volley:1.2.0'
     // Encrypted shared preferences
     compile 'com.scottyab:secure-preferences-lib:0.1.4'
     // Huawei HMS
     implementation 'com.huawei.agconnect:agconnect-core:1.4.1.300'
-    implementation 'com.huawei.hms:push:5.0.2.300'
+    implementation 'com.huawei.hms:push:5.0.4.302'
 }
 
 
@@ -105,6 +106,52 @@ bintray {
             desc = 'TwinPush SDK for Android ' + libraryVersion
             released = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZZ").format(new Date())
             vcsTag = 'v' + libraryVersion
+        }
+    }
+}
+
+uploadArchives {
+    repositories {
+        mavenDeployer {
+
+            beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
+
+            repository(url: "https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/") {
+                authentication(userName: properties.getProperty("ossrhUsername"), password: properties.getProperty("ossrhPassword"))
+            }
+
+            snapshotRepository(url: "https://s01.oss.sonatype.org/content/repositories/snapshots/") {
+                authentication(userName: properties.getProperty("ossrhUsername"), password: properties.getProperty("ossrhPassword"))
+            }
+
+            pom.project {
+                name 'TwinPush Android SDK'
+                packaging 'jar'
+                // optionally artifactId can be defined here
+                description 'TwinPush SDK for Android ' + libraryVersion
+                url siteUrl
+
+                scm {
+                    connection gitUrl
+                    developerConnection gitUrl
+                    url siteUrl
+                }
+
+                licenses {
+                    license {
+                        name 'MIT'
+                        url 'https://opensource.org/licenses/MIT'
+                    }
+                }
+
+                developers {
+                    developer {
+                        id 'twincoders'
+                        name 'TwinCoders'
+                        email 'support@twincoders.com'
+                    }
+                }
+            }
         }
     }
 }
