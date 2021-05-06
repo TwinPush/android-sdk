@@ -3,8 +3,8 @@ package com.twincoders.twinpush.sdk;
 import android.app.Activity;
 import android.content.Context;
 import android.location.Location;
-import android.support.annotation.NonNull;
-import android.support.annotation.WorkerThread;
+import androidx.annotation.NonNull;
+import androidx.annotation.WorkerThread;
 
 import com.google.firebase.FirebaseApp;
 import com.twincoders.twinpush.sdk.communications.TwinRequest;
@@ -15,6 +15,7 @@ import com.twincoders.twinpush.sdk.communications.requests.notifications.GetNoti
 import com.twincoders.twinpush.sdk.communications.requests.register.GetBadgeCountRequest;
 import com.twincoders.twinpush.sdk.entities.InboxNotification;
 import com.twincoders.twinpush.sdk.entities.LocationPrecision;
+import com.twincoders.twinpush.sdk.entities.PropertyType;
 import com.twincoders.twinpush.sdk.entities.RegistrationInfo;
 import com.twincoders.twinpush.sdk.entities.TwinPushOptions;
 import com.twincoders.twinpush.sdk.notifications.PushNotification;
@@ -80,6 +81,11 @@ public abstract class TwinPushSDK {
      * @param info Registration info for current device
      */
     public abstract void onRegistrationSuccess(@NonNull String deviceId, @NonNull RegistrationInfo info);
+
+    /**
+     * Clears the local registration info of the current device from TwinPush platform
+     */
+    public abstract void unregister();
     
 	/* Obtain notifications methods */
 
@@ -110,6 +116,17 @@ public abstract class TwinPushSDK {
      * @param listener Listener object to notify result to
      */
     public abstract void getUserInbox(int page, int resultsPerPage, GetInboxRequest.Listener listener);
+
+    /**
+     * Method to obtain notifications sent to current user identified by alias.
+     * The request will fail if no alias is associated with the current device.
+     * @param page Page to obtain notifications from. First page is 0
+     * @param resultsPerPage Number of results to obtain per page
+     * @param tags List of the tags that the notifications must contain to be returned
+     * @param noTags List of the tags that the notifications must not contain to be returned
+     * @param listener Listener object to notify result to
+     */
+    public abstract void getUserInbox(int page, int resultsPerPage, List<String> tags, List<String> noTags, GetInboxRequest.Listener listener);
 
     /**
      * Method to obtain a summary with the total and unopened counts of the notifications sent to
@@ -192,9 +209,33 @@ public abstract class TwinPushSDK {
     public abstract void setEnumProperty(String name, String value);
 
     /**
+     * Set the enum list value to a custom property for the current device
+     * @param name Name of the custom property
+     * @param value Value list to set. It will replace any previous values.
+     */
+    public abstract void setProperty(String name, List<String> value);
+
+    /**
+     * Generic method to set the property value for the given property.
+     *
+     * @param name Name of the custom property
+     * @param value Value to set. If null, previous value will be deleted.
+     * @param type Property type
+     * @param listener Listener to notify callback
+     */
+    public abstract void setProperty(final String name, final Object value, PropertyType type, TwinRequest.DefaultListener listener);
+
+    /**
      * Clears the properties registered for the current device
      */
     public abstract void clearProperties();
+
+
+    /**
+     * Clears the properties registered for the current device
+     * @param listener Listener to notify callback
+     */
+    public abstract void clearProperties(TwinRequest.DefaultListener listener);
     
     /* Location */
 
@@ -263,6 +304,17 @@ public abstract class TwinPushSDK {
      * Notifies that the user has opened the notification with given ID
      */
     public abstract void onNotificationOpen(String notificationId);
+
+    /**
+     * Notifies that the device has received a notification
+     * @param notification received notification
+     */
+    public abstract void onNotificationReceived(PushNotification notification);
+
+    /**
+     * Notifies that the device has received a notification with given ID
+     */
+    public abstract void onNotificationReceived(String notificationId);
     
     // API Setup methods
 
@@ -385,4 +437,10 @@ public abstract class TwinPushSDK {
      */
     @WorkerThread
     public abstract String getFirebaseInstanceIdToken();
+
+    /**
+     * Obtains if Push acknowledgement report is enabled in the current SDK setup.
+     * @return true if Push acknowledgement is enabled
+     */
+    public abstract boolean isPushAckEnabled();
 }

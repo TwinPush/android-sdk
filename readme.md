@@ -16,7 +16,7 @@ To use this service, it is necessary to access to the [Firebase Console](https:/
  2. Write down the **Server Key** from the Settings -> Cloud Messaging section of project
  3. Create an Android Application
  4. Setup Firebase in your Android project and include the required `google-services.json` file
- 
+
 This action can be easily done following these steps through an assistant in the Tools -> Firebase menu of Android Studio:
 
 ![](http://i.imgur.com/cD7Z8iT.png)
@@ -32,18 +32,48 @@ The remaining steps are automatically handled by the TwinPush SDK.
 
 **NOTE:** If your can not setup Firebase through the `google-services.json` file in your project, you can still use the [alternative method](#alternative-firebase-setup) using string resources.
 
+## Setup Huawei HMS Push Kit
+
+To start using HMS to send Push notifications to modern Huawei devices, you can follow the steps below:
+
+1. [Setup your App information in AppGallery Connect](https://developer.huawei.com/consumer/en/doc/development/HMSCore-Guides/android-config-agc-0000001050170137)
+2. [Integrate the HMS Core SDK](https://developer.huawei.com/consumer/en/doc/development/HMSCore-Guides/android-integrating-sdk-0000001050040084)
+
+Make sure to enable _Push Kit_, from _Grow_ menu of your project before downloading your **agconnect-services.json** file.
+
+![](https://communityfile-drcn.op.hicloud.com/FileServer/getFile/cmtyPub/011/111/111/0000000000011111111.20200422103205.39325176976447498076730625373748:50511023031301:2800:93D8E208342660CA1AC8A17F88E034A8F0296BBE08B7F180FC1D0F6B59E1FDEE.gif)
+
+You will need to include the signing certificate SHA256 fingerprint on the AppGallery Connect. In order to be able to test push notifications in debug application, you will have to obtain the debug signing fingerprint using:
+
+    keytool -list -v -keystore ~/.android/debug.keystore -alias androiddebugkey -storepass android -keypass android
+
+In case you need more detailed information, you have the following resources available:
+
+- Follow the official [Preparations for Integrating HUAWEI HMS Core guide](https://developer.huawei.com/consumer/en/codelab/HMSPreparation/index.html#0) to create the project and enable Push Services.
+- Read the alternative instructions on the  [Configuring App Information in AppGallery Connect](https://developer.huawei.com/consumer/en/doc/development/HMSCore-Guides/android-config-agc-0000001050170137) documentation.
+- Follow the information on the [Getting Started With Android](https://developer.huawei.com/consumer/en/doc/development/AppGallery-connect-Guides/agc-get-started) instructions for project creation and basic SDK integration.
+
 ## Register your application in TwinPush
 
 The next step is to setup the TwinPush application. This can be done through the [TwinPush console](https://app.twinpush.com):
 
 1. Access to TwinPush website and login with your account
 2. From the control panel of your application, select Application Settings
-3. Locate the _Android Push notifications_ section
-4. Select _Firebase_ as platform
-5. Enter the Server API Key obtained during Firebase Cloud Messaging registration
-6. Enter the Android Application package
 
-![API Key input](http://i.imgur.com/0WoTbbv.png)
+And then, for Firebase Cloud Messaging:
+
+1. Locate the _Android Push notifications_ section
+2. Enter the Server API Key obtained during Firebase Cloud Messaging registration
+3. Enter the Android Application package
+
+For Huawei Mobile Services:
+
+1. Locate the _Huawei Mobile Services (HMS)_ section
+2. Click on Setup HMS
+3. Enter the ID and secret of the Oauth 2.0 client credential for your project, which you can find in the *Credentials* section of the [AppGallery Connect console](https://developer.huawei.com/consumer/en/console#/serviceCards/).
+
+
+![API Key input](https://i.imgur.com/BEUiZXU.png)
 
 ## Building the application
 
@@ -54,19 +84,26 @@ Include this dependency in your `build.gradle` file to reference this library in
 
 ```groovy
 dependencies {
-    compile 'com.twinpush.android:sdk:2.7.1'
+    implementation 'com.twinpush.android:sdk:3.3.1'
 }
 ```
 
 ### Configuring Android manifest
 
-Inside the _application_ node include the following service:
+Inside the _application_ node include the following services for both Firebase and Huawei:
 
 ```xml
 <service
-    android:name="com.twincoders.twinpush.sdk.services.NotificationIntentService">
+    android:name="com.twincoders.twinpush.sdk.services.NotificationIntentService"
+    android:exported="false">
     <intent-filter>
         <action android:name="com.google.firebase.MESSAGING_EVENT" />
+    </intent-filter>
+</service>
+<service android:name="com.twincoders.twinpush.sdk.services.TpHmsMessageService"
+    android:exported="false">
+    <intent-filter>
+        <action android:name="com.huawei.push.action.MESSAGING_EVENT"/>
     </intent-filter>
 </service>
 ```
@@ -79,6 +116,7 @@ To Setup TwinPush SDK you will need the following information:
 * **TwinPush API Key**: TwinPush Application API Key displayed in Settings section
 * **Subdomain**: Server subdomain where the application is deployed. Can be obtained in the Settings section of the TwinPush platform.
   
+
 ![Notification example](http://i.imgur.com/y2wSepym.jpg)
 
 To initialize the SDK you will ussually override the `onCreate` method of main activity and call `setup` method from the TwinPush SDK, that accepts a `TwinPushOptions` object as  parameter that will hold the required information.
@@ -149,7 +187,7 @@ When your application receives a Push notification, it will be shown in the stat
 
 This intent contains the following data:
 
-* Action: `NotificationIntentService.ON_NOTIFICATION_RECEIVED_ACTION`
+* Action: `NotificationIntentService.ON_NOTIFICATION_OPENED_ACTION`
 * Extras:
   * `NotificationIntentService.EXTRA_NOTIFICATION`: Serialized object of class PushNotification that contains the information of the received notification.
 
@@ -192,7 +230,7 @@ void checkPushNotification(Intent intent) {
     
         if (notification != null && notification.isRichNotification()) {
             Intent richIntent = new Intent(this, RichNotificationActivity.class);
-            richIntent.putExtra(    NotificationIntentService.EXTRA_NOTIFICATION, notification);
+            richIntent.putExtra(NotificationIntentService.EXTRA_NOTIFICATION, notification);
             startActivity(richIntent);
         }
     }
@@ -267,7 +305,7 @@ TwinPushSDK.getInstance(this).deleteNotification(notification, new TwinRequest.D
 });
 ```
 
-The Demo Application contains an [Inbox Activity](https://github.com/TwinPush/android-sdk/blob/master/demo/src/main/java/com/twincoders/twinpush/sdk/demo/InboxActivity.java) that implements a fully functional example of the User Inbox using a [ReciclerView](http://developer.android.com/intl/es/reference/android/support/v7/widget/RecyclerView.html) adapter.
+The Demo Application contains an [Inbox Activity](https://github.com/TwinPush/android-sdk/blob/master/demo/src/main/java/com/twincoders/twinpush/sdk/demo/InboxActivity.java) that implements a fully functional example of the User Inbox using a [ReciclerView](https://developer.android.com/guide/topics/ui/layout/recyclerview) adapter.
 
 ### Sending user information
 
@@ -277,8 +315,8 @@ To do this, you have to make a call to `setProperty` method of `TwinPushSDK`.
 
 ```java
 TwinPushSDK twinPush = TwinPushSDK.getInstance(this);
-twinPush.setProperty("age", getAge());
-twinPush.setProperty("gender", getGender());
+twinPush.setProperty("age", 48);
+twinPush.setProperty("first-name", "Franklin");
 ```
 
 This method takes to parameters:
@@ -287,6 +325,27 @@ This method takes to parameters:
 * Value to be assigned to the device. If sending null, it will delete previously submitted information for this attribute.
 
 The system automatically recognizes the type of data to be sent.
+
+#### Enum values
+
+TwinPush also offers the option to create properties whose values are included in a small set of options. These types of properties with bounded values can be used to categorize and segment users.
+
+To create this kind of properties, you have to use the `setEnumProperty` method of `TwinPushSDK`, that has the same input values and behavior than `setProperty`:
+
+```java
+TwinPushSDK twinPush = TwinPushSDK.getInstance(this);
+twinPush.setEnumProperty("gender", "male");
+twinPush.setEnumProperty("client-type", "vip");
+```
+
+It is also possible to define a list of values for a enum device property. This way, the device will match the filters that affect to any of the selected values. To do so, use the method `setProperty` method with an object of type `List<String>` as value parameter: 
+
+```java
+TwinPushSDK twinPush = TwinPushSDK.getInstance(this);
+twinPush.setProperty("Social", Arrays.asList("Facebook", "Twitter"));
+```
+
+#### Clear properties
 
 You can also delete all information sent by a device performing a call to `clearProperties`:
 
@@ -369,6 +428,30 @@ twinPush.setLocation(40.383, -3.717);
 twinPush.updateLocation(LocationPrecision.HIGH);
 ```
 
+### Push notifications acknowledgement
+
+As an optional behavior, that needs to be enabled at license level, it is possible to obtain an acknowledgement when a push notification is received on a device.
+
+This behavior allows to know with precission which devices has received a given notification and the date of reception for every single one.
+
+To enable this function at SDK level, it is only required to set the `pushAckEnabled` setup parameter to `true`:
+
+```java
+public void onCreate(Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+    // Setup TwinPush SDK
+    TwinPushOptions options = new TwinPushOptions();              // Initialize options
+    options.twinPushAppId =   "7687xxxxxxxxxxxx";                 // - APP ID
+    options.twinPushApiKey =  "c5caxxxxxxxxxxxxxxxxxxxxxxxx1592"; // - API Key
+    options.subdomain =       "mycompany";                        // - Application subdomain
+    options.pushAckEnabled =  true;                               // - Push acknowledgement
+    TwinPushSDK.getInstance(this).setup(options);                 // Call setup
+    /* Your code goes here... */
+}
+```
+
+When a push notification is received, the SDK will automatically report the acknowledgement to the TwinPush API for the pair notification-device.
+
 ## Customize behavior
 
 ### On notification received
@@ -377,7 +460,7 @@ It is possible to _intercept_ the event that is produced when a notificaion is r
 
 To execute your own code when a notification is received you can follow the steps below:
 
-* Create a class that extends [NotificationIntentService](https://github.com/TwinPush/android-sdk/blob/master/sdk/src/com/twincoders/twinpush/sdk/services/NotificationIntentService.java) and override the `displayNotification` method to display the notification in the desired way:
+* Create a class that extends [NotificationIntentService](https://github.com/TwinPush/android-sdk/blob/master/sdk/src/main/java/com/twincoders/twinpush/sdk/services/NotificationIntentService.java) for Firebase and [TpHmsMessageService](https://github.com/TwinPush/android-sdk/blob/master/sdk/src/main/java/com/twincoders/twinpush/sdk/services/TpHmsMessageService.java) for Huawei and override the `displayNotification` method to display the notification in the desired way:
 
 ```java
 public class MyIntentService extends NotificationIntentService {
@@ -391,27 +474,34 @@ public class MyIntentService extends NotificationIntentService {
 }
 ```
 
-* Replace the `NotificationIntentService` declaration with your own implementation in the Manifest file:
+* Replace the `NotificationIntentService` and `TpHmsMessageService` declarations with your own implementations in the Manifest file:
 
 ```xml
 <service
-    android:name="my_app_package.services.MyIntentService">
+    android:name="my_app_package.MyFirebaseIntentService"
+    android:exported="false">
     <intent-filter>
         <action android:name="com.google.firebase.MESSAGING_EVENT" />
+    </intent-filter>
+</service>
+<service android:name="my_app_package.MyHuaweiIntentService"
+    android:exported="false">
+    <intent-filter>
+        <action android:name="com.huawei.push.action.MESSAGING_EVENT"/>
     </intent-filter>
 </service>
 ```
 
 ### Custom notification layouts
 
-As described in the [official documentation](http://developer.android.com/design/patterns/notifications.html), Android offers a variety of ways to display notifications to the user.
+As described in the [official documentation](https://developer.android.com/training/notify-user/expanded), Android offers a variety of ways to display notifications to the user.
 
 ![](http://developer.android.com/design/media/notifications_pattern_expandable.png)
 _Image: Example of default Android expanded and contracted layouts (source: [Android Developers](http://developer.android.com/))_
 
 By default, TwinPush will display the notification message in both contracted and expanded layouts, and will show the application icon for the notifications. By overriding the default TwinPush behavior, you can stack notifications, change the icon displayed on each and broadly, improve and customize the way in which messages are displayed to the user.
 
-To change the default behavior of displaying notificaiton, implement your own `NotificationIntentService` as descrived above and include your code in the `displayNotification` method:
+To change the default behavior of displaying notificaiton, implement your own `NotificationIntentService` for Firebase and `TpHmsMessageService` for Huawei as described above and include your code in the `displayNotification` method:
 
 ```java
 public class MyIntentService extends NotificationIntentService {
@@ -527,6 +617,7 @@ In the following table you have the relation between the fields from the JSON fi
 
 | String resource    | `google-services.json` |
 |--------------------|------------------------|
+| `fcmProjectId`     | `project_info.project_id` |
 | `fcmProjectNumber` | `project_info.project_number` |
 | `fcmMobileAppId`   | `client.client_info.mobilesdk_app_id` |
 | `fcmApiKey`        | `client.api_key.current_key` |
@@ -535,6 +626,7 @@ An example resources file could be as following (e.g. `res/values/firebase.xml`)
 
 ```xml
 <resources>
+  <string name="fcmProjectId">myapplication</string>
   <string name="fcmProjectNumber">181234567890</string>
   <string name="fcmMobileAppId">1:181234567890:android:0c15ec0987654321</string>
   <string name="fcmApiKey">AIzaSyDCOSDluQ5hmu4ZduNbOWB01PcDllww6_o</string>

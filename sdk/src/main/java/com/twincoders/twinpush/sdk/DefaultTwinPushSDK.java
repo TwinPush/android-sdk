@@ -18,13 +18,21 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.provider.Settings.Secure;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v4.content.ContextCompat;
+import android.text.TextUtils;
+import android.util.Pair;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
+
+import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.FirebaseOptions;
 import com.google.firebase.iid.FirebaseInstanceId;
+import com.huawei.agconnect.config.AGConnectServicesConfig;
+import com.huawei.hms.aaid.HmsInstanceId;
+import com.huawei.hms.api.HuaweiMobileServicesUtil;
+import com.huawei.hms.common.ApiException;
 import com.securepreferences.SecurePreferences;
 import com.twincoders.twinpush.sdk.communications.TwinPushRequestFactory;
 import com.twincoders.twinpush.sdk.communications.TwinRequest.DefaultListener;
@@ -38,6 +46,7 @@ import com.twincoders.twinpush.sdk.communications.requests.register.GetBadgeCoun
 import com.twincoders.twinpush.sdk.communications.requests.register.RegisterRequest;
 import com.twincoders.twinpush.sdk.entities.InboxNotification;
 import com.twincoders.twinpush.sdk.entities.LocationPrecision;
+import com.twincoders.twinpush.sdk.entities.Platform;
 import com.twincoders.twinpush.sdk.entities.PropertyType;
 import com.twincoders.twinpush.sdk.entities.RegistrationInfo;
 import com.twincoders.twinpush.sdk.entities.RegistrationMode;
@@ -73,6 +82,8 @@ public class DefaultTwinPushSDK extends TwinPushSDK implements LocationListener 
     private static final String PREF_TWINPUSH_APP_ID = "TWINPUSH_APP_ID";
     private static final String PREF_TWINPUSH_SUBDOMAIN = "TWINPUSH_SUBDOMAIN";
     private static final String PREF_TWINPUSH_CUSTOM_HOST = "TWINPUSH_CUSTOM_HOST";
+    private static final String PREF_PUSH_ACK_ENABLED = "PUSH_ACK_ENABLED";
+    private static final String PREF_PREFERRED_PLATFORM = "PREFERRED_PLATFORM";
     private static final String DEFAULT_SUBDOMAIN = "app";
     private static final String DEFAULT_HOST = "https://%s.twinpush.com";
     // Location constants
@@ -91,10 +102,11 @@ public class DefaultTwinPushSDK extends TwinPushSDK implements LocationListener 
     private static final String PREF_SSL_SUBJECT = "PREF_SSL_SUBJECT";
 
     /* Private properties */
-    private Context _context = null;
+    private Context _context;
     private TwinPushRequest registerRequest = null;
     private List<Activity> openedActivities = new ArrayList<>();
-    private LastLocationFinder locationFinder = null;
+    private LastLocationFinder locationFinder;
+    private OnRegistrationListener registrationListener = null;
 
     /* Properties */
     private String deviceAlias = null;
@@ -109,7 +121,7 @@ public class DefaultTwinPushSDK extends TwinPushSDK implements LocationListener 
         locationFinder.setChangedLocationListener(this);
     }
 
-	/* Public API Methods */
+    /* Public API Methods */
 
     @Override
     public void register() {
@@ -123,6 +135,7 @@ public class DefaultTwinPushSDK extends TwinPushSDK implements LocationListener 
 
     @Override
     public void register(final String deviceAlias, final OnRegistrationListener listener) {
+        this.registrationListener = listener;
         // Run in background
         AsyncTask.execute(new Runnable() {
             @Override
@@ -131,9 +144,14 @@ public class DefaultTwinPushSDK extends TwinPushSDK implements LocationListener 
                 if (appId != null) {
                     // Make sure the device has the proper dependencies.
                     // Only register if registration info has changed since last register
-                    String pushToken = getFirebaseInstanceIdToken();
+                    Pair<Platform, String> platformToken = getPlatformAndToken();
+                    String pushToken = platformToken.second;
+                    Platform platform = platformToken.first;
+
                     String newDeviceAlias = deviceAlias != null ? deviceAlias : getDeviceAlias();
-                    final RegistrationInfo info = RegistrationInfo.fromContext(getContext(), getDeviceUDID(), newDeviceAlias, pushToken);
+                    final RegistrationInfo info =
+                            RegistrationInfo.fromContext(getContext(), platform,
+                                    getDeviceUDID(), newDeviceAlias, pushToken);
                     info.printLog();
                     final String registrationHash = encrypt(info.toString());
                     if (!isDeviceRegistered() || !Strings.equals(registrationHash, getRegistrationHash())) {
@@ -142,24 +160,31 @@ public class DefaultTwinPushSDK extends TwinPushSDK implements LocationListener 
                         Ln.d("Using registration mode: %s", registrationMode);
                         switch (registrationMode) {
                             case INTERNAL:
-                                launchRegistrationRequest(info, listener);
+                                launchRegistrationRequest(info);
                                 break;
                             case EXTERNAL:
                                 RegistrationIntentReceiver.launchExternalRegistrationIntent(getContext(), info);
                                 break;
                             default:
-                                registerError(new Exception("Registration mode not supported: " + registrationMode), listener);
+                                registerError(new Exception("Registration mode not supported: " + registrationMode));
                                 break;
                         }
                     } else {
                         Ln.d("Registration info did not change since last registration");
-                        notifySuccess(deviceAlias, listener);
+                        notifySuccess(deviceAlias);
                     }
                 } else {
-                    registerError(new Exception("Application ID is not setup in TwinPush SDK"), listener);
+                    registerError(new Exception("Application ID is not setup in TwinPush SDK"));
                 }
             }
         });
+    }
+
+    @Override
+    public void unregister() {
+        setDeviceId(null);
+        setDeviceAlias(null);
+        setRegistrationHash(null);
     }
 
     public void onRegistrationSuccess(@NonNull String deviceId, @NonNull RegistrationInfo info) {
@@ -167,9 +192,10 @@ public class DefaultTwinPushSDK extends TwinPushSDK implements LocationListener 
         setDeviceAlias(deviceAlias);
         setRegistrationHash(encrypt(info.toString()));
         Ln.i("Device successfully registered on TwinPush (deviceId:%s, alias:%s)", deviceId, info.getDeviceAlias());
+        notifySuccess(info.getDeviceAlias());
     }
 
-    private void launchRegistrationRequest(final RegistrationInfo info, @Nullable final OnRegistrationListener listener) {
+    private void launchRegistrationRequest(final RegistrationInfo info) {
         if (getApiKey() != null) {
             if (registerRequest != null) {
                 registerRequest.cancel();
@@ -181,42 +207,47 @@ public class DefaultTwinPushSDK extends TwinPushSDK implements LocationListener 
                                 @Override
                                 public void onError(Exception exception) {
                                     registerRequest = null;
-                                    registerError(exception, listener);
+                                    registerError(exception);
                                 }
 
                                 @Override
                                 public void onRegistrationSuccess(String deviceId, String deviceAlias) {
                                     registerRequest = null;
                                     DefaultTwinPushSDK.this.onRegistrationSuccess(deviceId, info);
-                                    notifySuccess(deviceAlias, listener);
                                 }
                             });
         } else {
-            registerError(new Exception("API Key is not setup in TwinPush SDK"), listener);
+            registerError(new Exception("API Key is not setup in TwinPush SDK"));
         }
     }
 
-    private void notifySuccess(final String deviceAlias, final OnRegistrationListener listener) {
-        if (listener != null) {
+    private void notifySuccess(final String deviceAlias) {
+        if (registrationListener != null) {
             Handler mainHandler = new Handler(Looper.getMainLooper());
             mainHandler.post(new Runnable() {
                 @Override
                 public void run() {
-                    listener.onRegistrationSuccess(deviceAlias);
+                    if (registrationListener != null) {
+                        registrationListener.onRegistrationSuccess(deviceAlias);
+                        registrationListener = null;
+                    }
                 }
             });
         }
     }
 
-    private void registerError(final Exception e, final OnRegistrationListener listener) {
+    private void registerError(final Exception e) {
         // Sender ID is not setup
         Ln.e(e);
-        if (listener != null) {
+        if (registrationListener != null) {
             Handler mainHandler = new Handler(Looper.getMainLooper());
             mainHandler.post(new Runnable() {
                 @Override
                 public void run() {
-                    listener.onRegistrationError(e);
+                    if (registrationListener != null) {
+                        registrationListener.onRegistrationError(e);
+                        registrationListener = null;
+                    }
                 }
             });
         }
@@ -234,7 +265,12 @@ public class DefaultTwinPushSDK extends TwinPushSDK implements LocationListener 
 
     @Override
     public void getUserInbox(int page, int resultsPerPage, GetInboxRequest.Listener listener) {
-        getRequestFactory().getUserInbox(page, resultsPerPage, listener);
+        getRequestFactory().getUserInbox(page, resultsPerPage, null, null, listener);
+    }
+
+    @Override
+    public void getUserInbox(int page, int resultsPerPage, List<String> tags, List<String> noTags, GetInboxRequest.Listener listener) {
+        getRequestFactory().getUserInbox(page, resultsPerPage, tags, noTags, listener);
     }
 
     @Override
@@ -266,48 +302,56 @@ public class DefaultTwinPushSDK extends TwinPushSDK implements LocationListener 
 
     /* Properties */
     public void setProperty(String name, String value) {
-        setProperty(name, value, PropertyType.STRING);
+        setProperty(name, value, PropertyType.STRING, null);
     }
 
     public void setProperty(String name, Boolean value) {
-        setProperty(name, value, PropertyType.BOOLEAN);
+        setProperty(name, value, PropertyType.BOOLEAN, null);
     }
 
     public void setProperty(String name, Integer value) {
-        setProperty(name, value, PropertyType.INTEGER);
+        setProperty(name, value, PropertyType.INTEGER, null);
     }
 
     public void setProperty(String name, Float value) {
-        setProperty(name, value, PropertyType.FLOAT);
+        setProperty(name, value, PropertyType.FLOAT, null);
     }
 
     public void setProperty(String name, Double value) {
-        setProperty(name, value, PropertyType.FLOAT);
+        setProperty(name, value, PropertyType.FLOAT, null);
     }
 
     public void setEnumProperty(String name, String value) {
-        setProperty(name, value, PropertyType.ENUM);
+        setProperty(name, value, PropertyType.ENUM, null);
     }
 
-    private void setProperty(final String name, final Object value, PropertyType type) {
+    public void setProperty(String name, List<String> value) {
+        setProperty(name, value, PropertyType.ENUM_LIST, null);
+    }
+
+    public void setProperty(final String name, final Object value, PropertyType type, DefaultListener listener) {
+        DefaultListener requestListener = listener != null ? listener : getDefaultListener(String.format("Set property '%s' = '%s'", name, value == null ? "null" : value.toString()));
         if (isDeviceRegistered()) {
-            DefaultListener listener = getDefaultListener(String.format("Set property '%s' = '%s'", name, value == null? "null" : value.toString()));
-            getRequestFactory().setCustomProperty(name, type, value, listener);
+            getRequestFactory().setCustomProperty(name, type, value, requestListener);
         } else {
-            Ln.w("Not launching 'Set custom property': Device unregistered");
+            requestListener.onError(new Exception("Not launching 'Set custom property': Device unregistered"));
         }
     }
 
     public void clearProperties() {
+        this.clearProperties(null);
+    }
+
+    public void clearProperties(DefaultListener listener) {
+        DefaultListener requestListener = listener != null ? listener : getDefaultListener("Clear properties");
         if (isDeviceRegistered()) {
-            DefaultListener listener = getDefaultListener("Clear properties");
-            getRequestFactory().clearCustomProperties(listener);
+            getRequestFactory().clearCustomProperties(requestListener);
         } else {
-            Ln.w("Not launching 'Clear custom properties': Device unregistered");
+            requestListener.onError(new Exception("Not launching 'Clear custom properties': Device unregistered"));
         }
     }
 
-	/* Location */
+    /* Location */
 
     public void setLocation(double latitude, double longitude) {
         Location location = new Location("USER_ENTRY");
@@ -365,7 +409,9 @@ public class DefaultTwinPushSDK extends TwinPushSDK implements LocationListener 
         if (ContextCompat.checkSelfPermission(getContext(), android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
                 || ContextCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             LocationManager locationManager = (LocationManager) getContext().getSystemService(Context.LOCATION_SERVICE);
-            locationManager.removeUpdates(getBackgroundLocationIntent());
+            if (locationManager != null) {
+                locationManager.removeUpdates(getBackgroundLocationIntent());
+            }
         }
     }
 
@@ -373,11 +419,13 @@ public class DefaultTwinPushSDK extends TwinPushSDK implements LocationListener 
         if (ContextCompat.checkSelfPermission(getContext(), android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
                 || ContextCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             LocationManager locationManager = (LocationManager) getContext().getSystemService(Context.LOCATION_SERVICE);
-            locationManager.requestLocationUpdates(
-                    LocationManager.PASSIVE_PROVIDER,
-                    getLocationMinUpdateTime(),
-                    getLocationMinUpdateDistance(),
-                    getBackgroundLocationIntent());
+            if (locationManager != null) {
+                locationManager.requestLocationUpdates(
+                        LocationManager.PASSIVE_PROVIDER,
+                        getLocationMinUpdateTime(),
+                        getLocationMinUpdateDistance(),
+                        getBackgroundLocationIntent());
+            }
         } else {
             Ln.e("Could not start location updates, required permissions not found");
         }
@@ -391,7 +439,7 @@ public class DefaultTwinPushSDK extends TwinPushSDK implements LocationListener 
         return getSharedPreferences().getBoolean(PREF_MONITOR_LOCATION_CHANGES, false);
     }
 
-	/* Use statistics */
+    /* Use statistics */
 
     public void activityStart(Activity activity) {
         if (openedActivities.isEmpty()) {
@@ -403,9 +451,7 @@ public class DefaultTwinPushSDK extends TwinPushSDK implements LocationListener 
     }
 
     public void activityStop(Activity activity) {
-        if (openedActivities.contains(activity)) {
-            openedActivities.remove(activity);
-        }
+        openedActivities.remove(activity);
         if (openedActivities.isEmpty()) {
             onApplicationClose();
         }
@@ -444,6 +490,21 @@ public class DefaultTwinPushSDK extends TwinPushSDK implements LocationListener 
         }
     }
 
+    @Override
+    public void onNotificationReceived(PushNotification notification) {
+        if (notification != null) {
+            onNotificationReceived(notification.getId());
+        }
+    }
+
+    @Override
+    public void onNotificationReceived(String notificationId) {
+        if (notificationId != null) {
+            DefaultListener listener = getDefaultListener(String.format("On Notification Received: %s", notificationId));
+            getRequestFactory().onReceivedNotification(notificationId, listener);
+        }
+    }
+
     /* Storage */
     private Map<String, SharedPreferences> sharedPreferencesMap = new TreeMap<>();
 
@@ -468,26 +529,20 @@ public class DefaultTwinPushSDK extends TwinPushSDK implements LocationListener 
     private void securePreferences(SharedPreferences securePreferences, SharedPreferences oldPrefs) {
         // Migrates values stored in old preferences to secured preferences
         SharedPreferences.Editor editor = securePreferences.edit();
-        if( !oldPrefs.getAll().isEmpty() )
-        {
+        if (!oldPrefs.getAll().isEmpty()) {
             // Move everything over.
-            for(Map.Entry<String, ?> entry : oldPrefs.getAll().entrySet())
-            {
+            for (Map.Entry<String, ?> entry : oldPrefs.getAll().entrySet()) {
                 Object value = entry.getValue();
 
-                if( value instanceof String ) {
+                if (value instanceof String) {
                     editor.putString(entry.getKey(), (String) value);
-                }
-                else if( value instanceof Integer ) {
+                } else if (value instanceof Integer) {
                     editor.putInt(entry.getKey(), (Integer) value);
-                }
-                else if( value instanceof Long ) {
+                } else if (value instanceof Long) {
                     editor.putLong(entry.getKey(), (Long) value);
-                }
-                else if( value instanceof Float ) {
+                } else if (value instanceof Float) {
                     editor.putFloat(entry.getKey(), (Float) value);
-                }
-                else if( value instanceof Boolean ) {
+                } else if (value instanceof Boolean) {
                     editor.putBoolean(entry.getKey(), (Boolean) value);
                 }
             }
@@ -576,18 +631,24 @@ public class DefaultTwinPushSDK extends TwinPushSDK implements LocationListener 
     public boolean setup(TwinPushOptions options) {
         if (options != null) {
             String appId = options.twinPushAppId;
-            String apiKey = options.twinPushApiKey;
             String subdomain = options.subdomain;
             String serverHost = options.serverHost;
             RegistrationMode registrationMode = options.registrationMode;
             boolean validHost = Strings.notEmpty(subdomain) || Strings.notEmpty(serverHost);
-            if (registrationMode != null) {
-                if (Strings.notEmpty(appId)) {
-                    if (Strings.notEmpty(apiKey) || registrationMode != RegistrationMode.INTERNAL) {
+            if (Strings.notEmpty(appId)) {
+                if (registrationMode != null) {
+                    if (Strings.notEmpty(options.twinPushApiKey) || registrationMode != RegistrationMode.INTERNAL) {
                         if (validHost) {
+                            // If AppId has changed, clear previous data to avoid conflict
+                            String prevAppId = getAppId();
+                            if (Strings.notEmpty(prevAppId) && !Strings.equals(appId, prevAppId)) {
+                                unregister();
+                            }
                             setAppId(options.twinPushAppId);
                             setApiKey(options.twinPushApiKey);
                             setRegistrationMode(options.registrationMode);
+                            setPushAckEnabled(options.pushAckEnabled);
+                            setPreferredPlatform(options.preferredPlatform);
                             if (options.serverHost != null) {
                                 setServerHost(options.serverHost);
                             } else {
@@ -602,11 +663,12 @@ public class DefaultTwinPushSDK extends TwinPushSDK implements LocationListener 
                     } else {
                         Ln.e("TwinPush Setup Error: API Key is required for Internal registrarion mode");
                     }
+
                 } else {
-                    Ln.e("TwinPush Setup Error: App ID info is missing");
+                    Ln.e("TwinPush Setup Error: registration mode can not be null");
                 }
             } else {
-                Ln.e("TwinPush Setup Error: registration mode can not be null");
+                Ln.e("TwinPush Setup Error: App ID info is missing");
             }
         } else {
             Ln.e("TwinPush Setup Error: options object is null");
@@ -622,7 +684,9 @@ public class DefaultTwinPushSDK extends TwinPushSDK implements LocationListener 
                             getContext().getString(R.string.twinPush_default_channel_name),
                             getContext().getResources().getInteger(R.integer.twinPush_default_channel_importance));
             NotificationManager manager = (NotificationManager) getContext().getSystemService(Context.NOTIFICATION_SERVICE);
-            manager.createNotificationChannel(channel);
+            if (manager != null) {
+                manager.createNotificationChannel(channel);
+            }
         }
     }
 
@@ -685,19 +749,23 @@ public class DefaultTwinPushSDK extends TwinPushSDK implements LocationListener 
     }
 
     @Override
-    public void onProviderDisabled(String provider) {}
+    public void onProviderDisabled(String provider) {
+    }
 
     @Override
-    public void onProviderEnabled(String provider) {}
+    public void onProviderEnabled(String provider) {
+    }
 
     @Override
-    public void onStatusChanged(String provider, int status, Bundle extras) {}
+    public void onStatusChanged(String provider, int status, Bundle extras) {
+    }
 
+    @Override
     public boolean isDeviceRegistered() {
         return getDeviceId() != null;
     }
 
-	/* Security */
+    /* Security */
 
     private void resetSSLChecks() {
         // Reset SSL Checks
@@ -724,16 +792,16 @@ public class DefaultTwinPushSDK extends TwinPushSDK implements LocationListener 
 
     public Map<String, String> getSSLIssuerChecks() {
         Map<String, String> map = new HashMap<>();
-        for( Entry<?, ?> entry : getSharedPreferences(PREF_SSL_ISSUER).getAll().entrySet() ) {
-            map.put( entry.getKey().toString(), entry.getValue().toString() );
+        for (Entry<?, ?> entry : getSharedPreferences(PREF_SSL_ISSUER).getAll().entrySet()) {
+            map.put(entry.getKey().toString(), entry.getValue().toString());
         }
         return map;
     }
 
     public Map<String, String> getSSLSubjectChecks() {
         Map<String, String> map = new HashMap<>();
-        for( Entry<?, ?> entry : getSharedPreferences(PREF_SSL_SUBJECT).getAll().entrySet() ) {
-            map.put( entry.getKey().toString(), entry.getValue().toString() );
+        for (Entry<?, ?> entry : getSharedPreferences(PREF_SSL_SUBJECT).getAll().entrySet()) {
+            map.put(entry.getKey().toString(), entry.getValue().toString());
         }
         return map;
     }
@@ -794,17 +862,47 @@ public class DefaultTwinPushSDK extends TwinPushSDK implements LocationListener 
         );
     }
 
+    private void setPushAckEnabled(boolean pushAckEnabled) {
+        if (pushAckEnabled) {
+            getSharedPreferences().edit().putBoolean(PREF_PUSH_ACK_ENABLED, pushAckEnabled).apply();
+        } else {
+            getSharedPreferences().edit().remove(PREF_PUSH_ACK_ENABLED).apply();
+        }
+    }
+
+    @NonNull
+    private Platform getPreferredPlatform() {
+        try {
+            return Platform.valueOf(
+                    getSharedPreferences().getString(PREF_PREFERRED_PLATFORM,
+                            Platform.ANDROID.toString()));
+        } catch (Exception exception) {
+            return Platform.ANDROID;
+        }
+    }
+
+    private void setPreferredPlatform(@NonNull Platform platform) {
+        getSharedPreferences().edit().putString(PREF_PREFERRED_PLATFORM, platform.toString()).apply();
+    }
+
+    @Override
+    public boolean isPushAckEnabled() {
+        return getSharedPreferences().getBoolean(PREF_PUSH_ACK_ENABLED, false);
+    }
+
     /* Customizable Firebase instance */
     private FirebaseApp firebase = null;
     private final static String FIREBASE_NAME = "twinpush";
+
     @Override
     public FirebaseApp getFirebaseApp() {
         if (firebase == null) {
-            String firebaseAppId =  getContext().getString(R.string.fcmMobileAppId);
+            String firebaseAppId = getContext().getString(R.string.fcmMobileAppId);
             if (Strings.notEmpty(firebaseAppId)) {
                 // Manually configure Firebase Options
                 FirebaseOptions options = new FirebaseOptions.Builder()
                         .setApplicationId(firebaseAppId)
+                        .setProjectId(getContext().getString(R.string.fcmProjectId))
                         .setApiKey(getContext().getString(R.string.fcmApiKey))
                         .setGcmSenderId(getContext().getString(R.string.fcmProjectNumber))
                         .build();
@@ -831,26 +929,77 @@ public class DefaultTwinPushSDK extends TwinPushSDK implements LocationListener 
     }
 
     private final static String FIREBASE_DEFAULT_APP_NAME = "[DEFAULT]";
+
     private boolean isDefaultFirebaseInitialized() {
-        boolean hasBeenInitialized=false;
+        boolean hasBeenInitialized = false;
         List<FirebaseApp> firebaseApps = FirebaseApp.getApps(getContext());
-        for(FirebaseApp app : firebaseApps){
-            if(app.getName().equals(FIREBASE_DEFAULT_APP_NAME)){
-                hasBeenInitialized=true;
+        for (FirebaseApp app : firebaseApps) {
+            if (app.getName().equals(FIREBASE_DEFAULT_APP_NAME)) {
+                hasBeenInitialized = true;
             }
         }
         return hasBeenInitialized;
     }
 
     public String getFirebaseInstanceIdToken() {
-        FirebaseApp firebaseApp = getFirebaseApp();
         try {
+            FirebaseApp firebaseApp = getFirebaseApp();
             return FirebaseInstanceId.getInstance(firebaseApp).getToken(
                     firebaseApp.getOptions().getGcmSenderId(),
                     "FCM");
-        } catch (IOException ex) {
+        } catch (Exception ex) {
             Ln.e(ex, "Error while trying to obtain Firebase Token");
             return null;
         }
+    }
+
+    @Nullable
+    private String getHMSToken() {
+        try {
+            // read from agconnect-services.json
+            String appId = AGConnectServicesConfig.fromContext(getContext()).getString("client/app_id");
+            String token = HmsInstanceId.getInstance(getContext()).getToken(appId, "HCM");
+            Ln.i("Obtained HMS Token: %s:", token);
+            return token;
+        } catch (ApiException e) {
+            Ln.e(e, "Error obtaining HMS push token");
+            return null;
+        }
+    }
+
+    private Pair<Platform, String> getPlatformAndToken() {
+        List<Platform> availablePlatforms = new ArrayList<>();
+        if (isGoogleServicesAvailable()) availablePlatforms.add(Platform.ANDROID);
+        if (isHuaweiServicesAvailable()) availablePlatforms.add(Platform.HUAWEI);
+        final Platform preferredPlatform = getPreferredPlatform();
+        final Platform selectedPlatform;
+        final String pushToken;
+        if (availablePlatforms.isEmpty()) {
+            selectedPlatform = preferredPlatform;
+            pushToken = null;
+        } else {
+            if (availablePlatforms.contains(getPreferredPlatform())) {
+                selectedPlatform = getPreferredPlatform();
+            } else {
+                selectedPlatform = availablePlatforms.get(0);
+            }
+            switch (selectedPlatform) {
+                case HUAWEI: pushToken = getHMSToken(); break;
+                case ANDROID:
+                default: pushToken = getFirebaseInstanceIdToken(); break;
+            }
+        }
+        return new Pair<>(selectedPlatform, pushToken);
+
+    }
+
+    private boolean isGoogleServicesAvailable() {
+        return GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(getContext()) ==
+                com.google.android.gms.common.ConnectionResult.SUCCESS;
+    }
+
+    private boolean isHuaweiServicesAvailable() {
+        return HuaweiMobileServicesUtil.isHuaweiMobileServicesAvailable(getContext()) ==
+                com.huawei.hms.api.ConnectionResult.SUCCESS;
     }
 }

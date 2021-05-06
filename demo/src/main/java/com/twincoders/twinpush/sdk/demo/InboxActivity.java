@@ -2,9 +2,9 @@ package com.twincoders.twinpush.sdk.demo;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.widget.DefaultItemAnimator;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
+import androidx.recyclerview.widget.DefaultItemAnimator;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -13,6 +13,7 @@ import android.widget.Toast;
 
 import com.twincoders.twinpush.sdk.TwinPushSDK;
 import com.twincoders.twinpush.sdk.activities.RichNotificationActivity;
+import com.twincoders.twinpush.sdk.communications.TwinPushException;
 import com.twincoders.twinpush.sdk.communications.TwinRequest;
 import com.twincoders.twinpush.sdk.communications.requests.notifications.GetInboxRequest;
 import com.twincoders.twinpush.sdk.demo.adapters.DividerItemDecoration;
@@ -87,7 +88,17 @@ public class InboxActivity extends ParentActivity implements ItemClickSupport.On
 
             @Override
             public void onError(Exception exception) {
-                Toast.makeText(InboxActivity.this, String.format("Error while trying to load notifications: %s", exception.getLocalizedMessage()), Toast.LENGTH_LONG).show();
+                if (exception instanceof TwinPushException) {
+                    TwinPushException twinPushException = (TwinPushException) exception;
+                    // Example of obtaining TwinPush API error response info
+                    if (twinPushException.getStatusCode() == 404) {
+                        Toast.makeText(InboxActivity.this, "Device is not linked with any alias", Toast.LENGTH_LONG).show();
+                    } else {
+                        Toast.makeText(InboxActivity.this, String.format("Error while trying to load notifications: %s", exception.getLocalizedMessage()), Toast.LENGTH_LONG).show();
+                    }
+                } else {
+                    Toast.makeText(InboxActivity.this, String.format("Error while trying to load notifications: %s", exception.getLocalizedMessage()), Toast.LENGTH_LONG).show();
+                }
                 stopProgress(emptyView);
             }
         });

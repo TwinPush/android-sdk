@@ -4,11 +4,11 @@ import java.util.List;
 
 public class DefaultRequestParam implements TwinRequestParam {
 	
-	String key = null;
-	Object value = null;
-	List<TwinRequestParam> innerParams = null;
-	List<String> arrayValue = null;
-	ParamType paramType;
+	private String key = null;
+	private Object value = null;
+	private List<TwinRequestParam> innerParams = null;
+	private List<String> arrayValue = null;
+	private ParamType paramType;
 	
 	private DefaultRequestParam() {
 		super();

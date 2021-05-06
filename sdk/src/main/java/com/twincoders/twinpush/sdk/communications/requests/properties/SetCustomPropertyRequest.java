@@ -1,7 +1,7 @@
 package com.twincoders.twinpush.sdk.communications.requests.properties;
 
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import com.twincoders.twinpush.sdk.communications.requests.TwinPushRequest;
 import com.twincoders.twinpush.sdk.entities.PropertyType;

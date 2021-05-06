@@ -21,6 +21,7 @@ import com.twincoders.twinpush.sdk.communications.requests.register.SetBadgeCoun
 import com.twincoders.twinpush.sdk.communications.requests.statistics.CloseAppRequest;
 import com.twincoders.twinpush.sdk.communications.requests.statistics.OpenAppRequest;
 import com.twincoders.twinpush.sdk.communications.requests.statistics.OpenNotificationRequest;
+import com.twincoders.twinpush.sdk.communications.requests.statistics.ReceivedNotificationRequest;
 import com.twincoders.twinpush.sdk.communications.requests.statistics.ReportStatisticsRequest;
 import com.twincoders.twinpush.sdk.entities.InboxNotification;
 import com.twincoders.twinpush.sdk.entities.PropertyType;
@@ -79,8 +80,8 @@ public class TwinPushRequestFactory {
 		return request;
 	}
 
-	public TwinPushRequest getUserInbox(int page, int resultsPerPage, GetInboxRequest.Listener listener) {
-		TwinPushRequest request = new GetInboxRequest(getAppId(), getDeviceId(), page, resultsPerPage, listener);
+	public TwinPushRequest getUserInbox(int page, int resultsPerPage, List<String> tags, List<String> noTags, GetInboxRequest.Listener listener) {
+		TwinPushRequest request = new GetInboxRequest(getAppId(), getDeviceId(), tags, noTags, page, resultsPerPage, listener);
 		launch(request);
 		return request;
 	}
@@ -153,6 +154,12 @@ public class TwinPushRequestFactory {
 	
 	public TwinPushRequest openNotification(String notificationId, DefaultListener listener) {
 		TwinPushRequest request = new OpenNotificationRequest(getAppId(), getDeviceId(), notificationId, listener);
+		launch(request);
+		return request;
+	}
+
+	public TwinPushRequest onReceivedNotification(String notificationId, DefaultListener listener) {
+		TwinPushRequest request = new ReceivedNotificationRequest(getAppId(), getDeviceId(), notificationId, listener);
 		launch(request);
 		return request;
 	}

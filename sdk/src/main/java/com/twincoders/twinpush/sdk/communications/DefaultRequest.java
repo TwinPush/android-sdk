@@ -22,7 +22,16 @@ abstract class DefaultRequest implements TwinRequest {
 
     public void addParam(String key, Object value) {
         if (value != null) {
-            requestParams.add(new DefaultRequestParam(key, value));
+        	if (value instanceof List) {
+        		List<String> stringList = new ArrayList<>();
+        		// Ensure that array contains only strings
+        		for (Object item : (List) value) {
+        			stringList.add(item.toString());
+				}
+				requestParams.add(DefaultRequestParam.arrayParam(key, stringList));
+			} else {
+				requestParams.add(new DefaultRequestParam(key, value));
+			}
         }
     }
     

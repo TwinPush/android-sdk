@@ -2,7 +2,12 @@ package com.twincoders.twinpush.sdk.entities;
 
 public enum PropertyType {
 
-	STRING("string"), BOOLEAN("boolean"), INTEGER("integer"), FLOAT("float"), ENUM("enum");
+	STRING("string"),
+	BOOLEAN("boolean"),
+	INTEGER("integer"),
+	FLOAT("float"),
+	ENUM("enum"),
+	ENUM_LIST("enum_list");
 
 	private String valueType;
 

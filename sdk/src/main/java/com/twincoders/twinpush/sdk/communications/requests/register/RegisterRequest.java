@@ -20,7 +20,6 @@ public class RegisterRequest extends TwinPushTokenRequest {
 	private final static String REGISTER_SEGMENT = "register";
 	/* Parameters */
 	private final static String PLATFORM_KEY = "platform";
-	private final static String PLATFORM_VALUE = "android";
 	private final static String ALIAS_KEY = "alias_device";
 	private final static String UDID_KEY = "udid";
 	private final static String PUSH_TOKEN_KEY = "push_token";
@@ -50,7 +49,7 @@ public class RegisterRequest extends TwinPushTokenRequest {
 		addSegmentParam(DEVICES_SEGMENT);
 		addSegmentParam(REGISTER_SEGMENT);
 		// Parameters
-		addParam(PLATFORM_KEY, PLATFORM_VALUE);
+		addParam(PLATFORM_KEY, registrationInfo.getPlatform().getKey());
 		addParam(UDID_KEY, registrationInfo.getUdid());
 		addParam(ALIAS_KEY, registrationInfo.getDeviceAlias());
         addParam(PUSH_TOKEN_KEY, registrationInfo.getPushToken());

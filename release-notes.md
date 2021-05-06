@@ -1,5 +1,56 @@
 # TwinPush Android SDK Release Notes
 
+## 3.3.1 - 2020-12-02
+
+- Included Huawei Messaging Services integration
+
+## 3.2.2 - 2020-07-02
+
+* Included callback listener for generic setProperty and for clearProperties SDK methods
+
+## 3.2.1 - 2020-03-19
+
+* Notification push acknowledgement will only be sent when notifications are enabled on the device
+* TwinPush API response errors will be wrapped in a TwinPushException object with additional info
+
+## 3.2.0 - 2020-02-04
+
+* Implemented optional push acknowledgement on notification received 
+
+## 3.1.0 - 2020-02-04
+
+* Included tag filtering for getUserInbox method
+
+## 3.0.1 - 2019-12-23
+
+* Fixed race condition that could lead to runtime exception when registration returns error
+
+## 3.0.0 - 2019-10-15
+
+* Updated compile SDK version to 29
+* Increased `minSdkVersion` to 16 as required for Firebase library
+* Updated firebase library version to 20 
+* Migrated to Android X
+
+## 2.8.0 - 2019-09-12
+
+* Now it is possible to send Enum List custom properties for device using `setProperty` method
+
+## 2.7.7 - 2019-04-29
+
+* Device info will be cleared when `app_id` is changed on `setup` method call
+* Registration listener will also be called after external registration when present
+
+## 2.7.6 - 2018-11-29
+
+* Included SDK method `setEnumProperty` to create custom properties with enum values
+* Included SDK method `unregister` that clears the device registration info stored locally
+* Updated Android Support V4 dependency to latest version: 27.1.1
+* Updated gradle build tools to 3.2.1 and buildToolsVersion to 28.0.3
+* Updated target SDK to v27
+* Updated Android Support V4 dependency to latest version: 27.1.1
+* Improved communications error handling to include detailed message on returned exceptions
+
 ## 2.7.1 - 2018-10-05
 
 * Updated communications module library using volley

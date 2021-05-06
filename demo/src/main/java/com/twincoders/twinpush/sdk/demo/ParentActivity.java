@@ -3,7 +3,7 @@ package com.twincoders.twinpush.sdk.demo;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.os.Build;
-import android.support.v7.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatActivity;
 import android.view.View;
 
 /**
