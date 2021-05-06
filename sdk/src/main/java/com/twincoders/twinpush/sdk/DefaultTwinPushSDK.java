@@ -25,7 +25,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 
-import com.google.android.gms.common.GoogleApiAvailability;
+import com.google.android.gms.common.GoogleApiAvailabilityLight;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.FirebaseOptions;
 import com.google.firebase.iid.FirebaseInstanceId;
@@ -994,7 +994,7 @@ public class DefaultTwinPushSDK extends TwinPushSDK implements LocationListener 
     }
 
     private boolean isGoogleServicesAvailable() {
-        return GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(getContext()) ==
+        return GoogleApiAvailabilityLight.getInstance().isGooglePlayServicesAvailable(getContext()) ==
                 com.google.android.gms.common.ConnectionResult.SUCCESS;
     }
 
