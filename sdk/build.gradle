@@ -3,12 +3,14 @@ import java.text.SimpleDateFormat
 apply plugin: 'com.android.library'
 apply plugin: 'maven-publish'
 
-def libraryVersion = '3.4.0'
-def libraryVersionCode = 30400
+def libraryVersion = '3.4.1'
+def libraryVersionCode = 30401
+def libraryGroupId = 'com.github.TwinPush'
+def libraryArtifactId = 'android-sdk'
 
 // Maven group and version
 version = libraryVersion
-group = 'com.twinpush.android'
+group = libraryGroupId
 
 android {
     compileSdkVersion 30
@@ -42,4 +44,30 @@ dependencies {
     // Huawei HMS
     implementation 'com.huawei.agconnect:agconnect-core:1.4.1.300'
     implementation 'com.huawei.hms:push:5.0.4.302'
+}
+
+afterEvaluate {
+    publishing {
+        publications {
+            // Creates a Maven publication called "release".
+            release(MavenPublication) {
+                // Applies the component for the release build variant.
+                from components.release
+
+                // You can then customize attributes of the publication as shown below.
+                groupId = libraryGroupId
+                artifactId = libraryArtifactId
+                version = libraryVersion
+            }
+            // Creates a Maven publication called “debug”.
+            debug(MavenPublication) {
+                // Applies the component for the debug build variant.
+                from components.debug
+
+                groupId = libraryGroupId
+                artifactId = libraryArtifactId
+                version = libraryVersion + '-debug'
+            }
+        }
+    }
 }
