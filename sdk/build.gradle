@@ -1,18 +1,14 @@
 import java.text.SimpleDateFormat
 
 apply plugin: 'com.android.library'
-apply plugin: 'com.github.dcendents.android-maven'
-apply plugin: 'com.jfrog.bintray'
+apply plugin: 'maven-publish'
 
 def libraryVersion = '3.3.0'
 def libraryVersionCode = 30300
 
 // Maven group and version
 version = libraryVersion
-def siteUrl = 'https://github.com/TwinPush/android-sdk'      // Homepage URL of the library
-def gitUrl = 'https://github.com/TwinPush/android-sdk.git'   // Git repository URL
-group = "com.twinpush.android"                               // Maven Group ID for the artifact
-archivesBaseName = "sdk"
+group = 'com.twinpush.android'
 
 android {
     compileSdkVersion 30
@@ -46,112 +42,4 @@ dependencies {
     // Huawei HMS
     implementation 'com.huawei.agconnect:agconnect-core:1.4.1.300'
     implementation 'com.huawei.hms:push:5.0.4.302'
-}
-
-
-install {
-    repositories.mavenInstaller {
-        // This generates POM.xml with proper parameters
-        pom {
-            project {
-                packaging 'aar'
-            }
-        }
-    }
-}
-
-dependencies {
-}
-
-task sourcesJar(type: Jar) {
-    from android.sourceSets.main.java.srcDirs
-    classifier = 'sources'
-}
-
-//task javadoc(type: Javadoc) {
-    //source = android.sourceSets.main.java.srcDirs
-    //classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
-    //failOnError false
-//}
-
-//task javadocJar(type: Jar, dependsOn: javadoc) {
-    //classifier = 'javadoc'
-    //from javadoc.destinationDir
-    //options.encoding = 'UTF-8'
-//}
-artifacts {
-    //archives javadocJar
-    archives sourcesJar
-}
-
-Properties properties = new Properties()
-properties.load(project.rootProject.file('local.properties').newDataInputStream())
-
-bintray {
-    user = properties.getProperty("bintray.user")
-    key = properties.getProperty("bintray.apikey")
-
-    configurations = ['archives']
-    pkg {
-        userOrg = "twinpush"
-        repo = "sdk"
-        name = "android-sdk"
-        websiteUrl = siteUrl
-        vcsUrl = gitUrl
-        licenses = ["MIT"]
-        publish = true
-
-        version {
-            name = libraryVersion
-            desc = 'TwinPush SDK for Android ' + libraryVersion
-            released = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZZ").format(new Date())
-            vcsTag = 'v' + libraryVersion
-        }
-    }
-}
-
-uploadArchives {
-    repositories {
-        mavenDeployer {
-
-            beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
-
-            repository(url: "https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/") {
-                authentication(userName: properties.getProperty("ossrhUsername"), password: properties.getProperty("ossrhPassword"))
-            }
-
-            snapshotRepository(url: "https://s01.oss.sonatype.org/content/repositories/snapshots/") {
-                authentication(userName: properties.getProperty("ossrhUsername"), password: properties.getProperty("ossrhPassword"))
-            }
-
-            pom.project {
-                name 'TwinPush Android SDK'
-                packaging 'jar'
-                // optionally artifactId can be defined here
-                description 'TwinPush SDK for Android ' + libraryVersion
-                url siteUrl
-
-                scm {
-                    connection gitUrl
-                    developerConnection gitUrl
-                    url siteUrl
-                }
-
-                licenses {
-                    license {
-                        name 'MIT'
-                        url 'https://opensource.org/licenses/MIT'
-                    }
-                }
-
-                developers {
-                    developer {
-                        id 'twincoders'
-                        name 'TwinCoders'
-                        email 'support@twincoders.com'
-                    }
-                }
-            }
-        }
-    }
 }
