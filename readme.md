@@ -92,9 +92,11 @@ Include this dependency in your module level `build.gradle` file to reference th
 
 ```groovy
 dependencies {
-    implementation 'com.github.TwinPush:android-sdk:3.4.0'
+    implementation 'com.github.TwinPush:android-sdk:3.4.1'
 }
 ```
+
+**Note:** Due to end of life of jCenter repository, since versión 3.4.0, library has been migrated to JitPack and it will be required to include the explicit reference and to update the dependency route as stated before.
 
 ### Configuring Android manifest
 
