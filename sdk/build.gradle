@@ -1,21 +1,18 @@
 import java.text.SimpleDateFormat
 
 apply plugin: 'com.android.library'
-apply plugin: 'com.github.dcendents.android-maven'
-apply plugin: 'com.jfrog.bintray'
+apply plugin: 'maven-publish'
 
-def libraryVersion = '3.3.0'
-def libraryVersionCode = 30300
+def libraryVersion = '3.4.0'
+def libraryVersionCode = 30400
 
 // Maven group and version
 version = libraryVersion
-def siteUrl = 'https://github.com/TwinPush/android-sdk'      // Homepage URL of the library
-def gitUrl = 'https://github.com/TwinPush/android-sdk.git'   // Git repository URL
-group = "com.twinpush.android"                               // Maven Group ID for the artifact
+group = 'com.twinpush.android'
 
 android {
     compileSdkVersion 30
-    buildToolsVersion "29.0.2"
+    buildToolsVersion '30.0.2'
 
     defaultConfig {
         minSdkVersion 16
@@ -37,74 +34,12 @@ dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     testCompile 'junit:junit:4.12'
 
-    compile 'com.google.firebase:firebase-messaging:21.0.0'
+    compile 'com.google.firebase:firebase-messaging:21.1.0'
     compile 'androidx.legacy:legacy-support-v4:1.0.0'
-    compile 'com.android.volley:volley:1.1.1'
+    compile 'com.android.volley:volley:1.2.0'
     // Encrypted shared preferences
     compile 'com.scottyab:secure-preferences-lib:0.1.4'
     // Huawei HMS
     implementation 'com.huawei.agconnect:agconnect-core:1.4.1.300'
-    implementation 'com.huawei.hms:push:5.0.2.300'
-}
-
-
-install {
-    repositories.mavenInstaller {
-        // This generates POM.xml with proper parameters
-        pom {
-            project {
-                packaging 'aar'
-            }
-        }
-    }
-}
-
-dependencies {
-}
-
-task sourcesJar(type: Jar) {
-    from android.sourceSets.main.java.srcDirs
-    classifier = 'sources'
-}
-
-//task javadoc(type: Javadoc) {
-    //source = android.sourceSets.main.java.srcDirs
-    //classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
-    //failOnError false
-//}
-
-//task javadocJar(type: Jar, dependsOn: javadoc) {
-    //classifier = 'javadoc'
-    //from javadoc.destinationDir
-    //options.encoding = 'UTF-8'
-//}
-artifacts {
-    //archives javadocJar
-    archives sourcesJar
-}
-
-Properties properties = new Properties()
-properties.load(project.rootProject.file('local.properties').newDataInputStream())
-
-bintray {
-    user = properties.getProperty("bintray.user")
-    key = properties.getProperty("bintray.apikey")
-
-    configurations = ['archives']
-    pkg {
-        userOrg = "twinpush"
-        repo = "sdk"
-        name = "android-sdk"
-        websiteUrl = siteUrl
-        vcsUrl = gitUrl
-        licenses = ["MIT"]
-        publish = true
-
-        version {
-            name = libraryVersion
-            desc = 'TwinPush SDK for Android ' + libraryVersion
-            released = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZZ").format(new Date())
-            vcsTag = 'v' + libraryVersion
-        }
-    }
+    implementation 'com.huawei.hms:push:5.0.4.302'
 }

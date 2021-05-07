@@ -1,7 +1,6 @@
 # TwinPush SDK Library
 
-[![Download](https://api.bintray.com/packages/twinpush/sdk/android-sdk/images/download.svg)](https://bintray.com/twinpush/sdk/android-sdk/_latestVersion)
-[![License](https://go-shields.herokuapp.com/license-MIT-blue.png)](https://raw.githubusercontent.com/TwinPush/android-sdk/master/LICENSE)
+[![](https://jitpack.io/v/TwinPush/android-sdk.svg)](https://jitpack.io/#TwinPush/android-sdk) [![License](https://img.shields.io/badge/License-MIT-blue.svg)](https://raw.githubusercontent.com/TwinPush/android-sdk/master/LICENSE)
 
 
 Native Android SDK library for [TwinPush](http://twinpush.com) platform.
@@ -80,11 +79,20 @@ For Huawei Mobile Services:
 ### Gradle Dependency
 Google recommends using [Android Studio](https://developer.android.com/sdk/index.html) with Gradle for Android Projects.
 
-Include this dependency in your `build.gradle` file to reference this library in your project
+Add it in your project level root `build.gradle` at the end of repositories:
+
+	allprojects {
+		repositories {
+			...
+			maven { url 'https://jitpack.io' }
+		}
+	}
+
+Include this dependency in your module level `build.gradle` file to reference this library in your project
 
 ```groovy
 dependencies {
-    implementation 'com.twinpush.android:sdk:3.3.1'
+    implementation 'com.github.TwinPush:android-sdk:3.4.0'
 }
 ```
 
