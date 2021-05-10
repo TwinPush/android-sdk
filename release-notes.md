@@ -1,5 +1,9 @@
 # TwinPush Android SDK Release Notes
 
+## 3.4.1 - 2021-05-10
+
+* Library migrated to JitPack repository
+
 ## 3.3.1 - 2020-12-02
 
 - Included Huawei Messaging Services integration
