@@ -92,7 +92,7 @@ Include this dependency in your module level `build.gradle` file to reference th
 
 ```groovy
 dependencies {
-    implementation 'com.github.TwinPush:android-sdk:3.4.1'
+    implementation 'com.github.twinpush:android-sdk:3.4.1'
 }
 ```
 
