@@ -941,6 +941,8 @@ public class DefaultTwinPushSDK extends TwinPushSDK implements LocationListener 
         return hasBeenInitialized;
     }
 
+    // TODO Change InstanceID method
+    // https://stackoverflow.com/questions/51125169/what-method-should-i-use-now-since-firebaseinstanceid-getinstance-gettoken-i
     public String getFirebaseInstanceIdToken() {
         try {
             FirebaseApp firebaseApp = getFirebaseApp();

@@ -1,5 +1,11 @@
 # TwinPush Android SDK Release Notes
 
+## Pending
+
+* Upgraded gradle version to 7.0.2
+* Updated AGP dependency from 4.2.0 to 7.0.2
+* Updated Firebase messaging library from 21.0.0 to 23.0.0
+
 ## 3.4.1 - 2021-05-10
 
 * Library migrated to JitPack repository
