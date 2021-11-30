@@ -31,6 +31,10 @@ public abstract class TwinPushSDK {
         void onRegistrationError(Exception exception);
         void onRegistrationSuccess(String deviceAlias);
     }
+    public interface GetTokenListener {
+        void onTokenError(Exception exception);
+        void onTokenSuccess(String token);
+    }
 
     private static TwinPushSDK sharedInstance = null;
 	
@@ -431,12 +435,10 @@ public abstract class TwinPushSDK {
     public abstract FirebaseApp getFirebaseApp();
 
     /**
-     * Obtains the Firebase InstanceId token for the Firebase Instance setup for TwinPush.
-     * This method can not be called from Main Thread
+     * Obtains the previously set Firebase InstanceId token.
      * @return Firebase InstanceId token
      */
-    @WorkerThread
-    public abstract String getFirebaseInstanceIdToken();
+    public abstract void getFirebaseToken(@NonNull GetTokenListener listener);
 
     /**
      * Obtains if Push acknowledgement report is enabled in the current SDK setup.
