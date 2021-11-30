@@ -56,7 +56,7 @@ public abstract class RegistrationIntentReceiver extends BroadcastReceiver {
     }
 
     /**
-     * Launchs a broadcast intent for the registration request including the registration info as extra
+     * Launch a broadcast intent for the registration request including the registration info as extra
      * @param context Current application context
      * @param info Container with the information for the registration
      */

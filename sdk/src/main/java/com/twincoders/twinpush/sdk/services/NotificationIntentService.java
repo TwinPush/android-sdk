@@ -69,7 +69,7 @@ public class NotificationIntentService extends FirebaseMessagingService implemen
         // Get updated InstanceID token.
         Ln.d("FCM Token created: " + s);
 
-        // Refresh register if needed
+        // Refresh registration if needed
         if (twinPush.isDeviceRegistered()) {
             twinPush.register();
         }
