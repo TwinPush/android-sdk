@@ -54,8 +54,10 @@ public class NotificationIntentService extends FirebaseMessagingService implemen
 			// Send push notification acknowledgement if enabled
 			if (twinpush.isPushAckEnabled() && NotificationManagerCompat.from(getBaseContext()).areNotificationsEnabled())
 				twinpush.onNotificationReceived(notification);
-			// Display Notification
-			displayNotification(getBaseContext(), notification);
+			// Display Notification if not silent
+			if (!notification.isSilent()) {
+				displayNotification(getBaseContext(), notification);
+			}
 		}
     }
 
