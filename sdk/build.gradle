@@ -40,8 +40,8 @@ dependencies {
     // Encrypted shared preferences
     api 'com.scottyab:secure-preferences-lib:0.1.4'
     // Huawei HMS
-    implementation 'com.huawei.agconnect:agconnect-core:1.4.1.300'
-    implementation 'com.huawei.hms:push:5.0.4.302'
+    implementation 'com.huawei.agconnect:agconnect-core:1.6.2.300'
+    implementation 'com.huawei.hms:push:6.1.0.300'
 }
 
 afterEvaluate {
