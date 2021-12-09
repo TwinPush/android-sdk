@@ -891,7 +891,11 @@ public class DefaultTwinPushSDK extends TwinPushSDK implements LocationListener 
     }
 
     private void setSilentReceiverClass(Class<? extends SilentPushReceiver> receiver) {
-        getSharedPreferences().edit().putString(PREF_SILENT_RECEIVER, receiver.getCanonicalName()).apply();
+        if (receiver != null) {
+            getSharedPreferences().edit().putString(PREF_SILENT_RECEIVER, receiver.getCanonicalName()).apply();
+        } else {
+            getSharedPreferences().edit().remove(PREF_SILENT_RECEIVER).apply();
+        }
     }
 
     public Class<? extends SilentPushReceiver> getSilentReceiverClass() {
