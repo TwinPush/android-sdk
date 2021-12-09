@@ -32,7 +32,7 @@ android {
 
 dependencies {
     api fileTree(dir: 'libs', include: ['*.jar'])
-    testImplementation 'junit:junit:4.12'
+    testImplementation 'junit:junit:4.13.1'
 
     api 'com.google.firebase:firebase-messaging:23.0.0'
     api 'androidx.legacy:legacy-support-v4:1.0.0'
