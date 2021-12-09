@@ -45,7 +45,7 @@ public class NotificationIntentService extends FirebaseMessagingService implemen
 				twinpush.onNotificationReceived(notification);
 			// Display Notification if not silent
 			if (notification.isSilent()) {
-				onSilentNotificationReceived(getBaseContext(), notification);
+				onSilentPushReceived(getBaseContext(), notification);
 			} else {
 				displayNotification(getBaseContext(), notification);
 			}
@@ -86,7 +86,7 @@ public class NotificationIntentService extends FirebaseMessagingService implemen
 	}
 
 	@Override
-	public void onSilentNotificationReceived(Context context, PushNotification notification) {
-    	defaultService.onSilentNotificationReceived(context, notification);
+	public void onSilentPushReceived(Context context, PushNotification notification) {
+    	defaultService.onSilentPushReceived(context, notification);
 	}
 }

@@ -90,7 +90,7 @@ public class DefaultNotificationService {
      * @param context Application context
      * @param notification PushNotification object with the information of the received message
      */
-    public void onSilentNotificationReceived(Context context, PushNotification notification) {
+    public void onSilentPushReceived(Context context, PushNotification notification) {
         SilentPushReceiver silentPushReceiver = TwinPushSDK.getInstance(context).getSilentReceiver();
         if (silentPushReceiver != null) {
             silentPushReceiver.onSilentNotificationReceived(context, notification);
