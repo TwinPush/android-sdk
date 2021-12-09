@@ -975,6 +975,9 @@ public class DefaultTwinPushSDK extends TwinPushSDK implements LocationListener 
 
     @Override
     public void getFirebaseToken(@NonNull GetTokenListener listener) {
+        Ln.d("Requesting FCM Token...");
+        // Initialize Firebase App first
+        getFirebaseApp();
         FirebaseMessaging.getInstance().getToken()
                 .addOnCompleteListener(task -> {
                     if (!task.isSuccessful()) {
@@ -987,6 +990,7 @@ public class DefaultTwinPushSDK extends TwinPushSDK implements LocationListener 
 
                     // Log and toast
                     Ln.d("FCM Token fetched: %s", token);
+                    listener.onTokenSuccess(token);
                 });
     }
 
