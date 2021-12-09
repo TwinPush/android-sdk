@@ -1,6 +1,6 @@
 # TwinPush Android SDK Release Notes
 
-## Pending
+## 3.5.1 - 2021-12-09
 
 * Upgraded gradle version to 7.0.4
 * Updated AGP dependency from 4.2.0 to 7.0.4
