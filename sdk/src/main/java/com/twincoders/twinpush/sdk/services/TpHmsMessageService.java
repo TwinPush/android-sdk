@@ -75,4 +75,9 @@ public class TpHmsMessageService extends HmsMessageService implements PushReceiv
     public PushNotification getNotification(Map<String, String> data) {
         return defaultService.getNotification(data);
     }
+
+    @Override
+    public void onSilentNotificationReceived(Context context, PushNotification notification) {
+        defaultService.onSilentNotificationReceived(context, notification);
+    }
 }

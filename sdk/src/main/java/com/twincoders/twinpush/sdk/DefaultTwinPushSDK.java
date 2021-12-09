@@ -18,7 +18,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.provider.Settings.Secure;
-import android.util.Pair;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -55,6 +54,7 @@ import com.twincoders.twinpush.sdk.logging.Strings;
 import com.twincoders.twinpush.sdk.notifications.PushNotification;
 import com.twincoders.twinpush.sdk.services.LocationChangeReceiver;
 import com.twincoders.twinpush.sdk.services.RegistrationIntentReceiver;
+import com.twincoders.twinpush.sdk.services.SilentPushReceiver;
 import com.twincoders.twinpush.sdk.util.LastLocationFinder;
 import com.twincoders.twinpush.sdk.util.StringEncrypter;
 
@@ -82,7 +82,7 @@ public class DefaultTwinPushSDK extends TwinPushSDK implements LocationListener 
     private static final String PREF_TWINPUSH_CUSTOM_HOST = "TWINPUSH_CUSTOM_HOST";
     private static final String PREF_PUSH_ACK_ENABLED = "PUSH_ACK_ENABLED";
     private static final String PREF_PREFERRED_PLATFORM = "PREFERRED_PLATFORM";
-    private static final String PREF_FIREBASE_TOKEN = "FIREBASE_TOKEN";
+    private static final String PREF_SILENT_RECEIVER = "PREF_SILENT_RECEIVER";
     private static final String DEFAULT_SUBDOMAIN = "app";
     private static final String DEFAULT_HOST = "https://%s.twinpush.com";
     // Location constants
@@ -648,6 +648,7 @@ public class DefaultTwinPushSDK extends TwinPushSDK implements LocationListener 
                             setRegistrationMode(options.registrationMode);
                             setPushAckEnabled(options.pushAckEnabled);
                             setPreferredPlatform(options.preferredPlatform);
+                            setSilentReceiverClass(options.silentPushReceiverClass);
                             if (options.serverHost != null) {
                                 setServerHost(options.serverHost);
                             } else {
@@ -887,6 +888,34 @@ public class DefaultTwinPushSDK extends TwinPushSDK implements LocationListener 
     @Override
     public boolean isPushAckEnabled() {
         return getSharedPreferences().getBoolean(PREF_PUSH_ACK_ENABLED, false);
+    }
+
+    private void setSilentReceiverClass(Class<? extends SilentPushReceiver> receiver) {
+        getSharedPreferences().edit().putString(PREF_SILENT_RECEIVER, receiver.getCanonicalName()).apply();
+    }
+
+    public Class<? extends SilentPushReceiver> getSilentReceiverClass() {
+        String className = getSharedPreferences().getString(PREF_SILENT_RECEIVER, null);
+        if (className != null) {
+            try {
+                return Class.forName(className).asSubclass(SilentPushReceiver.class);
+            } catch (ClassNotFoundException e) {
+                Ln.e(e, "Error trying to obtain notification receiver class");
+            }
+        }
+        return null;
+    }
+
+    public SilentPushReceiver getSilentReceiver() {
+        Class<? extends SilentPushReceiver> receiverClass = getSilentReceiverClass();
+        if (receiverClass != null) {
+            try {
+                return receiverClass.newInstance();
+            } catch (Exception ex) {
+                Ln.e(ex, "Error trying to obtain notification receiver class");
+            }
+        }
+        return null;
     }
 
     /* Customizable Firebase instance */

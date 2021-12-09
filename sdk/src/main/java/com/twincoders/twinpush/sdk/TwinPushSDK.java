@@ -19,6 +19,7 @@ import com.twincoders.twinpush.sdk.entities.PropertyType;
 import com.twincoders.twinpush.sdk.entities.RegistrationInfo;
 import com.twincoders.twinpush.sdk.entities.TwinPushOptions;
 import com.twincoders.twinpush.sdk.notifications.PushNotification;
+import com.twincoders.twinpush.sdk.services.SilentPushReceiver;
 
 import java.util.List;
 import java.util.Map;
@@ -429,6 +430,13 @@ public abstract class TwinPushSDK {
     public abstract String getServerHost();
 
     /**
+     * Obtains an instance of the SilentPushReceiver class defined in the setup method. Returns null
+     * if not set or invalid
+     * @return instance of SilentPushReceiver
+     */
+    public abstract SilentPushReceiver getSilentReceiver();
+
+    /**
      * Retrieves the Firebase app instance setup for TwinPush. It will be the default instance or a
      * customized one depending integration preferences
      */
@@ -436,7 +444,6 @@ public abstract class TwinPushSDK {
 
     /**
      * Obtains the previously set Firebase InstanceId token.
-     * @return Firebase InstanceId token
      */
     public abstract void getFirebaseToken(@NonNull GetTokenListener listener);
 

@@ -1,28 +1,17 @@
 package com.twincoders.twinpush.sdk.services;
 
-import android.app.Notification;
 import android.app.PendingIntent;
 import android.content.Context;
-import android.content.Intent;
 
 import androidx.annotation.NonNull;
-import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
-import com.twincoders.twinpush.sdk.R;
 import com.twincoders.twinpush.sdk.TwinPushSDK;
 import com.twincoders.twinpush.sdk.logging.Ln;
-import com.twincoders.twinpush.sdk.logging.Strings;
 import com.twincoders.twinpush.sdk.notifications.PushNotification;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 
 public class NotificationIntentService extends FirebaseMessagingService implements PushReceiverService {
@@ -55,7 +44,9 @@ public class NotificationIntentService extends FirebaseMessagingService implemen
 			if (twinpush.isPushAckEnabled() && NotificationManagerCompat.from(getBaseContext()).areNotificationsEnabled())
 				twinpush.onNotificationReceived(notification);
 			// Display Notification if not silent
-			if (!notification.isSilent()) {
+			if (notification.isSilent()) {
+				onSilentNotificationReceived(getBaseContext(), notification);
+			} else {
 				displayNotification(getBaseContext(), notification);
 			}
 		}
@@ -92,5 +83,10 @@ public class NotificationIntentService extends FirebaseMessagingService implemen
 	@Override
 	public PushNotification getNotification(Map<String, String> data) {
 		return defaultService.getNotification(data);
+	}
+
+	@Override
+	public void onSilentNotificationReceived(Context context, PushNotification notification) {
+    	defaultService.onSilentNotificationReceived(context, notification);
 	}
 }
