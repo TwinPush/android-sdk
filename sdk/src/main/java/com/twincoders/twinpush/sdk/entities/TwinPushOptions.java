@@ -1,5 +1,7 @@
 package com.twincoders.twinpush.sdk.entities;
 
+import com.twincoders.twinpush.sdk.services.SilentPushReceiver;
+
 public class TwinPushOptions {
 
     public final static String DEFAULT_SUBDOMAIN = "app";
@@ -19,5 +21,7 @@ public class TwinPushOptions {
     public boolean pushAckEnabled = false;
     /* Preferred platform in case that the device can be registered as multiple*/
     public Platform preferredPlatform = Platform.ANDROID;
+    /* Class to receive event when a silent notification is received */
+    public Class<? extends SilentPushReceiver> silentPushReceiverClass = null;
 
 }

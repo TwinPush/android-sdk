@@ -10,6 +10,7 @@ import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 
 import com.twincoders.twinpush.sdk.R;
+import com.twincoders.twinpush.sdk.TwinPushSDK;
 import com.twincoders.twinpush.sdk.logging.Ln;
 import com.twincoders.twinpush.sdk.logging.Strings;
 import com.twincoders.twinpush.sdk.notifications.PushNotification;
@@ -81,6 +82,19 @@ public class DefaultNotificationService {
         intent.putExtra(NotificationIntentService.EXTRA_NOTIFICATION, notification);
         // Prepare the pending intent
         return PendingIntent.getActivity(context, notification.getId().hashCode(), intent, PendingIntent.FLAG_CANCEL_CURRENT);
+    }
+
+    /**
+     * Delivers a broadcast intent to notify that a silent notification has been received to the
+     * client application
+     * @param context Application context
+     * @param notification PushNotification object with the information of the received message
+     */
+    public void onSilentPushReceived(Context context, PushNotification notification) {
+        SilentPushReceiver silentPushReceiver = TwinPushSDK.getInstance(context).getSilentReceiver();
+        if (silentPushReceiver != null) {
+            silentPushReceiver.onSilentPushReceived(context, notification);
+        }
     }
 
     /**

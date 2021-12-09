@@ -9,6 +9,7 @@ import java.util.Map;
 public class PushNotification implements Serializable {
 
 	private static final long serialVersionUID = 1L;
+	private static final String SILENT_TAG = "tp_silent";
 	
 	/* Properties */
 	private String id;
@@ -76,5 +77,9 @@ public class PushNotification implements Serializable {
 	
 	public boolean hasTitle() {
 		return getTitle() != null && getTitle().trim().length() > 0;
+	}
+
+	public boolean isSilent() {
+		return tags != null && tags.contains(SILENT_TAG);
 	}
 }

@@ -19,6 +19,7 @@ import com.twincoders.twinpush.sdk.entities.PropertyType;
 import com.twincoders.twinpush.sdk.entities.RegistrationInfo;
 import com.twincoders.twinpush.sdk.entities.TwinPushOptions;
 import com.twincoders.twinpush.sdk.notifications.PushNotification;
+import com.twincoders.twinpush.sdk.services.SilentPushReceiver;
 
 import java.util.List;
 import java.util.Map;
@@ -30,6 +31,10 @@ public abstract class TwinPushSDK {
     public interface OnRegistrationListener {
         void onRegistrationError(Exception exception);
         void onRegistrationSuccess(String deviceAlias);
+    }
+    public interface GetTokenListener {
+        void onTokenError(Exception exception);
+        void onTokenSuccess(String token);
     }
 
     private static TwinPushSDK sharedInstance = null;
@@ -425,18 +430,22 @@ public abstract class TwinPushSDK {
     public abstract String getServerHost();
 
     /**
+     * Obtains an instance of the SilentPushReceiver class defined in the setup method. Returns null
+     * if not set or invalid
+     * @return instance of SilentPushReceiver
+     */
+    public abstract SilentPushReceiver getSilentReceiver();
+
+    /**
      * Retrieves the Firebase app instance setup for TwinPush. It will be the default instance or a
      * customized one depending integration preferences
      */
     public abstract FirebaseApp getFirebaseApp();
 
     /**
-     * Obtains the Firebase InstanceId token for the Firebase Instance setup for TwinPush.
-     * This method can not be called from Main Thread
-     * @return Firebase InstanceId token
+     * Obtains the previously set Firebase InstanceId token.
      */
-    @WorkerThread
-    public abstract String getFirebaseInstanceIdToken();
+    public abstract void getFirebaseToken(@NonNull GetTokenListener listener);
 
     /**
      * Obtains if Push acknowledgement report is enabled in the current SDK setup.

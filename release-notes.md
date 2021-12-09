@@ -1,5 +1,17 @@
 # TwinPush Android SDK Release Notes
 
+## Pending
+
+* Upgraded gradle version to 7.0.4
+* Updated AGP dependency from 4.2.0 to 7.0.4
+* Updated Firebase messaging library from 21.0.0 to 23.0.0
+* Updated Huawei messaging libraries:
+  * `com.huawei.agconnect:agconnect-core` from 1.4.1.300 to 1.6.2.300 
+  * `com.huawei.hms:push` from 5.0.4.302 to 6.1.0.300
+* Included `ACCESS_COARSE_LOCATION` permission on Manifest as is now required to access to `ACCESS_FINE_LOCATION`
+* Removed deprecated usages of FirebaseInstanceId class to obtain GCM Push token and replaced for new async `FirebaseMessaging.getInstance().getToken()` method
+* Included Silent Push Reception functionality
+
 ## 3.4.1 - 2021-05-10
 
 * Library migrated to JitPack repository

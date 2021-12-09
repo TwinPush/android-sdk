@@ -92,7 +92,7 @@ Include this dependency in your module level `build.gradle` file to reference th
 
 ```groovy
 dependencies {
-    implementation 'com.github.twinpush:android-sdk:3.4.1'
+    implementation 'com.github.twinpush:android-sdk:3.5.0'
 }
 ```
 
@@ -455,6 +455,40 @@ public void onCreate(Bundle savedInstanceState) {
     options.twinPushApiKey =  "c5caxxxxxxxxxxxxxxxxxxxxxxxx1592"; // - API Key
     options.subdomain =       "mycompany";                        // - Application subdomain
     options.pushAckEnabled =  true;                               // - Push acknowledgement
+    TwinPushSDK.getInstance(this).setup(options);                 // Call setup
+    /* Your code goes here... */
+}
+```
+
+### Silent push notifications
+
+TwinPush offers the option to deliver silent push notifications. This type of deliveries will not be displayed on Notifications Center, will be invisible for the user and can be used to trigger background tasks or updates.
+
+To receive silent push events, it is necessary to create a class that implements the `SilentPushReceiver` interface, which has a single `onSilentPushReceived` method that will be notified when the silent push is received, with the `PushNotification` object as a parameter, which contains all the information of the notification:
+
+```java
+import com.twincoders.twinpush.sdk.services.SilentPushReceiver;
+
+public class MySilentPushReceiver implements SilentPushReceiver {
+
+    @Override
+    public void onSilentPushReceived(Context context, PushNotification notification) {
+        // Perform background task!
+    }
+}
+```
+
+Once the SilentPushReceiver interface has been implemented, all you have to do is tell TwinPush the class that will receive the events using the `silentPushReceiverClass` setup parameter:
+
+```java
+public void onCreate(Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+    // Setup TwinPush SDK
+    TwinPushOptions options = new TwinPushOptions();              // Initialize options
+    options.twinPushAppId =   "7687xxxxxxxxxxxx";                 // - APP ID
+    options.twinPushApiKey =  "c5caxxxxxxxxxxxxxxxxxxxxxxxx1592"; // - API Key
+    options.subdomain =       "mycompany";                        // - Application subdomain
+    options.silentPushReceiverClass =  MySilentReceiver.class;    // - Silent push receiver
     TwinPushSDK.getInstance(this).setup(options);                 // Call setup
     /* Your code goes here... */
 }

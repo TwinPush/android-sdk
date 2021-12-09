@@ -31,4 +31,12 @@ public interface PushReceiverService {
      */
     PushNotification getNotification(Map<String, String> data);
 
+    /**
+     * Delivers a broadcast intent to notify that a silent notification has been received to the
+     * client application
+     * @param context Application context
+     * @param notification PushNotification object with the information of the received message
+     */
+    void onSilentPushReceived(Context context, PushNotification notification);
+
 }
