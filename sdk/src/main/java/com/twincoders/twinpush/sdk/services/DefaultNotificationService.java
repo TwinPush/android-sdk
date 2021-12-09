@@ -93,7 +93,7 @@ public class DefaultNotificationService {
     public void onSilentPushReceived(Context context, PushNotification notification) {
         SilentPushReceiver silentPushReceiver = TwinPushSDK.getInstance(context).getSilentReceiver();
         if (silentPushReceiver != null) {
-            silentPushReceiver.onSilentNotificationReceived(context, notification);
+            silentPushReceiver.onSilentPushReceived(context, notification);
         }
     }
 

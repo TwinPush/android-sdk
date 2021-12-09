@@ -22,6 +22,6 @@ public class TwinPushOptions {
     /* Preferred platform in case that the device can be registered as multiple*/
     public Platform preferredPlatform = Platform.ANDROID;
     /* Class to receive event when a silent notification is received */
-    public Class<SilentPushReceiver> silentPushReceiverClass = null;
+    public Class<? extends SilentPushReceiver> silentPushReceiverClass = null;
 
 }

@@ -6,6 +6,6 @@ import com.twincoders.twinpush.sdk.notifications.PushNotification;
 
 public interface SilentPushReceiver {
 
-    void onSilentNotificationReceived(Context context, PushNotification notification);
+    void onSilentPushReceived(Context context, PushNotification notification);
 
 }
