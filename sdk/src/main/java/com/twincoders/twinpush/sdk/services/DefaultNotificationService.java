@@ -158,14 +158,8 @@ public class DefaultNotificationService {
         try {
             if (jsonString != null) {
                 JSONArray jsonArray = new JSONArray(jsonString);
-                if (jsonArray.length() > 0) {
-                    // Lists are obtained as an array of arrays, so we need
-                    // to iterate through first element of parent array
-                    // ('[["tp_silent", "other_tag"]]')
-                    JSONArray tagArray = jsonArray.getJSONArray(0);
-                    for (int i = 0; i < tagArray.length(); i++) {
-                        result.add(tagArray.getString(i));
-                    }
+                for (int i = 0; i < jsonArray.length(); i++) {
+                    result.add(jsonArray.getString(i));
                 }
             }
         } catch (Exception e) {
