@@ -15,12 +15,15 @@ import com.twincoders.twinpush.sdk.logging.Ln;
 import com.twincoders.twinpush.sdk.logging.Strings;
 import com.twincoders.twinpush.sdk.notifications.PushNotification;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
 public class DefaultNotificationService {
@@ -29,6 +32,7 @@ public class DefaultNotificationService {
     public final static String EXTRA_NOTIFICATION_MESSAGE = "message";
     public final static String EXTRA_NOTIFICATION_ID = "tp_id";
     public final static String EXTRA_NOTIFICATION_CUSTOM = "custom";
+    public final static String EXTRA_NOTIFICATION_TAGS = "tags";
     public final static String EXTRA_NOTIFICATION_RICH_URL = "tp_rich_url";
 
     public DefaultNotificationService() {}
@@ -93,7 +97,10 @@ public class DefaultNotificationService {
     public void onSilentPushReceived(Context context, PushNotification notification) {
         SilentPushReceiver silentPushReceiver = TwinPushSDK.getInstance(context).getSilentReceiver();
         if (silentPushReceiver != null) {
+            Ln.d("Silent push arrived. Notifying %s...", silentPushReceiver.getClass().getName());
             silentPushReceiver.onSilentPushReceived(context, notification);
+        } else {
+            Ln.w("Silent push arrived, but no receiver set.");
         }
     }
 
@@ -110,6 +117,7 @@ public class DefaultNotificationService {
         String richURL = data.get(EXTRA_NOTIFICATION_RICH_URL);
         Date date = new Date();
         Map<String, String> customProperties = getCustomPropertiesMap(data.get(EXTRA_NOTIFICATION_CUSTOM));
+        List<String> tagArray = getTagArray(data.get(EXTRA_NOTIFICATION_TAGS));
 
         PushNotification notification = new PushNotification();
         notification.setId(notificationId);
@@ -118,6 +126,7 @@ public class DefaultNotificationService {
         notification.setDate(date);
         notification.setRichURL(richURL);
         notification.setCustomProperties(customProperties);
+        notification.setTags(tagArray);
 
         return notification;
     }
@@ -142,6 +151,27 @@ public class DefaultNotificationService {
             Ln.e(e, "Error while trying to parse JSON object");
         }
         return propertiesMap;
+    }
+
+    public List<String> getTagArray(String jsonString) {
+        List<String> result = new ArrayList<>();
+        try {
+            if (jsonString != null) {
+                JSONArray jsonArray = new JSONArray(jsonString);
+                if (jsonArray.length() > 0) {
+                    // Lists are obtained as an array of arrays, so we need
+                    // to iterate through first element of parent array
+                    // ('[["tp_silent", "other_tag"]]')
+                    JSONArray tagArray = jsonArray.getJSONArray(0);
+                    for (int i = 0; i < tagArray.length(); i++) {
+                        result.add(tagArray.getString(i));
+                    }
+                }
+            }
+        } catch (Exception e) {
+            Ln.e(e, "Error while trying to parse JSON object");
+        }
+        return result;
     }
 
 }
