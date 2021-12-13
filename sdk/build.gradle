@@ -3,8 +3,8 @@ import java.text.SimpleDateFormat
 apply plugin: 'com.android.library'
 apply plugin: 'maven-publish'
 
-def libraryVersion = '3.5.3'
-def libraryVersionCode = 30503
+def libraryVersion = '3.5.4'
+def libraryVersionCode = 30504
 def libraryGroupId = 'com.github.twinpush'
 def libraryArtifactId = 'android-sdk'
 
