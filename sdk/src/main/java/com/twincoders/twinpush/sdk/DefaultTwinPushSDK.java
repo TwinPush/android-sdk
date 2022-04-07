@@ -1053,7 +1053,9 @@ public class DefaultTwinPushSDK extends TwinPushSDK implements LocationListener 
     }
 
     private boolean isHuaweiServicesAvailable() {
-        return HuaweiMobileServicesUtil.isHuaweiMobileServicesAvailable(getContext()) ==
-                com.huawei.hms.api.ConnectionResult.SUCCESS;
+        return (HuaweiMobileServicesUtil.isHuaweiMobileServicesAvailable(getContext()) ==
+                com.huawei.hms.api.ConnectionResult.SUCCESS) ||
+                (HuaweiMobileServicesUtil.isHuaweiMobileServicesAvailable(getContext()) ==
+                        com.huawei.hms.api.ConnectionResult.SERVICE_VERSION_UPDATE_REQUIRED);
     }
 }
