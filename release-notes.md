@@ -1,5 +1,10 @@
 # TwinPush Android SDK Release Notes
 
+## 3.5.5 - 2022-04-07
+* Upgraded gradle version to 7.1.1
+* Updated Firebase messaging library from 23.0.0 to 23.0.2
+* Updated Huawei HMS library from 6.1.0.300 to 6.3.0.304
+
 ## 3.5.4 - 2021-12-13
 
 * Upgraded gradle version to 7.0.4
