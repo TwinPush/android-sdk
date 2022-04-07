@@ -14,7 +14,6 @@ group = libraryGroupId
 
 android {
     compileSdkVersion 31
-    buildToolsVersion '30.0.2'
 
     defaultConfig {
         minSdkVersion 16
@@ -34,7 +33,7 @@ dependencies {
     api fileTree(dir: 'libs', include: ['*.jar'])
     testImplementation 'junit:junit:4.13.1'
 
-    api 'com.google.firebase:firebase-messaging:23.0.0'
+    api 'com.google.firebase:firebase-messaging:23.0.2'
     api 'androidx.legacy:legacy-support-v4:1.0.0'
     api 'com.android.volley:volley:1.2.1'
     // Encrypted shared preferences
