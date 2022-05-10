@@ -17,7 +17,9 @@
 package com.twincoders.twinpush.sdk.util;
 
 import android.Manifest;
-import android.app.PendingIntent;
+import android.app.
+    
+    ;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -70,7 +72,11 @@ public class LastLocationFinder {
         // Construct the Pending Intent that will be broadcast by the oneshot
         // location update.
         Intent updateIntent = new Intent(SINGLE_LOCATION_UPDATE_ACTION);
-        singleUpatePI = PendingIntent.getBroadcast(context, 0, updateIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            singleUpatePI = PendingIntent.getBroadcast(context, 0, updateIntent, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
+        } else {
+            singleUpatePI = PendingIntent.getBroadcast(context, 0, updateIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        }
     }
 
     /**
