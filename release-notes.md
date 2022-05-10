@@ -1,9 +1,10 @@
 # TwinPush Android SDK Release Notes
 
-## 3.5.6 - 2022-05-10
+## 3.5.7 - 2022-05-10
 * Updated targetSDKVersion to 32
 * Upgraded gradle version to 7.2.0
 * Updated Firebase messaging library from 23.0.2 to 23.0.4
+* Included mutable tags to all PendingIntents instances to ensure compatibility to SDK 32
 
 ## 3.5.5 - 2022-04-07
 * Upgraded gradle version to 7.1.1
