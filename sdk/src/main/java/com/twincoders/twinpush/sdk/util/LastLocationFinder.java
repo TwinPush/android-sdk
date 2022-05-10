@@ -27,6 +27,8 @@ import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.os.Build;
+
 import androidx.core.app.ActivityCompat;
 
 import com.twincoders.twinpush.sdk.logging.Ln;
@@ -70,7 +72,13 @@ public class LastLocationFinder {
         // Construct the Pending Intent that will be broadcast by the oneshot
         // location update.
         Intent updateIntent = new Intent(SINGLE_LOCATION_UPDATE_ACTION);
-        singleUpatePI = PendingIntent.getBroadcast(context, 0, updateIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            singleUpatePI = PendingIntent.getBroadcast(context, 0, updateIntent,
+                    PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
+        } else {
+            singleUpatePI = PendingIntent.getBroadcast(context, 0, updateIntent,
+                    PendingIntent.FLAG_UPDATE_CURRENT);
+        }
     }
 
     /**
