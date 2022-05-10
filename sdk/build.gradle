@@ -13,11 +13,11 @@ version = libraryVersion
 group = libraryGroupId
 
 android {
-    compileSdkVersion 31
+    compileSdkVersion 32
 
     defaultConfig {
         minSdkVersion 16
-        targetSdkVersion 31
+        targetSdkVersion 32
         buildConfigField 'int', 'VERSION_CODE', "${libraryVersionCode}"
         buildConfigField 'String', 'VERSION_NAME', "\"${libraryVersion}\""
     }
@@ -27,13 +27,14 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+    namespace 'com.twincoders.twinpush.sdk'
 }
 
 dependencies {
     api fileTree(dir: 'libs', include: ['*.jar'])
     testImplementation 'junit:junit:4.13.1'
 
-    api 'com.google.firebase:firebase-messaging:23.0.2'
+    api 'com.google.firebase:firebase-messaging:23.0.4'
     api 'androidx.legacy:legacy-support-v4:1.0.0'
     api 'com.android.volley:volley:1.2.1'
     // Encrypted shared preferences
