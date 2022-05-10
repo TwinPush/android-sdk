@@ -388,11 +388,10 @@ public class DefaultTwinPushSDK extends TwinPushSDK implements LocationListener 
 
     private PendingIntent getBackgroundLocationIntent() {
         Intent passiveIntent = new Intent(getContext(), LocationChangeReceiver.class);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            return PendingIntent.getBroadcast(getContext(), 0, passiveIntent, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
-        } else {
-            return PendingIntent.getBroadcast(getContext(), 0, passiveIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-        }
+        int flags = Build.VERSION.SDK_INT >= Build.VERSION_CODES.M ?
+                PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE :
+                PendingIntent.FLAG_UPDATE_CURRENT;
+        return PendingIntent.getBroadcast(getContext(), 0, passiveIntent, flags);
     }
 
     public void startMonitoringLocationChanges() {

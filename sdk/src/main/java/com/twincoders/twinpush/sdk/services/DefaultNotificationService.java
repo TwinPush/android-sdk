@@ -4,6 +4,7 @@ import android.app.Notification;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 
 import androidx.annotation.NonNull;
 import androidx.core.app.NotificationCompat;
@@ -85,7 +86,10 @@ public class DefaultNotificationService {
         intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_CLEAR_TOP);
         intent.putExtra(NotificationIntentService.EXTRA_NOTIFICATION, notification);
         // Prepare the pending intent
-        return PendingIntent.getActivity(context, notification.getId().hashCode(), intent, PendingIntent.FLAG_CANCEL_CURRENT);
+        int flags = Build.VERSION.SDK_INT >= Build.VERSION_CODES.M ?
+                PendingIntent.FLAG_CANCEL_CURRENT | PendingIntent.FLAG_IMMUTABLE :
+                PendingIntent.FLAG_CANCEL_CURRENT;
+        return PendingIntent.getActivity(context, notification.getId().hashCode(), intent, flags);
     }
 
     /**

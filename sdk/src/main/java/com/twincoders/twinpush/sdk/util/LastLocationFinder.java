@@ -72,13 +72,10 @@ public class LastLocationFinder {
         // Construct the Pending Intent that will be broadcast by the oneshot
         // location update.
         Intent updateIntent = new Intent(SINGLE_LOCATION_UPDATE_ACTION);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            singleUpatePI = PendingIntent.getBroadcast(context, 0, updateIntent,
-                    PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
-        } else {
-            singleUpatePI = PendingIntent.getBroadcast(context, 0, updateIntent,
-                    PendingIntent.FLAG_UPDATE_CURRENT);
-        }
+        int flags = Build.VERSION.SDK_INT >= Build.VERSION_CODES.M ?
+                PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE :
+                PendingIntent.FLAG_UPDATE_CURRENT;
+        singleUpatePI = PendingIntent.getBroadcast(context, 0, updateIntent, flags);
     }
 
     /**
