@@ -1,5 +1,11 @@
 # TwinPush Android SDK Release Notes
 
+## 3.5.8 - 2022-12-01
+* Updated SecurePreferences dependency to remove unused unsafe algorithm
+* Updated Firebase messaging library from 23.0.4 to 23.1.0
+* App ID is now obtained using AGConnectOptionsBuilder to avoid deprecated usage of AGConnectServicesConfig
+* Minor good practice warning fixes
+
 ## 3.5.7 - 2022-05-10
 * Updated targetSDKVersion to 32
 * Upgraded gradle version to 7.2.0
