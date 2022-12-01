@@ -28,6 +28,7 @@ import com.google.android.gms.common.GoogleApiAvailabilityLight;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.FirebaseOptions;
 import com.google.firebase.messaging.FirebaseMessaging;
+import com.huawei.agconnect.AGConnectOptionsBuilder;
 import com.huawei.agconnect.config.AGConnectServicesConfig;
 import com.huawei.hms.aaid.HmsInstanceId;
 import com.huawei.hms.api.HuaweiMobileServicesUtil;
@@ -1002,7 +1003,7 @@ public class DefaultTwinPushSDK extends TwinPushSDK implements LocationListener 
     private String getHMSToken() {
         try {
             // read from agconnect-services.json
-            String appId = AGConnectServicesConfig.fromContext(getContext()).getString("client/app_id");
+            String appId = new AGConnectOptionsBuilder().build(getContext()).getString("client/app_id");
             String token = HmsInstanceId.getInstance(getContext()).getToken(appId, "HCM");
             Ln.i("Obtained HMS Token: %s:", token);
             return token;
