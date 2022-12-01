@@ -29,7 +29,6 @@ import com.google.firebase.FirebaseApp;
 import com.google.firebase.FirebaseOptions;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.huawei.agconnect.AGConnectOptionsBuilder;
-import com.huawei.agconnect.config.AGConnectServicesConfig;
 import com.huawei.hms.aaid.HmsInstanceId;
 import com.huawei.hms.api.HuaweiMobileServicesUtil;
 import com.huawei.hms.common.ApiException;
@@ -225,13 +224,10 @@ public class DefaultTwinPushSDK extends TwinPushSDK implements LocationListener 
     private void notifySuccess(final String deviceAlias) {
         if (registrationListener != null) {
             Handler mainHandler = new Handler(Looper.getMainLooper());
-            mainHandler.post(new Runnable() {
-                @Override
-                public void run() {
-                    if (registrationListener != null) {
-                        registrationListener.onRegistrationSuccess(deviceAlias);
-                        registrationListener = null;
-                    }
+            mainHandler.post(() -> {
+                if (registrationListener != null) {
+                    registrationListener.onRegistrationSuccess(deviceAlias);
+                    registrationListener = null;
                 }
             });
         }
@@ -242,13 +238,10 @@ public class DefaultTwinPushSDK extends TwinPushSDK implements LocationListener 
         Ln.e(e);
         if (registrationListener != null) {
             Handler mainHandler = new Handler(Looper.getMainLooper());
-            mainHandler.post(new Runnable() {
-                @Override
-                public void run() {
-                    if (registrationListener != null) {
-                        registrationListener.onRegistrationError(e);
-                        registrationListener = null;
-                    }
+            mainHandler.post(() -> {
+                if (registrationListener != null) {
+                    registrationListener.onRegistrationError(e);
+                    registrationListener = null;
                 }
             });
         }
@@ -419,6 +412,7 @@ public class DefaultTwinPushSDK extends TwinPushSDK implements LocationListener 
         }
     }
 
+    @SuppressLint("MissingPermission")
     public void registerForLocationUpdates() {
         if (ContextCompat.checkSelfPermission(getContext(), android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
                 || ContextCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
@@ -510,7 +504,7 @@ public class DefaultTwinPushSDK extends TwinPushSDK implements LocationListener 
     }
 
     /* Storage */
-    private Map<String, SharedPreferences> sharedPreferencesMap = new TreeMap<>();
+    private final Map<String, SharedPreferences> sharedPreferencesMap = new TreeMap<>();
 
     private SharedPreferences getSharedPreferences() {
         return getSharedPreferences(PREF_FILE_NAME);
