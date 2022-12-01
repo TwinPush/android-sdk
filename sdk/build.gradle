@@ -34,11 +34,11 @@ dependencies {
     api fileTree(dir: 'libs', include: ['*.jar'])
     testImplementation 'junit:junit:4.13.1'
 
-    api 'com.google.firebase:firebase-messaging:23.0.4'
+    api 'com.google.firebase:firebase-messaging:23.1.0'
     api 'androidx.legacy:legacy-support-v4:1.0.0'
     api 'com.android.volley:volley:1.2.1'
     // Encrypted shared preferences
-    api 'com.scottyab:secure-preferences-lib:0.1.4'
+    api 'com.scottyab:secure-preferences-lib:0.1.7'
     // Huawei HMS
     implementation 'com.huawei.agconnect:agconnect-core:1.6.2.300'
     implementation 'com.huawei.hms:push:6.3.0.304'

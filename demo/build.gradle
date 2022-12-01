@@ -25,12 +25,12 @@ dependencies {
 
 
     implementation project(':sdk')
-    implementation 'androidx.appcompat:appcompat:1.4.1'
-    implementation 'com.google.android.material:material:1.6.0'
+    implementation 'androidx.appcompat:appcompat:1.5.1'
+    implementation 'com.google.android.material:material:1.7.0'
     implementation 'androidx.recyclerview:recyclerview:1.2.1'
     implementation 'androidx.cardview:cardview:1.0.0'
     implementation 'com.github.ganfra:material-spinner:2.0.0'
-    implementation 'com.google.firebase:firebase-messaging:23.0.4'
+    implementation 'com.google.firebase:firebase-messaging:23.1.0'
     // Huawei HMS
     implementation 'com.huawei.agconnect:agconnect-core:1.6.2.300'
     testImplementation 'junit:junit:4.13.1'
