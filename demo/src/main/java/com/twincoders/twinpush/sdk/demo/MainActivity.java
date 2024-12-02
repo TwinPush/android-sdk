@@ -3,19 +3,21 @@ package com.twincoders.twinpush.sdk.demo;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import com.google.android.material.snackbar.Snackbar;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.material.snackbar.Snackbar;
 import com.twincoders.twinpush.sdk.TwinPushSDK;
 import com.twincoders.twinpush.sdk.activities.RichNotificationActivity;
 import com.twincoders.twinpush.sdk.entities.TwinPushOptions;
+import com.twincoders.twinpush.sdk.logging.Ln;
 import com.twincoders.twinpush.sdk.logging.Strings;
 import com.twincoders.twinpush.sdk.notifications.PushNotification;
 import com.twincoders.twinpush.sdk.services.NotificationIntentService;
+import com.twincoders.twinpush.sdk.util.PushPermissionRequest;
 
 import java.util.Arrays;
 
@@ -28,7 +30,10 @@ public class MainActivity extends ParentActivity {
     static final String PREF_AGE = "age";
     static final String PREF_STATUS = "status";
 
+    PushPermissionRequest pushPermissionRequest;
+
     Button mRegisterButton;
+    Button mInfoButton;
     TwinPushSDK twinPush;
 
     View mRegisterProgress;
@@ -49,7 +54,10 @@ public class MainActivity extends ParentActivity {
 
         mRegisterProgress = findViewById(R.id.register_progress);
         mRegisterForm = findViewById(R.id.register_form);
+        mInfoButton = findViewById(R.id.info_button);
+        mInfoButton.setOnClickListener(this::showInfo);
         mRegisterButton = findViewById(R.id.register_button);
+        mRegisterButton.setOnClickListener(this::register);
 
         ageTxt = findViewById(R.id.age);
         usernameTxt = findViewById(R.id.username);
@@ -64,9 +72,9 @@ public class MainActivity extends ParentActivity {
         twinPush = TwinPushSDK.getInstance(this);
         // Setup TwinPush SDK
         TwinPushOptions options = new TwinPushOptions();                // Initialize options
-        options.twinPushAppId =     "xxxxxxxxxxxxxxxx";                 // - APP ID
-        options.twinPushApiKey =    "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"; // - API Key
-        options.subdomain =         "mysubdomain";                      // - Application subdomain
+        options.twinPushAppId =     "816b6f7f129b5982";                 // - APP ID
+        options.twinPushApiKey =    "17c1d1fc0804fd57038e4062779f144d"; // - API Key
+        options.subdomain =         "pre";                              // - Application subdomain
         twinPush.setup(options);                                        // Call setup
 
         // Show previous values when present
@@ -79,6 +87,8 @@ public class MainActivity extends ParentActivity {
             statusSpinner.setSelection(Arrays.asList(statusArray).indexOf(currentStatus) + 1);
         }
 
+        pushPermissionRequest = PushPermissionRequest.registerForResult(this);
+
         // Check push notification
         checkPushNotification(getIntent());
     }
@@ -90,7 +100,6 @@ public class MainActivity extends ParentActivity {
     }
 
     // Layout events
-
     public void register(View view) {
         showProgress(true);
         final TwinPushSDK.OnRegistrationListener listener = new TwinPushSDK.OnRegistrationListener() {
@@ -102,7 +111,9 @@ public class MainActivity extends ParentActivity {
 
             @Override
             public void onRegistrationSuccess(String deviceAlias) {
-                Toast.makeText(MainActivity.this, "Successfully registered to TwinPush!", Toast.LENGTH_LONG).show();
+                String pushPermission = PushPermissionRequest.isPermissionGranted(MainActivity.this) ? "granted" : "NOT granted";
+                String message = String.format("Successfully registered to TwinPush! Push permissions %s", pushPermission);
+                Toast.makeText(MainActivity.this, message, Toast.LENGTH_LONG).show();
                 // Set custom properties to TwinPush
                 twinPush.clearProperties();
                 twinPush.setProperty("age", getAge());
@@ -127,8 +138,7 @@ public class MainActivity extends ParentActivity {
                 showProgress(false);
             }
         };
-
-        twinPush.register(getUsername(), listener);
+        pushPermissionRequest.launch(granted -> twinPush.register(getUsername(), listener));
     }
 
     public void showInfo(View view) {

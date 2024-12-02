@@ -47,7 +47,7 @@ public class DefaultNotificationService {
     public void displayNotification(@NonNull Context context, @NonNull PushNotification notification, @NonNull PendingIntent contentIntend) {
         String title = notification.getTitle();
         // It title is empty, display application name
-        if (title == null || title.trim().length() == 0) {
+        if (title == null || title.trim().isEmpty()) {
             int stringId = context.getApplicationInfo().labelRes;
             title = context.getString(stringId);
         }
@@ -66,7 +66,6 @@ public class DefaultNotificationService {
                     .setAutoCancel(true)
                     .setStyle(new NotificationCompat.BigTextStyle().bigText(notification.getMessage()))
                     .build();
-
             NotificationManagerCompat.from(context).notify(notification.getId().hashCode(), push);
         } else {
             Ln.e("ERROR: Notification not displayed. Notification channel can not be null");
