@@ -41,6 +41,8 @@ dependencies {
     api 'com.android.volley:volley:1.2.1'
     // Encrypted shared preferences
     api 'com.scottyab:secure-preferences-lib:0.1.7'
+    // AppCompat is required for permissions check
+    implementation 'androidx.appcompat:appcompat:1.7.0'
     // Huawei HMS
     implementation 'com.huawei.agconnect:agconnect-core:1.6.2.300'
     implementation 'com.huawei.hms:push:6.3.0.304'

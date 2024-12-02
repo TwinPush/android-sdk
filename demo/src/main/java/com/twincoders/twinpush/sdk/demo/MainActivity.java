@@ -2,22 +2,14 @@ package com.twincoders.twinpush.sdk.demo;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
-import android.os.Build;
 import android.os.Bundle;
-import com.google.android.material.snackbar.Snackbar;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import android.Manifest;
-import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContracts;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
-
+import com.google.android.material.snackbar.Snackbar;
 import com.twincoders.twinpush.sdk.TwinPushSDK;
 import com.twincoders.twinpush.sdk.activities.RichNotificationActivity;
 import com.twincoders.twinpush.sdk.entities.TwinPushOptions;
@@ -25,6 +17,7 @@ import com.twincoders.twinpush.sdk.logging.Ln;
 import com.twincoders.twinpush.sdk.logging.Strings;
 import com.twincoders.twinpush.sdk.notifications.PushNotification;
 import com.twincoders.twinpush.sdk.services.NotificationIntentService;
+import com.twincoders.twinpush.sdk.util.PushPermissionRequest;
 
 import java.util.Arrays;
 
@@ -37,8 +30,7 @@ public class MainActivity extends ParentActivity {
     static final String PREF_AGE = "age";
     static final String PREF_STATUS = "status";
 
-    ActivityResultLauncher<String> requestPermissionLauncher;
-    static final String PUSH_PERMISSION = "android.permission.POST_NOTIFICATIONS";
+    PushPermissionRequest pushPermissionRequest;
 
     Button mRegisterButton;
     Button mInfoButton;
@@ -54,7 +46,6 @@ public class MainActivity extends ParentActivity {
     SharedPreferences getPreferences() {
         return getSharedPreferences(PREFS, MODE_PRIVATE);
     }
-    PermissionCallback callback;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -96,6 +87,21 @@ public class MainActivity extends ParentActivity {
             statusSpinner.setSelection(Arrays.asList(statusArray).indexOf(currentStatus) + 1);
         }
 
+        pushPermissionRequest = PushPermissionRequest.registerForResult(this);
+
+        // Check push notification
+        checkPushNotification(getIntent());
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        checkPushNotification(intent);
+        super.onNewIntent(intent);
+    }
+
+    // Layout events
+    public void register(View view) {
+        showProgress(true);
         final TwinPushSDK.OnRegistrationListener listener = new TwinPushSDK.OnRegistrationListener() {
             @Override
             public void onRegistrationError(Exception exception) {
@@ -105,7 +111,9 @@ public class MainActivity extends ParentActivity {
 
             @Override
             public void onRegistrationSuccess(String deviceAlias) {
-                Toast.makeText(MainActivity.this, "Successfully registered to TwinPush!", Toast.LENGTH_LONG).show();
+                String pushPermission = PushPermissionRequest.isPermissionGranted(MainActivity.this) ? "granted" : "NOT granted";
+                String message = String.format("Successfully registered to TwinPush! Push permissions %s", pushPermission);
+                Toast.makeText(MainActivity.this, message, Toast.LENGTH_LONG).show();
                 // Set custom properties to TwinPush
                 twinPush.clearProperties();
                 twinPush.setProperty("age", getAge());
@@ -130,50 +138,7 @@ public class MainActivity extends ParentActivity {
                 showProgress(false);
             }
         };
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.TIRAMISU) {
-            callback = granted -> twinPush.register(getUsername(), listener);
-            requestPermissionLauncher =
-                    registerForActivityResult(new ActivityResultContracts.RequestPermission(), callback::onResult);
-        }
-
-        // Check push notification
-        checkPushNotification(getIntent());
-    }
-
-    @Override
-    protected void onNewIntent(Intent intent) {
-        checkPushNotification(intent);
-        super.onNewIntent(intent);
-    }
-
-    // Layout events
-
-    @FunctionalInterface
-    public interface PermissionCallback {
-        void onResult(boolean granted);
-    }
-
-    public void register(View view) {
-        showProgress(true);
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            Ln.d("Android SDK version >= 33, required to request POST_NOTIFICATIONS permission");
-            if (ContextCompat.checkSelfPermission(
-                    this, PUSH_PERMISSION) == PackageManager.PERMISSION_GRANTED) {
-                Ln.d("Permission for POST_NOTIFICATIONS granted!");
-                callback.onResult(true);
-            } else if (ActivityCompat.shouldShowRequestPermissionRationale(
-                    this, PUSH_PERMISSION)) {
-                Ln.d("Permission for POST_NOTIFICATIONS has already been denied");
-                callback.onResult(false);
-            } else {
-                Ln.d("Requesting POST_NOTIFICATIONS permission");
-                requestPermissionLauncher.launch(PUSH_PERMISSION);
-            }
-        } else {
-            Ln.d("Android SDK version < 33, not required to request POST_NOTIFICATIONS permission");
-            callback.onResult(true);
-        }
+        pushPermissionRequest.launch(granted -> twinPush.register(getUsername(), listener));
     }
 
     public void showInfo(View view) {
