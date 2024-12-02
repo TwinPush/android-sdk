@@ -195,7 +195,7 @@ twinPush.register("email@company.com", new TwinPushSDK.OnRegistrationListener() 
 
 Starting from Android SDK 33, **notification permissions are not granted by default**. Your application must request these permissions at runtime to display notifications. For detailed instructions and additional information, refer to the [official Android Developers documentation](https://developer.android.com/develop/ui/views/notifications/notification-permission). Make sure to also review the [best practices](https://developer.android.com/develop/ui/views/notifications/notification-permission?hl=es-419#best-practices) to determine the optimal timing for requesting permissions.
 
-![](https://i.imgur.com/0c4LCcu.png)
+![](https://i.imgur.com/0c4LCcum.png)
 
 The TwinPush SDK includes an optional helper class, `PushPermissionRequest`, designed to simplify notification permissions management. To use this helper, follow the steps below:
 
