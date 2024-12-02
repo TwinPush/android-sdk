@@ -12,7 +12,7 @@ group = libraryGroupId
 
 android {
     defaultConfig {
-        minSdkVersion 16
+        minSdkVersion 21
         targetSdkVersion 35
         compileSdk 35
         buildConfigField 'int', 'VERSION_CODE', "${libraryVersionCode}"
