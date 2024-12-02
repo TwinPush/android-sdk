@@ -1,8 +1,8 @@
 apply plugin: 'com.android.library'
 apply plugin: 'maven-publish'
 
-def libraryVersion = '3.6.2'
-def libraryVersionCode = 30602
+def libraryVersion = '3.6.3'
+def libraryVersionCode = 30603
 def libraryGroupId = 'com.github.twinpush'
 def libraryArtifactId = 'android-sdk'
 
