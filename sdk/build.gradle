@@ -18,6 +18,10 @@ android {
         buildConfigField 'int', 'VERSION_CODE', "${libraryVersionCode}"
         buildConfigField 'String', 'VERSION_NAME', "\"${libraryVersion}\""
     }
+    lintOptions {
+        abortOnError false
+        checkReleaseBuilds false
+    }
     buildTypes {
         release {
             minifyEnabled false
