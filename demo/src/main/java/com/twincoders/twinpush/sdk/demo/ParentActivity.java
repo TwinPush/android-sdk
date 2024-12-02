@@ -3,13 +3,22 @@ package com.twincoders.twinpush.sdk.demo;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.os.Build;
+
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+
+import android.os.Bundle;
 import android.view.View;
 
 /**
  * Created by agutierrez on 6/11/15.
  */
 public abstract class ParentActivity extends AppCompatActivity {
+
+    @Override
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+    }
 
     /**
      * Shows the progress UI and hides the register form.
