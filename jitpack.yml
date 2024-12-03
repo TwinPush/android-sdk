@@ -1,2 +1,9 @@
 jdk:
-  -openjdk11
+  -openjdk17
+build:
+  # Only compile sdk module
+  pre:
+    - ./gradlew :sdk:assembleRelease
+  # Publish the generated artifact
+  publish:
+    - sdk/build/outputs/aar/sdk-release.aar

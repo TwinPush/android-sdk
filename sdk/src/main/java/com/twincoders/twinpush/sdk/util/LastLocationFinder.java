@@ -1,19 +1,3 @@
-/*
- * Copyright 2011 Google Inc.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 package com.twincoders.twinpush.sdk.util;
 
 import android.Manifest;
@@ -30,6 +14,7 @@ import android.location.LocationManager;
 import android.os.Build;
 
 import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
 import com.twincoders.twinpush.sdk.logging.Ln;
 
@@ -39,11 +24,11 @@ import java.util.List;
  * Optimized implementation of Last Location Finder for devices running Gingerbread  
  * and above.
  *
- * This class let's you find the "best" (most accurate and timely) previously 
+ * This class lets you find the "best" (most accurate and timely) previously 
  * detected location using whatever providers are available. 
  *
  * Where a timely / accurate previous location is not detected it will
- * return the newest location (where one exists) and setup a oneshot 
+ * return the newest location (where one exists) and set up a oneshot 
  * location update to find the current location.
  */
 public class LastLocationFinder {
@@ -55,6 +40,7 @@ public class LastLocationFinder {
     protected LocationManager locationManager;
     protected Context context;
     protected Criteria criteria;
+    protected BroadcastReceiver singleUpdateReceiver;
 
     /**
      * Construct a new Gingerbread Last Location Finder.
@@ -82,7 +68,7 @@ public class LastLocationFinder {
      * Returns the most accurate and timely previously detected location.
      * Where the last result is beyond the specified maximum distance or
      * latency a one-off location update is returned via the {@link LocationListener}
-     * specified in {@link setChangedLocationListener}.
+     * specified in setChangedLocationListener.
      * @param minDistance Minimum distance before we require a location update.
      * @param minTime Minimum time required between location updates.
      * @return The most accurate and / or timely previously detected location.
@@ -125,11 +111,34 @@ public class LastLocationFinder {
 
         // If the best result is beyond the allowed time limit, or the accuracy of the
         // best result is wider than the acceptable maximum distance, request a single update.
-        // This check simply implements the same conditions we set when requesting regular
-        // location updates every [minTime] and [minDistance].
-        if (android.os.Build.VERSION.SDK_INT >= 9 && locationListener != null && (bestTime < minTime || bestAccuracy > minDistance)) {
+        if (locationListener != null && (bestTime < minTime || bestAccuracy > minDistance)) {
             IntentFilter locIntentFilter = new IntentFilter(SINGLE_LOCATION_UPDATE_ACTION);
-            context.registerReceiver(singleUpdateReceiver, locIntentFilter);
+
+            singleUpdateReceiver = new BroadcastReceiver() {
+                @Override
+                public void onReceive(Context context, Intent intent) {
+                    // Unregister receiver immediately after receiving broadcast
+                    context.unregisterReceiver(singleUpdateReceiver);
+
+                    String key = LocationManager.KEY_LOCATION_CHANGED;
+                    Location location = (Location) intent.getExtras().get(key);
+
+                    if (locationListener != null && location != null) {
+                        locationListener.onLocationChanged(location);
+                    }
+
+                    // Remove pending updates from the LocationManager
+                    locationManager.removeUpdates(singleUpatePI);
+                }
+            };
+
+            ContextCompat.registerReceiver(
+                    context,
+                    singleUpdateReceiver,
+                    locIntentFilter,
+                    ContextCompat.RECEIVER_NOT_EXPORTED
+            );
+
             try {
                 locationManager.requestSingleUpdate(criteria, singleUpatePI);
             } catch (Exception ex) {
@@ -139,27 +148,6 @@ public class LastLocationFinder {
 
         return bestResult;
     }
-
-    /**
-     * This {@link BroadcastReceiver} listens for a single location
-     * update before unregistering itself.
-     * The oneshot location update is returned via the {@link LocationListener}
-     * specified in {@link setChangedLocationListener}.
-     */
-    protected BroadcastReceiver singleUpdateReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            context.unregisterReceiver(singleUpdateReceiver);
-
-            String key = LocationManager.KEY_LOCATION_CHANGED;
-            Location location = (Location)intent.getExtras().get(key);
-
-            if (locationListener != null && location != null)
-                locationListener.onLocationChanged(location);
-
-            locationManager.removeUpdates(singleUpatePI);
-        }
-    };
 
     /**
      * {@inheritDoc}
@@ -173,5 +161,9 @@ public class LastLocationFinder {
      */
     public void cancel() {
         locationManager.removeUpdates(singleUpatePI);
+        if (singleUpdateReceiver != null) {
+            context.unregisterReceiver(singleUpdateReceiver);
+            singleUpdateReceiver = null;
+        }
     }
 }

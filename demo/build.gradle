@@ -40,3 +40,9 @@ dependencies {
     // Enable multidex to avoid "Cannot fit requested classes in a single dex file" error
     implementation "androidx.multidex:multidex:2.0.1"
 }
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(17)
+    }
+}

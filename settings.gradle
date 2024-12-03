@@ -1,2 +1,9 @@
-include ':sdk', ':demo'
+plugins {
+    id 'org.gradle.toolchains.foojay-resolver-convention' version '0.8.0'
+}
+if (System.getenv("JITPACK") != null) {
+    include(":sdk")
+} else {
+    include(":sdk", ":demo")
+}
 rootProject.name = 'twinpush'
