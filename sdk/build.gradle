@@ -62,6 +62,9 @@ afterEvaluate {
                 groupId = libraryGroupId
                 artifactId = libraryArtifactId
                 version = libraryVersion
+
+                // Ensure that AAR file is included
+                artifact("$buildDir/outputs/aar/sdk-release.aar")
             }
             // Creates a Maven publication called “debug”.
             debug(MavenPublication) {
