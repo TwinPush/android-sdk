@@ -1,7 +1,5 @@
-plugins {
-    id 'com.android.library'
-    id 'maven-publish'
-}
+apply plugin: 'com.android.library'
+apply plugin: 'maven-publish'
 
 def libraryVersion = '3.6.3'
 def libraryVersionCode = 30603
@@ -33,6 +31,12 @@ android {
     buildFeatures {
         buildConfig = true
     }
+    publishing {
+        singleVariant("release") {
+            withSourcesJar()
+            withJavadocJar()
+        }
+    }
     namespace 'com.twincoders.twinpush.sdk'
 }
 
@@ -52,30 +56,18 @@ dependencies {
     implementation 'com.huawei.hms:push:6.3.0.304'
 }
 
-afterEvaluate {
-    publishing {
-        publications {
-            // Creates a Maven publication called "release".
-            release(MavenPublication) {
-                // Applies the component for the release build variant.
-                from components.findByName('release')
 
-                // You can then customize attributes of the publication as shown below.
-                groupId = libraryGroupId
-                artifactId = libraryArtifactId
-                version = libraryVersion
-
-                // Ensure that AAR file is included
-                artifact("$buildDir/outputs/aar/sdk-release.aar")
-            }
-            // Creates a Maven publication called “debug”.
-            debug(MavenPublication) {
-                // Applies the component for the debug build variant.
-                from components.findByName('debug')
-
-                groupId = libraryGroupId
-                artifactId = libraryArtifactId
-                version = libraryVersion + '-debug'
+publishing {
+    publications {
+        // Creates a Maven publication called "release".
+        release(MavenPublication) {
+            // You can then customize attributes of the publication as shown below.
+            groupId = libraryGroupId
+            artifactId = libraryArtifactId
+            version = libraryVersion
+            // Applies the component for the release build variant.
+            afterEvaluate {
+                from components.release
             }
         }
     }
