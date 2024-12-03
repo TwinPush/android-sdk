@@ -65,6 +65,7 @@ publishing {
             groupId = libraryGroupId
             artifactId = libraryArtifactId
             version = libraryVersion
+            pom.packaging = "aar"
             // Applies the component for the release build variant.
             afterEvaluate {
                 from components.release
