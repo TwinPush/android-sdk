@@ -1,12 +1,15 @@
 package com.twincoders.twinpush.sdk.services;
 
+import android.Manifest;
 import android.app.Notification;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Build;
 
 import androidx.annotation.NonNull;
+import androidx.core.app.ActivityCompat;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 
@@ -45,9 +48,14 @@ public class DefaultNotificationService {
      * @param contentIntend Content intent for the given notification, that will be launched when user clicks notification
      */
     public void displayNotification(@NonNull Context context, @NonNull PushNotification notification, @NonNull PendingIntent contentIntend) {
+        // Do not show the notification if we lack of the required permission
+        if (ActivityCompat.checkSelfPermission(context, Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
+            Ln.e("Notifications permission NOT granted. Notification not displayed.");
+            return;
+        }
         String title = notification.getTitle();
         // It title is empty, display application name
-        if (title == null || title.trim().length() == 0) {
+        if (title == null || title.trim().isEmpty()) {
             int stringId = context.getApplicationInfo().labelRes;
             title = context.getString(stringId);
         }
@@ -66,7 +74,6 @@ public class DefaultNotificationService {
                     .setAutoCancel(true)
                     .setStyle(new NotificationCompat.BigTextStyle().bigText(notification.getMessage()))
                     .build();
-
             NotificationManagerCompat.from(context).notify(notification.getId().hashCode(), push);
         } else {
             Ln.e("ERROR: Notification not displayed. Notification channel can not be null");

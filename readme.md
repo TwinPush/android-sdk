@@ -92,7 +92,7 @@ Include this dependency in your module level `build.gradle` file to reference th
 
 ```groovy
 dependencies {
-    implementation 'com.github.twinpush:android-sdk:3.5.9'
+    implementation 'com.github.twinpush:android-sdk:3.7.0'
 }
 ```
 
@@ -190,6 +190,56 @@ twinPush.register("email@company.com", new TwinPushSDK.OnRegistrationListener() 
     }
 });
 ```
+
+### Request Notifications Permission
+
+Starting from Android SDK 33, **notification permissions are not granted by default**. Your application must request these permissions at runtime to display notifications. For detailed instructions and additional information, refer to the [official Android Developers documentation](https://developer.android.com/develop/ui/views/notifications/notification-permission). Make sure to also review the [best practices](https://developer.android.com/develop/ui/views/notifications/notification-permission?hl=es-419#best-practices) to determine the optimal timing for requesting permissions.
+
+![](https://i.imgur.com/0c4LCcum.png)
+
+The TwinPush SDK includes an optional helper class, `PushPermissionRequest`, designed to simplify notification permissions management. To use this helper, follow the steps below:
+
+> **Note:** Your activity must inherit from `AppCompatActivity` (part of the AndroidX library) to use this helper.
+
+#### 1. Declare the `PushPermissionRequest` variable in your activity:
+
+```java
+public class MyActivity extends AppCompatActivity {
+    ...
+    private PushPermissionRequest pushPermissionRequest;
+    ...
+}
+```
+
+#### 2. Register the permission request in the `onCreate` method of your activity:
+
+```java
+@Override
+protected void onCreate(Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+    ...
+    pushPermissionRequest = PushPermissionRequest.registerForResult(this);
+    ...
+}
+```
+
+#### 3. Launch the permission request when appropriate:
+
+You can decide the best moment to request permissions based on your application flow. Alternatively, you can integrate it with the TwinPush SDK registration method as shown below:
+
+```java
+pushPermissionRequest.launch(granted -> twinPush.register("email@company.com", listener));
+```
+
+#### 4. Check the permission status at any time:
+
+To verify whether the notification permission has been granted, use the static `isPermissionGranted(Context)` method:
+
+```java
+boolean isGranted = PushPermissionRequest.isPermissionGranted(this);
+```
+
+This method allows you to conditionally execute actions based on the current permission status.
 
 ### Receiving notifications
 

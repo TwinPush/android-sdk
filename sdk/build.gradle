@@ -1,10 +1,8 @@
-import java.text.SimpleDateFormat
-
 apply plugin: 'com.android.library'
 apply plugin: 'maven-publish'
 
-def libraryVersion = '3.5.9'
-def libraryVersionCode = 30509
+def libraryVersion = '3.7.0'
+def libraryVersionCode = 30700
 def libraryGroupId = 'com.github.twinpush'
 def libraryArtifactId = 'android-sdk'
 
@@ -13,13 +11,16 @@ version = libraryVersion
 group = libraryGroupId
 
 android {
-    compileSdkVersion 32
-
     defaultConfig {
-        minSdkVersion 16
-        targetSdkVersion 32
+        minSdkVersion 21
+        targetSdkVersion 35
+        compileSdk 35
         buildConfigField 'int', 'VERSION_CODE', "${libraryVersionCode}"
         buildConfigField 'String', 'VERSION_NAME', "\"${libraryVersion}\""
+    }
+    lintOptions {
+        abortOnError false
+        checkReleaseBuilds false
     }
     buildTypes {
         release {
@@ -27,45 +28,54 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+    buildFeatures {
+        buildConfig = true
+    }
+    publishing {
+        singleVariant("release") {
+            withSourcesJar()
+            withJavadocJar()
+        }
+    }
     namespace 'com.twincoders.twinpush.sdk'
 }
 
 dependencies {
     api fileTree(dir: 'libs', include: ['*.jar'])
-    testImplementation 'junit:junit:4.13.1'
+    testImplementation 'junit:junit:4.13.2'
 
-    api 'com.google.firebase:firebase-messaging:23.1.0'
+    api 'com.google.firebase:firebase-messaging:24.1.0'
     api 'androidx.legacy:legacy-support-v4:1.0.0'
     api 'com.android.volley:volley:1.2.1'
     // Encrypted shared preferences
     api 'com.scottyab:secure-preferences-lib:0.1.7'
+    // AppCompat is required for permissions check
+    implementation 'androidx.appcompat:appcompat:1.7.0'
     // Huawei HMS
     implementation 'com.huawei.agconnect:agconnect-core:1.6.2.300'
     implementation 'com.huawei.hms:push:6.3.0.304'
 }
 
-afterEvaluate {
-    publishing {
-        publications {
-            // Creates a Maven publication called "release".
-            release(MavenPublication) {
-                // Applies the component for the release build variant.
+
+publishing {
+    publications {
+        // Creates a Maven publication called "release".
+        release(MavenPublication) {
+            // You can then customize attributes of the publication as shown below.
+            groupId = libraryGroupId
+            artifactId = libraryArtifactId
+            version = libraryVersion
+            pom.packaging = "aar"
+            // Applies the component for the release build variant.
+            afterEvaluate {
                 from components.release
-
-                // You can then customize attributes of the publication as shown below.
-                groupId = libraryGroupId
-                artifactId = libraryArtifactId
-                version = libraryVersion
-            }
-            // Creates a Maven publication called “debug”.
-            debug(MavenPublication) {
-                // Applies the component for the debug build variant.
-                from components.debug
-
-                groupId = libraryGroupId
-                artifactId = libraryArtifactId
-                version = libraryVersion + '-debug'
             }
         }
+    }
+}
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(17)
     }
 }
