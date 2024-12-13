@@ -19,6 +19,7 @@ android {
         buildConfigField 'String', 'VERSION_NAME', "\"${libraryVersion}\""
     }
     lintOptions {
+        // TODO. Check if we can re-include lint checks
         abortOnError false
         checkReleaseBuilds false
     }
@@ -52,8 +53,8 @@ dependencies {
     // AppCompat is required for permissions check
     implementation 'androidx.appcompat:appcompat:1.7.0'
     // Huawei HMS
-    implementation 'com.huawei.agconnect:agconnect-core:1.6.2.300'
-    implementation 'com.huawei.hms:push:6.3.0.304'
+    implementation 'com.huawei.agconnect:agconnect-remoteconfig:1.9.1.301'
+    implementation 'com.huawei.hms:push:6.11.0.300'
 }
 
 

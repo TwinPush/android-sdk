@@ -35,7 +35,7 @@ dependencies {
     implementation 'com.github.ganfra:material-spinner:2.0.0'
     implementation 'com.google.firebase:firebase-messaging:24.1.0'
     // Huawei HMS
-    implementation 'com.huawei.agconnect:agconnect-core:1.6.2.300'
+    implementation 'com.huawei.agconnect:agconnect-core:1.9.1.301'
     testImplementation 'junit:junit:4.13.2'
     // Enable multidex to avoid "Cannot fit requested classes in a single dex file" error
     implementation "androidx.multidex:multidex:2.0.1"
