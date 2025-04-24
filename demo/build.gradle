@@ -30,12 +30,12 @@ dependencies {
     implementation project(':sdk')
     implementation 'androidx.appcompat:appcompat:1.7.0'
     implementation 'com.google.android.material:material:1.12.0'
-    implementation 'androidx.recyclerview:recyclerview:1.3.2'
+    implementation 'androidx.recyclerview:recyclerview:1.4.0'
     implementation 'androidx.cardview:cardview:1.0.0'
     implementation 'com.github.ganfra:material-spinner:2.0.0'
-    implementation 'com.google.firebase:firebase-messaging:24.1.0'
+    implementation 'com.google.firebase:firebase-messaging:24.1.1'
     // Huawei HMS
-    implementation 'com.huawei.agconnect:agconnect-core:1.9.1.301'
+    implementation 'com.huawei.agconnect:agconnect-core:1.9.1.304'
     testImplementation 'junit:junit:4.13.2'
     // Enable multidex to avoid "Cannot fit requested classes in a single dex file" error
     implementation "androidx.multidex:multidex:2.0.1"
