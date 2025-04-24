@@ -1,6 +1,23 @@
 # TwinPush Android SDK Release Notes
 
+## v3.7.1 - 2024-12-13
+
+Updated Huawei library dependencies:
+
+* Core from 1.6.2.300 to 1.9.1.301
+* HMS Push library from 6.3.0.304 to 6.11.0.300
+
+## 3.7.0 - 2024-12-03
+
+* Updated dependencies, compileSdk and targetSdkVersion from 32 to 35.
+* Updated required minSdkVersion from 16 to 21.
+* Implemented PushPermissionsRequest helper to manage Push Permissions.
+* Included addtitional documentation for Request Notifications Permission.
+* Included javadoc and sources on exported library.
+* Updated jitpack openjdk from 11 to 17.
+
 ## 3.5.9 - 2022-12-01
+
 * Updated SecurePreferences dependency to remove unused unsafe algorithm
 * Updated Firebase messaging library from 23.0.4 to 23.1.0
 * App ID is now obtained using AGConnectOptionsBuilder to avoid deprecated usage of AGConnectServicesConfig
@@ -8,12 +25,14 @@
 * Enable multidex on Demo project to avoid "Cannot fit requested classes in a single dex file" error
 
 ## 3.5.7 - 2022-05-10
+
 * Updated targetSDKVersion to 32
 * Upgraded gradle version to 7.2.0
 * Updated Firebase messaging library from 23.0.2 to 23.0.4
 * Included mutable tags to all PendingIntents instances to ensure compatibility to SDK 32
 
 ## 3.5.5 - 2022-04-07
+
 * Upgraded gradle version to 7.1.1
 * Updated Firebase messaging library from 23.0.0 to 23.0.2
 * Updated Huawei HMS library from 6.1.0.300 to 6.3.0.304
