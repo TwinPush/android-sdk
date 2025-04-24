@@ -1,5 +1,16 @@
 # TwinPush Android SDK Release Notes
 
+## v3.7.2 - 2024-12-13
+
+Updated Huawei library dependencies:
+
+* Core from 1.9.1.301 to 1.9.1.304 
+* HMS Push library from 6.11.0.300 to 6.13.0.300
+
+Other dependencies:
+
+* Gradle version from 8.7 to 8.11.1 and AGP from 8.6.1 to 8.9.2
+
 ## v3.7.1 - 2024-12-13
 
 Updated Huawei library dependencies:
