@@ -1,6 +1,6 @@
 # TwinPush Android SDK Release Notes
 
-## v3.8.2 - 2026-04-29
+## v3.8.3 - 2026-04-29
 
 Updated Huawei library dependencies:
 
@@ -9,8 +9,7 @@ Updated Huawei library dependencies:
 
 Other dependencies and improvements:
 
-* Gradle version from 8.11.1 to 9.4.1 and AGP from 8.9.2 to 9.2.0
-* Updated JitPack compile JDK from 17 to 21
+* Gradle version from 8.11.1 to 9.5.0 and AGP from 8.9.2 to 9.2.0
 * Replaced deprecated `proguard-android.txt` with `proguard-android-optimize.txt`
 
 ## v3.7.2 - 2024-12-13
