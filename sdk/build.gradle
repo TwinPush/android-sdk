@@ -11,22 +11,23 @@ version = libraryVersion
 group = libraryGroupId
 
 android {
+    compileSdk = 36
+    namespace 'com.twincoders.twinpush.sdk'
+
     defaultConfig {
-        minSdkVersion 21
-        targetSdkVersion 35
-        compileSdk 35
+        minSdk = 23
+        targetSdk = 36
         buildConfigField 'int', 'VERSION_CODE', "${libraryVersionCode}"
         buildConfigField 'String', 'VERSION_NAME', "\"${libraryVersion}\""
     }
-    lintOptions {
-        // TODO. Check if we can re-include lint checks
-        abortOnError false
-        checkReleaseBuilds false
+    lint {
+        abortOnError = false
+        checkReleaseBuilds = false
     }
     buildTypes {
         release {
             minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
     buildFeatures {
@@ -38,20 +39,19 @@ android {
             withJavadocJar()
         }
     }
-    namespace 'com.twincoders.twinpush.sdk'
 }
 
 dependencies {
     api fileTree(dir: 'libs', include: ['*.jar'])
     testImplementation 'junit:junit:4.13.2'
 
-    api 'com.google.firebase:firebase-messaging:24.1.1'
+    api 'com.google.firebase:firebase-messaging:25.0.1'
     api 'androidx.legacy:legacy-support-v4:1.0.0'
     api 'com.android.volley:volley:1.2.1'
     // Encrypted shared preferences
     api 'com.scottyab:secure-preferences-lib:0.1.7'
     // AppCompat is required for permissions check
-    implementation 'androidx.appcompat:appcompat:1.7.0'
+    implementation 'androidx.appcompat:appcompat:1.7.1'
     // Huawei HMS
     implementation 'com.huawei.agconnect:agconnect-remoteconfig:1.9.1.304'
     implementation 'com.huawei.hms:push:6.13.0.300'
