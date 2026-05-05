@@ -98,7 +98,7 @@ dependencies {
     // OR
     
     // Google version: includes Firebase ONLY (Use this to avoid Huawei libraries import)
-    implementation 'com.github.twinpush:android-sdk-google:3.7.2'
+    implementation 'com.github.TwinPush.android-sdk:google:3.7.2'
 }
 ```
 

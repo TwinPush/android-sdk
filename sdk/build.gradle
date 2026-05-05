@@ -88,7 +88,7 @@ publishing {
         // Creates a Maven publication called "google".
         google(MavenPublication) {
             groupId = libraryGroupId
-            artifactId = libraryArtifactId + "-google"
+            artifactId = "google"
             version = libraryVersion
             pom.packaging = "aar"
             afterEvaluate {
