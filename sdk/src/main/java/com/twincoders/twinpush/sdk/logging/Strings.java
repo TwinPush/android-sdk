@@ -116,24 +116,6 @@ public class Strings {
         return toString(o).trim().length()!=0;
     }
 
-    public static String md5(String s) {
-        try {
-            // Create MD5 Hash
-            final MessageDigest digest = java.security.MessageDigest.getInstance("MD5");
-            digest.update(s.getBytes());
-            final byte messageDigest[] = digest.digest();
-
-            // Create Hex String
-            final StringBuffer hexString = new StringBuffer();
-            for (byte aMessageDigest : messageDigest)
-                hexString.append(Integer.toHexString(0xFF & aMessageDigest));
-            return hexString.toString();
-
-        } catch (NoSuchAlgorithmException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
     public static String capitalize( String s ) {
         final String c = Strings.toString(s);
         return c.length()>=2 ? c.substring(0,1).toUpperCase(Locale.getDefault()) + c.substring(1) : c.length()>=1 ? c.toUpperCase(Locale.getDefault()) : c; 
