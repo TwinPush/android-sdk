@@ -11,6 +11,17 @@ android {
         versionName "1.0"
         multiDexEnabled true
     }
+
+    flavorDimensions = ["services"]
+    productFlavors {
+        full {
+            dimension "services"
+        }
+        google {
+            dimension "services"
+        }
+    }
+
     buildTypes {
         release {
             minifyEnabled false
@@ -26,8 +37,8 @@ android {
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
 
-
     implementation project(':sdk')
+
     implementation 'androidx.appcompat:appcompat:1.7.0'
     implementation 'com.google.android.material:material:1.12.0'
     implementation 'androidx.recyclerview:recyclerview:1.4.0'
@@ -35,7 +46,7 @@ dependencies {
     implementation 'com.github.ganfra:material-spinner:2.0.0'
     implementation 'com.google.firebase:firebase-messaging:24.1.1'
     // Huawei HMS
-    implementation 'com.huawei.agconnect:agconnect-core:1.9.5.302'
+    fullImplementation 'com.huawei.agconnect:agconnect-core:1.9.5.302'
     testImplementation 'junit:junit:4.13.2'
     // Enable multidex to avoid "Cannot fit requested classes in a single dex file" error
     implementation "androidx.multidex:multidex:2.0.1"

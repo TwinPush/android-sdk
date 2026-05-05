@@ -28,10 +28,7 @@ import com.google.android.gms.common.GoogleApiAvailabilityLight;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.FirebaseOptions;
 import com.google.firebase.messaging.FirebaseMessaging;
-import com.huawei.agconnect.AGConnectOptionsBuilder;
-import com.huawei.hms.aaid.HmsInstanceId;
-import com.huawei.hms.api.HuaweiMobileServicesUtil;
-import com.huawei.hms.common.ApiException;
+import com.twincoders.twinpush.sdk.services.HmsStatus;
 import com.securepreferences.SecurePreferences;
 import com.twincoders.twinpush.sdk.communications.TwinPushRequestFactory;
 import com.twincoders.twinpush.sdk.communications.TwinRequest.DefaultListener;
@@ -995,16 +992,7 @@ public class DefaultTwinPushSDK extends TwinPushSDK implements LocationListener 
 
     @Nullable
     private String getHMSToken() {
-        try {
-            // read from agconnect-services.json
-            String appId = new AGConnectOptionsBuilder().build(getContext()).getString("client/app_id");
-            String token = HmsInstanceId.getInstance(getContext()).getToken(appId, "HCM");
-            Ln.i("Obtained HMS Token: %s:", token);
-            return token;
-        } catch (ApiException e) {
-            Ln.e(e, "Error obtaining HMS push token");
-            return null;
-        }
+        return HmsStatus.getHMSToken(getContext());
     }
 
     private void getPlatformAndToken(@NonNull GetTokenAndPlatformListener listener) {
@@ -1052,9 +1040,6 @@ public class DefaultTwinPushSDK extends TwinPushSDK implements LocationListener 
     }
 
     private boolean isHuaweiServicesAvailable() {
-        return (HuaweiMobileServicesUtil.isHuaweiMobileServicesAvailable(getContext()) ==
-                com.huawei.hms.api.ConnectionResult.SUCCESS) ||
-                (HuaweiMobileServicesUtil.isHuaweiMobileServicesAvailable(getContext()) ==
-                        com.huawei.hms.api.ConnectionResult.SERVICE_VERSION_UPDATE_REQUIRED);
+        return HmsStatus.isHuaweiServicesAvailable(getContext());
     }
 }
