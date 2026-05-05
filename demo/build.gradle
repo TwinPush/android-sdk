@@ -1,5 +1,5 @@
-apply plugin: 'com.huawei.agconnect'
 apply plugin: 'com.android.application'
+apply plugin: 'com.huawei.agconnect'
 
 android {
     defaultConfig {

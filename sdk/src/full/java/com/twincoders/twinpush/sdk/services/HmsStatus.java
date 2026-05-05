@@ -22,11 +22,19 @@ public class HmsStatus {
         try {
             // read from agconnect-services.json
             String appId = new AGConnectOptionsBuilder().build(context).getString("client/app_id");
+            if (appId == null || appId.isEmpty()) {
+                Ln.e("HMS App ID not found. Ensure agconnect-services.json is present and agcp plugin is applied.");
+                return null;
+            }
+            Ln.i("Requesting HMS Token for App ID: %s", appId);
             String token = HmsInstanceId.getInstance(context).getToken(appId, "HCM");
-            Ln.i("Obtained HMS Token: %s:", token);
+            Ln.i("Obtained HMS Token: %s", token);
             return token;
         } catch (ApiException e) {
-            Ln.e(e, "Error obtaining HMS push token");
+            Ln.e(e, "Error obtaining HMS push token. Error code: %d", e.getStatusCode());
+            return null;
+        } catch (Exception e) {
+            Ln.e(e, "Unexpected error obtaining HMS push token");
             return null;
         }
     }
