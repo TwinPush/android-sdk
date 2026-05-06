@@ -20,9 +20,21 @@ android {
         buildConfigField 'int', 'VERSION_CODE', "${libraryVersionCode}"
         buildConfigField 'String', 'VERSION_NAME', "\"${libraryVersion}\""
     }
-    lint {
-        abortOnError = false
-        checkReleaseBuilds = false
+
+    flavorDimensions = ["services"]
+    productFlavors {
+        full {
+            dimension "services"
+        }
+        google {
+            dimension "services"
+        }
+    }
+
+    lintOptions {
+        // TODO. Check if we can re-include lint checks
+        abortOnError false
+        checkReleaseBuilds false
     }
     buildTypes {
         release {
@@ -34,7 +46,11 @@ android {
         buildConfig = true
     }
     publishing {
-        singleVariant("release") {
+        singleVariant("fullRelease") {
+            withSourcesJar()
+            withJavadocJar()
+        }
+        singleVariant("googleRelease") {
             withSourcesJar()
             withJavadocJar()
         }
@@ -53,23 +69,31 @@ dependencies {
     // AppCompat is required for permissions check
     implementation 'androidx.appcompat:appcompat:1.7.1'
     // Huawei HMS
-    implementation 'com.huawei.agconnect:agconnect-remoteconfig:1.9.5.302'
-    implementation 'com.huawei.hms:push:6.13.0.301'
+    fullImplementation 'com.huawei.agconnect:agconnect-remoteconfig:1.9.5.302'
+    fullImplementation 'com.huawei.hms:push:6.13.0.301'
 }
 
 
 publishing {
     publications {
-        // Creates a Maven publication called "release".
-        release(MavenPublication) {
-            // You can then customize attributes of the publication as shown below.
+        // Creates a Maven publication called "full".
+        full(MavenPublication) {
             groupId = libraryGroupId
             artifactId = libraryArtifactId
             version = libraryVersion
             pom.packaging = "aar"
-            // Applies the component for the release build variant.
             afterEvaluate {
-                from components.release
+                from components.fullRelease
+            }
+        }
+        // Creates a Maven publication called "google".
+        google(MavenPublication) {
+            groupId = libraryGroupId
+            artifactId = "google"
+            version = libraryVersion
+            pom.packaging = "aar"
+            afterEvaluate {
+                from components.googleRelease
             }
         }
     }

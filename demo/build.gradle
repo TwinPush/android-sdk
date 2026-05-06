@@ -1,3 +1,4 @@
+apply plugin: 'com.android.application'
 apply plugin: 'com.huawei.agconnect'
 apply plugin: 'com.android.application'
 apply plugin: 'com.google.gms.google-services'
@@ -14,6 +15,17 @@ android {
         versionName "1.0"
         multiDexEnabled true
     }
+
+    flavorDimensions = ["services"]
+    productFlavors {
+        full {
+            dimension "services"
+        }
+        google {
+            dimension "services"
+        }
+    }
+
     buildTypes {
         release {
             minifyEnabled false
@@ -28,6 +40,7 @@ android {
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
 
+    implementation project(':sdk')
 
     implementation project(':sdk')
     implementation 'androidx.appcompat:appcompat:1.7.1'
