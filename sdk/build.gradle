@@ -79,7 +79,7 @@ publishing {
         // Creates a Maven publication called "full".
         full(MavenPublication) {
             groupId = libraryGroupId
-            artifactId = libraryArtifactId
+            artifactId = "full"
             version = libraryVersion
             pom.packaging = "aar"
             afterEvaluate {
