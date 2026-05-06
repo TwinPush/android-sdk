@@ -93,12 +93,12 @@ Include this dependency in your module level `build.gradle` file to reference th
 ```groovy
 dependencies {
     // Standard version: includes Firebase and Huawei HMS
-    implementation 'com.github.twinpush:android-sdk:3.8.4'
+    implementation 'com.github.twinpush.android-sdk:full:3.8.5'
     
     // OR
     
     // Google version: includes Firebase ONLY (Use this to avoid Huawei libraries import)
-    implementation 'com.github.twinpush.android-sdk:google:3.8.4'
+    implementation 'com.github.twinpush.android-sdk:google:3.8.5'
 }
 ```
 
