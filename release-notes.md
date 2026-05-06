@@ -1,15 +1,16 @@
 # TwinPush Android SDK Release Notes
 
-## v3.8.3 - 2026-04-29
+## v3.8.4 - 2026-05-06
 
 Dependencies and improvements:
 
 * Upgraded compileSdk and targetSdkVersion from 35 to 36.
 * Updated required minSdkVersion from 21 to 23.
-* Huawei Core from 1.9.1.304 to 1.9.5.302
-* HMS Push library from 6.13.0.300 to 6.13.0.301
-* Gradle version from 8.11.1 to 9.5.0 and AGP from 8.9.2 to 9.2.0
-* Replaced deprecated `proguard-android.txt` with `proguard-android-optimize.txt`
+* Huawei Core from 1.9.1.304 to 1.9.5.302.
+* HMS Push library from 6.13.0.300 to 6.13.0.301.
+* Gradle version from 8.11.1 to 9.5.0 and AGP from 8.9.2 to 9.2.1.
+* Replaced deprecated `proguard-android.txt` with `proguard-android-optimize.txt`.
+* Included compile variant to exclude Huawei libraries from imported SDK.
 
 ## v3.7.2 - 2024-12-13
 
