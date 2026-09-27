@@ -238,20 +238,4 @@ The SDK is process-local: although ledger commits serialize across processes,
 another process's in-memory pins are replaced at its next refresh. Use a single
 networking process when immediate cross-process retirement is required.
 
-Run:
-
-```sh
-./gradlew :sdk:testGoogleDebugUnitTest :sdk:testFullDebugUnitTest \
-  :sdk:assembleGoogleDebug :sdk:assembleFullDebug --no-configuration-cache
-```
-
-The tests include the unmodified public interoperability vector with a pre-2035
-clock, malformed input/signature cases, persistent rollback and races, Android
-storage/cache adapters, setup callback delivery, offline/cache/timeout and configuration
-replacement cases, and actual loopback HTTPS through Volley under Robolectric.
-TLS tests use JSSE sockets and a test-only CA; they do not mock certificate checks
-or HTTP responses. They are not device/emulator instrumentation tests. Test PEM
-private keys are deliberately public fixtures and must never be used outside tests.
-The SDK's minSdk remains 23, with no new production cryptography dependency.
-
 Transport reference: [Volley 1.2.1 HurlStack](https://github.com/google/volley/blob/1.2.1/core/src/main/java/com/android/volley/toolbox/HurlStack.java).
