@@ -112,6 +112,7 @@ public class DefaultTwinPushSDK extends TwinPushSDK implements LocationListener 
     private String deviceId = null;
     private String apiKey = null;
     private String appId = null;
+    private volatile Exception setupValidationFailure;
 
     /* Listeners */
     public interface GetTokenAndPlatformListener {
@@ -174,7 +175,10 @@ public class DefaultTwinPushSDK extends TwinPushSDK implements LocationListener 
                     }
                 });
             } else {
-                registerError(new Exception("Application ID is not setup in TwinPush SDK"));
+                Exception setupError = setupValidationFailure;
+                registerError(setupError == null
+                        ? new Exception("Application ID is not setup in TwinPush SDK; call setup before register")
+                        : new Exception("Cannot register because TwinPush setup failed: " + setupError.getMessage(), setupError));
             }
         });
     }
@@ -662,10 +666,12 @@ public class DefaultTwinPushSDK extends TwinPushSDK implements LocationListener 
                         resetSSLChecks();
                     });
         } catch (IllegalArgumentException | IllegalStateException error) {
+            setupValidationFailure = error;
             Ln.e("TwinPush Setup Error: %s", error.getMessage());
             if (listener != null) new Handler(Looper.getMainLooper()).post(() -> listener.onError(error));
             return false;
         }
+        setupValidationFailure = null;
         if (setupCompletion != null) setupCompletion.cancel();
         setupCompletion = null;
         createNotificationChannel();

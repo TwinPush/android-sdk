@@ -46,7 +46,11 @@ deprecated; configure the key through options in new integrations.
 HTTPS origin/app/token with pinning enabled, or activation during an unprotected
 HTTP operation. These validation failures leave the previous configuration intact.
 If provided, the listener receives the error asynchronously as well. A `true` return
-means local options were accepted, **not that bootstrap has completed**.
+means local options were accepted, **not that bootstrap has completed**. If setup was
+rejected and no application ID is configured, a subsequent `register` reports
+`Cannot register because TwinPush setup failed: ...` and preserves the original
+validation exception as its cause. Register from `onReady` to avoid that follow-up
+attempt after a failed setup.
 
 For custom error handling, use an explicit listener and override `onError`:
 
