@@ -60,11 +60,9 @@ import com.twincoders.twinpush.sdk.util.StringEncrypter;
 
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.TreeMap;
 
 public class DefaultTwinPushSDK extends TwinPushSDK implements LocationListener {
@@ -95,10 +93,6 @@ public class DefaultTwinPushSDK extends TwinPushSDK implements LocationListener 
     private static final String PREF_MONITOR_LOCATION_CHANGES = "MONITOR_LOCATION_CHANGES";
     private static final String PREF_LOCATION_MIN_UPDATE_TIME = "LOCATION_MIN_UPDATE_TIME";
     private static final String PREF_LOCATION_MIN_UPDATE_DISTANCE = "LOCATION_MIN_UPDATE_DISTANCE";
-    // Security constants
-    private static final String PREF_SSL_PUBLIC_KEY = "PREF_SSL_PUBLIC_KEY";
-    private static final String PREF_SSL_ISSUER = "PREF_SSL_ISSUER";
-    private static final String PREF_SSL_SUBJECT = "PREF_SSL_SUBJECT";
 
     /* Private properties */
     private final Context _context;
@@ -663,7 +657,6 @@ public class DefaultTwinPushSDK extends TwinPushSDK implements LocationListener 
                         setSilentReceiverClass(options.silentPushReceiverClass);
                         setServerHost(options.serverHost);
                         if (options.serverHost == null) setSubdomain(options.subdomain);
-                        resetSSLChecks();
                     });
         } catch (IllegalArgumentException | IllegalStateException error) {
             setupValidationFailure = error;
@@ -685,9 +678,6 @@ public class DefaultTwinPushSDK extends TwinPushSDK implements LocationListener 
     @Override
     @Deprecated
     public synchronized void enableCertificatePinning(String key) {
-        if (getSSLPublicKeyCheck() != null || !getSSLIssuerChecks().isEmpty() || !getSSLSubjectChecks().isEmpty()) {
-            throw new IllegalStateException("Remove legacy SSL checks before enabling remote certificate pinning");
-        }
         PinningRuntime.get(getContext()).enable(key, getServerHost(), getAppId(), getApiKey());
         if (setupCompletion != null) setupCompletion.cancel();
         setupCompletion = null;
@@ -783,50 +773,6 @@ public class DefaultTwinPushSDK extends TwinPushSDK implements LocationListener 
     }
 
     /* Security */
-
-    private void resetSSLChecks() {
-        // Reset SSL Checks
-        setSSLPublicKeyCheck(null);
-        getSharedPreferences(PREF_SSL_ISSUER).edit().clear().apply();
-        getSharedPreferences(PREF_SSL_SUBJECT).edit().clear().apply();
-    }
-
-    public void setSSLPublicKeyCheck(String encodedKey) {
-        if (encodedKey != null && PinningRuntime.get(getContext()).isEnabled()) {
-            throw new IllegalStateException("Legacy SSL checks cannot be mixed with remote certificate pinning");
-        }
-        getSharedPreferences().edit().putString(PREF_SSL_PUBLIC_KEY, encodedKey).apply();
-    }
-
-    public String getSSLPublicKeyCheck() {
-        return getSharedPreferences().getString(PREF_SSL_PUBLIC_KEY, null);
-    }
-
-    public void addSSLIssuerCheck(String field, String expectedValue) {
-        if (PinningRuntime.get(getContext()).isEnabled()) throw new IllegalStateException("Remote certificate pinning is enabled");
-        getSharedPreferences(PREF_SSL_ISSUER).edit().putString(field, expectedValue).apply();
-    }
-
-    public void addSSLSubjectCheck(String field, String expectedValue) {
-        if (PinningRuntime.get(getContext()).isEnabled()) throw new IllegalStateException("Remote certificate pinning is enabled");
-        getSharedPreferences(PREF_SSL_SUBJECT).edit().putString(field, expectedValue).apply();
-    }
-
-    public Map<String, String> getSSLIssuerChecks() {
-        Map<String, String> map = new HashMap<>();
-        for (Entry<?, ?> entry : getSharedPreferences(PREF_SSL_ISSUER).getAll().entrySet()) {
-            map.put(entry.getKey().toString(), entry.getValue().toString());
-        }
-        return map;
-    }
-
-    public Map<String, String> getSSLSubjectChecks() {
-        Map<String, String> map = new HashMap<>();
-        for (Entry<?, ?> entry : getSharedPreferences(PREF_SSL_SUBJECT).getAll().entrySet()) {
-            map.put(entry.getKey().toString(), entry.getValue().toString());
-        }
-        return map;
-    }
 
     private String encrypt(String rawValue) {
         if (rawValue != null) {

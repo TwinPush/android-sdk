@@ -579,7 +579,7 @@ Callbacks run once, asynchronously on the main thread, with a 30-second readines
 wait limit. Valid cached pins work offline; without them, bootstrap failure reports
 an error and keeps pinning enabled. Requests issued before readiness fail through
 their usual error callback. The existing `setup(options)` remains supported.
-See the [integration guide](docs/certificate-pinning.md) for lifecycle, disabling,
+See the [integration guide](https://github.com/TwinPush/android-sdk/blob/master/docs/certificate-pinning.md) for lifecycle, disabling,
 legacy SSL migration, security boundaries and tests.
 
 ## Customize behavior

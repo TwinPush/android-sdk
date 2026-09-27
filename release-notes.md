@@ -5,6 +5,7 @@
 * Implemented optional dynamic certificate pinning, configured through `TwinPushOptions.certificatePinningKey`, with automatic retrieval and caching of verified certificate pins.
 * Included `setup` overload with `SetupListener` to report when SDK initialization is ready or has failed.
 * Improved registration error messages to preserve the original setup validation error.
+* Removed legacy static SSL methods (`setSSLPublicKeyCheck`, `addSSLIssuerCheck`, `addSSLSubjectCheck` and their getters). Applications using these methods must migrate to `TwinPushOptions.certificatePinningKey` before upgrading.
 
 Updated dependencies:
 

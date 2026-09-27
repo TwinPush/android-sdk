@@ -23,7 +23,6 @@ import com.twincoders.twinpush.sdk.notifications.PushNotification;
 import com.twincoders.twinpush.sdk.services.SilentPushReceiver;
 
 import java.util.List;
-import java.util.Map;
 
 @SuppressWarnings("unused")
 public abstract class TwinPushSDK {
@@ -356,7 +355,7 @@ public abstract class TwinPushSDK {
      * Previously transmitted operations are not protected retroactively.
      * Repeating the same configuration is idempotent. Changing configuration invalidates queued work.
      * @throws IllegalArgumentException for a malformed key or invalid domain/app/token configuration
-     * @throws IllegalStateException if legacy SSL checks are configured or unprotected HTTP is in flight
+     * @throws IllegalStateException if unprotected HTTP is in flight
      * @deprecated Set {@link TwinPushOptions#certificatePinningKey} before setup instead.
      * Every subsequent setup uses its options, including disabling pinning for a null or empty key.
      */
@@ -412,46 +411,6 @@ public abstract class TwinPushSDK {
      * a valid device ID assigned
      */
     public abstract boolean isDeviceRegistered();
-
-    // Security
-
-    /**
-     * Includes a SSL certificate pinning to check the Public Key
-     * @param encodedKey Encoded public key to check
-     */
-    public abstract void setSSLPublicKeyCheck(String encodedKey);
-
-    /**
-     * Obtains the SSL certificate Public Key check previously set
-     * @return ssl certificate check
-     */
-    public abstract String getSSLPublicKeyCheck();
-
-    /**
-     * Adds a SSL certificate pinning check. It will validate that the given issuer field will have the expected value
-     * @param field Issuer field to check (i.e. "CN" for Certificate Name, "O" for Organization)
-     * @param expectedValue Value that should match the certificate to be considered valid
-     */
-    public abstract void addSSLIssuerCheck(String field, String expectedValue);
-
-    /**
-     * Adds a SSL certificate pinning check. It will validate that the given subject field will have the expected value
-     * @param field Issuer field to check (i.e. "CN" for Certificate Name, "O" for Organization)
-     * @param expectedValue Value that should match the certificate to be considered valid
-     */
-    public abstract void addSSLSubjectCheck(String field, String expectedValue);
-
-    /**
-     * Obtains the map of checks for the SSL Certificate Issuer
-     * @return map of ssl certificate checks
-     */
-    public abstract Map<String, String> getSSLIssuerChecks();
-
-    /**
-     * Obtains the map of checks for the SSL Certificate Subject
-     * @return
-     */
-    public abstract Map<String, String> getSSLSubjectChecks();
 
     /**
      * Obtains the current subdomain for the TwinPush server. Default subdomain is 'app'

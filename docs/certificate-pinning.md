@@ -177,15 +177,7 @@ Base64, invalid UTC dates, fractions/exponents/signs in version numbers, invalid
 pin order/count, extra PEM objects and noncanonical SPKI encodings. RSA is limited
 to 2048–8192 bits. The environment-bound SHA-256 integration key authenticates the
 downloaded key first; SHA256withRSA then verifies the exact v1 LF-delimited canonical
-bytes, including the final LF. No JSON serialization is signed. See the supplied
-[SDK contract](protocol/certificate_pins_sdk.md) and
-[server protocol](protocol/certificate_pins.md). These supplied documents describe
-the wire protocol; the Android setup API and lifecycle described here supersede
-their direct-activation integration examples.
-
-Renewing a certificate or moving from GoDaddy to Let's Encrypt does not change the
-integration key while the environment and signing key remain the same. Changing
-the TLS public key changes its TLS pin and requires publishing that pin.
+bytes, including the final LF. No JSON serialization is signed.
 
 ## Persistence and refresh
 
@@ -211,16 +203,17 @@ at a time. Failure retries wait 1 and 4 seconds; after three failures, automatic
 retries stop. Request/resume/repeated-setup activity can try again after
 a 60-second cooldown. No background Android service is installed.
 
-## Existing static SSL methods
+## Migration from static SSL methods
 
-This checkout exposes `setSSLPublicKeyCheck`, `addSSLIssuerCheck` and
-`addSSLSubjectCheck`, but only persists their values: its existing default Volley
-transport does not read or enforce them. This change does not silently turn them
-into a different policy. Without remote opt-in their existing behavior is retained.
+Version 3.9.0 removes `setSSLPublicKeyCheck`, `getSSLPublicKeyCheck`,
+`addSSLIssuerCheck`, `addSSLSubjectCheck`, `getSSLIssuerChecks` and
+`getSSLSubjectChecks`. These methods only persisted values; the default Volley
+transport did not enforce them. This is a breaking API change for applications
+that reference these methods.
 
 To migrate, remove those calls, set `options.certificatePinningKey`, and call setup
-(which clears their stored settings) before any request. Remote and legacy
-configuration cannot be combined. Custom application/network-security-config pinning
+before any request. Previously stored static SSL settings are ignored.
+Custom application/network-security-config pinning
 is separate and still applies, including to bootstrap; remove or migrate it explicitly
 if it would prevent recovery from old TLS pins.
 
