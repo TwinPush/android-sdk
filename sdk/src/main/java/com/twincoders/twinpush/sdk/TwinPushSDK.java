@@ -18,6 +18,7 @@ import com.twincoders.twinpush.sdk.entities.LocationPrecision;
 import com.twincoders.twinpush.sdk.entities.PropertyType;
 import com.twincoders.twinpush.sdk.entities.RegistrationInfo;
 import com.twincoders.twinpush.sdk.entities.TwinPushOptions;
+import com.twincoders.twinpush.sdk.logging.Ln;
 import com.twincoders.twinpush.sdk.notifications.PushNotification;
 import com.twincoders.twinpush.sdk.services.SilentPushReceiver;
 
@@ -43,7 +44,7 @@ public abstract class TwinPushSDK {
     /**
      * Obtains a shared instance of the TwinPush SDK for the given context
      */
-    public static TwinPushSDK getInstance(Context context) {
+    public static synchronized TwinPushSDK getInstance(Context context) {
         if (sharedInstance == null) {
             sharedInstance = new DefaultTwinPushSDK(context);
         }
@@ -325,9 +326,42 @@ public abstract class TwinPushSDK {
 
     /**
      * Setup TwinPush SDK with the needed parameters
-     * @return true if the setup is OK, false if any of the required parameters is missing
+     * @return true if local options were accepted; remote pinning bootstrap may still be pending
      */
     public abstract boolean setup(TwinPushOptions options);
+
+    /** Reports setup readiness exactly once, asynchronously on the main thread. */
+    public interface SetupListener {
+        void onReady();
+        default void onError(Exception error) {
+            Ln.e(error);
+        }
+    }
+
+    /**
+     * Applies local options and optionally reports readiness. With pinning enabled, readiness
+     * requires verified unexpired pins from cache or network. Waiting is limited to 30 seconds.
+     * Failure does not disable pinning. Requests made before readiness fail normally, without queuing.
+     * A later successful setup supersedes a pending callback with an error.
+     * @return true if local options were accepted, false if invalid (also delivered to the listener)
+     */
+    public abstract boolean setup(TwinPushOptions options, SetupListener listener);
+
+    /**
+     * Enables remote TLS leaf SPKI pinning using the public integration key copied from TwinPush.
+     * Call after setup and before register or any other API operation, on each process start.
+     * Bootstrap is asynchronous. Until a verified, unexpired pinset is available, API operations
+     * fail through their normal error callbacks; there is no unpinned fallback.
+     * Activation during an unprotected HTTP operation throws instead of waiting on the main thread.
+     * Previously transmitted operations are not protected retroactively.
+     * Repeating the same configuration is idempotent. Changing configuration invalidates queued work.
+     * @throws IllegalArgumentException for a malformed key or invalid domain/app/token configuration
+     * @throws IllegalStateException if legacy SSL checks are configured or unprotected HTTP is in flight
+     * @deprecated Set {@link TwinPushOptions#certificatePinningKey} before setup instead.
+     * Every subsequent setup uses its options, including disabling pinning for a null or empty key.
+     */
+    @Deprecated
+    public abstract void enableCertificatePinning(String key);
 
     /**
      * Creates or updates the default channel for TwinPush notifications using the values set

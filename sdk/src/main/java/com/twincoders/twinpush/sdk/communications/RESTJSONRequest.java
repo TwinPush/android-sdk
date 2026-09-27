@@ -46,6 +46,9 @@ public abstract class RESTJSONRequest extends RESTRequest {
 
     @Override
 	public Request getRequest() {
+
+        // Bind authentication to the same configuration as the URL and queue generation.
+        final Map<String, String> requestHeaders = new java.util.HashMap<>(getHeaders());
 		JSONObject js = null;
         Ln.i("Launching request: %s", getURL());
         if (getHttpMethod() == HttpMethod.POST) {
@@ -88,7 +91,7 @@ public abstract class RESTJSONRequest extends RESTRequest {
 
             @Override
             public Map<String, String> getHeaders() throws AuthFailureError {
-                return RESTJSONRequest.this.getHeaders();
+                return requestHeaders;
             }
         };
 	}

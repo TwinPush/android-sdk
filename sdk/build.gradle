@@ -44,6 +44,11 @@ android {
     buildFeatures {
         buildConfig = true
     }
+    testOptions {
+        unitTests.all {
+            systemProperty 'robolectric.dependency.repo.url', 'https://repo.maven.apache.org/maven2'
+        }
+    }
     publishing {
         singleVariant("fullRelease") {
             withSourcesJar()
@@ -59,6 +64,9 @@ android {
 dependencies {
     api fileTree(dir: 'libs', include: ['*.jar'])
     testImplementation 'junit:junit:4.13.2'
+    testImplementation 'org.robolectric:robolectric:4.16.1'
+    // Volley's deprecated HttpStack adapter references these types when loaded by a JVM.
+    testImplementation 'org.apache.httpcomponents:httpcore:4.4.16'
 
     api 'com.google.firebase:firebase-messaging:25.0.1'
     api 'androidx.legacy:legacy-support-v4:1.0.0'

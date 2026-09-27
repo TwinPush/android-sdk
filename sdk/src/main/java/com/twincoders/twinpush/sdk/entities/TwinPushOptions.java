@@ -10,6 +10,9 @@ public class TwinPushOptions {
     public String twinPushAppId = null;
     /* Application API Key obtained from TwinPush WebApp */
     public String twinPushApiKey = null;
+    /** Public integration key for remote certificate pinning. Null or empty disables pinning.
+     * A nonempty malformed key makes setup fail without changing the previous configuration. */
+    public String certificatePinningKey = null;
     /* Custom subdomain for TwinPush server (e.g: domain of 'beta' will result in 'https://beta.twinpush.com' url) */
     public String subdomain = null;
     /* Custom host for the TwinPush server. Default is "https://{{subdomain}}.twinpush.com" */

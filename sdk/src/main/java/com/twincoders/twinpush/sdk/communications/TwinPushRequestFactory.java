@@ -3,6 +3,8 @@ package com.twincoders.twinpush.sdk.communications;
 import android.content.Context;
 
 import com.twincoders.twinpush.sdk.TwinPushSDK;
+import com.twincoders.twinpush.sdk.communications.pinning.PinningController;
+import com.twincoders.twinpush.sdk.communications.pinning.PinningRuntime;
 import com.twincoders.twinpush.sdk.communications.TwinRequest.DefaultListener;
 import com.twincoders.twinpush.sdk.communications.TwinRequest.OnRequestFinishListener;
 import com.twincoders.twinpush.sdk.communications.requests.TwinPushRequest;
@@ -39,6 +41,7 @@ public class TwinPushRequestFactory {
 	/* Properties */
 	private TwinRequestLauncher requestLauncher;
 	private TwinPushSDK twinpush;
+	private final PinningController security;
 	
 	private List<TwinPushRequest> pendingRequests = new ArrayList<>();
 	private boolean stopRequests = false;
@@ -52,7 +55,7 @@ public class TwinPushRequestFactory {
 		return twinpush.getAppId();
 	}
 	
-	public static TwinPushRequestFactory getSharedinstance(Context context) {
+	public static synchronized TwinPushRequestFactory getSharedinstance(Context context) {
 		if (sharedInstance == null) {
 			sharedInstance = new TwinPushRequestFactory(context);
 		}
@@ -60,6 +63,7 @@ public class TwinPushRequestFactory {
 	}
 	
 	private TwinPushRequestFactory(Context context) {
+		security = PinningRuntime.get(context);
 		requestLauncher = new DefaultRequestLauncher(context);
 		twinpush = TwinPushSDK.getInstance(context);
 	}
@@ -174,7 +178,9 @@ public class TwinPushRequestFactory {
 	
 	/* Launch methods */
 	
-	private void launch(TwinPushRequest request) {
+	private synchronized void launch(TwinPushRequest request) {
+		// Preserve the generation while waiting behind a sequential registration request.
+		((DefaultRequest) request).bindSecurityGeneration(security.generation());
 		if (stopRequests) {
 			pendingRequests.add(request);
 		} else {
@@ -184,8 +190,10 @@ public class TwinPushRequestFactory {
 
 					@Override
 					public void onRequestFinish() {
-						stopRequests = false;
-						launchNextRequest();
+						synchronized (TwinPushRequestFactory.this) {
+							stopRequests = false;
+							launchNextRequest();
+						}
 					}
 				});
 			} else {
@@ -196,11 +204,12 @@ public class TwinPushRequestFactory {
 		}
 	}
 	
-	private void launchNextRequest() {
+	private synchronized void launchNextRequest() {
 		if (!pendingRequests.isEmpty()) {
 			TwinPushRequest nextRequest = pendingRequests.get(0);
 			pendingRequests.remove(nextRequest);
-			launch(nextRequest);
+			if (nextRequest.isCanceled()) launchNextRequest();
+			else launch(nextRequest);
 		}
 	}
 	
