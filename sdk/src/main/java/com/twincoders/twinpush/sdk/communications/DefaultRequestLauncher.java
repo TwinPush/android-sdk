@@ -6,10 +6,11 @@ import androidx.annotation.NonNull;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
-import com.android.volley.toolbox.Volley;
+import com.android.volley.DefaultRetryPolicy;
+import com.twincoders.twinpush.sdk.communications.pinning.PinningController;
+import com.twincoders.twinpush.sdk.communications.pinning.PinningRuntime;
 import com.twincoders.twinpush.sdk.logging.Ln;
 
-import java.util.HashMap;
 import java.util.Map;
 
 class DefaultRequestLauncher implements TwinRequestLauncher {
@@ -19,16 +20,16 @@ class DefaultRequestLauncher implements TwinRequestLauncher {
     private RequestQueue queue;
 
     /** Array of active requests */
-    private Map<TwinRequest, Request> activeRequests = new HashMap<>();
+    private Map<TwinRequest, Request> activeRequests = new java.util.concurrent.ConcurrentHashMap<>();
 
     /* Parameterized constructor will be used when RequestLauncher is not injected */
     DefaultRequestLauncher(@NonNull Context context) {
         this.context = context;
-        queue = Volley.newRequestQueue(context);
+        queue = PinningRuntime.newQueue(context);
     }
 
     @Override
-    public void launchRequest(TwinRequest request) {
+    public synchronized void launchRequest(TwinRequest request) {
         Ln.v("Starting request: %s", request.getClass().getName());
         // Check if request is already on queue
         if (!activeRequests.containsKey(request)) {
@@ -42,10 +43,9 @@ class DefaultRequestLauncher implements TwinRequestLauncher {
     @Override
     public void cancelRequest(TwinRequest twinRequest) {
         // Cancel request by calling linked Http client method
-        if (activeRequests.containsKey(twinRequest)) {
-            Request request = activeRequests.get(twinRequest);
+        Request request = activeRequests.remove(twinRequest);
+        if (request != null) {
             request.cancel();
-            activeRequests.remove(twinRequest);
             Ln.v("Request canceled");
         } else {
             Ln.v("Could not cancel request, not currently active");
@@ -61,7 +61,22 @@ class DefaultRequestLauncher implements TwinRequestLauncher {
     /** Starts request execution */
     private void executeRequest(final TwinRequest request) {
 
-        Request volleyRequest = request.getRequest();
+        Request volleyRequest;
+        PinningController security = PinningRuntime.get(context);
+        synchronized (security) {
+            volleyRequest = request.getRequest();
+            long generation = security.generation();
+            if (request instanceof DefaultRequest) {
+                DefaultRequest operation = (DefaultRequest) request;
+                operation.bindSecurityGeneration(generation);
+                generation = operation.securityGeneration();
+            }
+            volleyRequest.setTag(generation);
+            if (security.isEnabled()) {
+                volleyRequest.setShouldCache(false);
+                volleyRequest.setRetryPolicy(new DefaultRetryPolicy(10000, 0, 1));
+            }
+        }
 
         // Include request in active requests map
         activeRequests.put(request, volleyRequest);
@@ -71,6 +86,12 @@ class DefaultRequestLauncher implements TwinRequestLauncher {
                 activeRequests.remove(request);
             }
         });
+
+        if (request.isCanceled()) {
+            activeRequests.remove(request);
+            volleyRequest.cancel();
+            return;
+        }
 
         // Launch request
         if (!request.isDummy()) {

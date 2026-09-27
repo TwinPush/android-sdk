@@ -18,7 +18,14 @@ abstract class DefaultRequest implements TwinRequest {
 
     private List<OnRequestFinishListener> onRequestFinishListeners = new ArrayList<>();
 
-    private Boolean canceled = false;
+    private volatile Boolean canceled = false;
+    private boolean finished;
+    private Long securityGeneration;
+
+    synchronized void bindSecurityGeneration(long generation) {
+        if (securityGeneration == null) securityGeneration = generation;
+    }
+    synchronized long securityGeneration() { return securityGeneration; }
 
     public void addParam(String key, Object value) {
         if (value != null) {
@@ -55,6 +62,7 @@ abstract class DefaultRequest implements TwinRequest {
     @Override
 	public void launch() {
     	canceled = false;
+        synchronized (this) { finished = false; }
         this.requestLauncher.launchRequest(this);
     }
 
@@ -62,6 +70,7 @@ abstract class DefaultRequest implements TwinRequest {
     public void cancel() {
         canceled = true;
         if (this.requestLauncher != null) this.requestLauncher.cancelRequest(this);
+        notifyFinishListeners();
     }
 
     public HttpMethod getHttpMethod() {
@@ -105,15 +114,21 @@ abstract class DefaultRequest implements TwinRequest {
 		return false;
 	}
 	
-	public void addOnRequestFinishListener(OnRequestFinishListener listener) {
+	public synchronized void addOnRequestFinishListener(OnRequestFinishListener listener) {
 		if (!onRequestFinishListeners.contains(listener)) {
 			onRequestFinishListeners.add(listener);
 		}
 	}
 	
-	void notifyFinishListeners() {
-		for (OnRequestFinishListener listener : onRequestFinishListeners) {
-			listener.onRequestFinish();
-		}
-	}
+    void notifyFinishListeners() {
+        List<OnRequestFinishListener> listeners;
+        synchronized (this) {
+            if (finished) return;
+            finished = true;
+            listeners = new ArrayList<>(onRequestFinishListeners);
+        }
+        for (OnRequestFinishListener listener : listeners) {
+            listener.onRequestFinish();
+        }
+    }
 }

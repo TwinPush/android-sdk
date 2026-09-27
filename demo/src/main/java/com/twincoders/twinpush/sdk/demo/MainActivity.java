@@ -71,10 +71,11 @@ public class MainActivity extends ParentActivity {
         twinPush = TwinPushSDK.getInstance(this);
         // Setup TwinPush SDK
         TwinPushOptions options = new TwinPushOptions();                // Initialize options
-        options.twinPushAppId =     "816b6f7f129b5982";                 // - APP ID
-        options.twinPushApiKey =    "17c1d1fc0804fd57038e4062779f144d"; // - API Key
-        options.subdomain =         "pre";                              // - Application subdomain
-        twinPush.setup(options);                                        // Call setup
+        options.twinPushAppId =     "2785b9d61574e029";                 // - APP ID
+        options.twinPushApiKey =    "ef6943d309f14f0658794dd855aef410"; // - API Key
+        options.subdomain =         "samlpre";                              // - Application subdomain
+        options.certificatePinningKey = "tp-pinning-v1:uIWn8SNUi2Gixt0-gKCtX71fl3M2nTQqkAU7FrqFB3E";
+        twinPush.setup(options);
 
         // Show previous values when present
         usernameTxt.setText(twinPush.getDeviceAlias());

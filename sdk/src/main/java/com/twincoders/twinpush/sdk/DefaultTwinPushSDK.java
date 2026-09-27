@@ -31,6 +31,8 @@ import com.google.firebase.messaging.FirebaseMessaging;
 import com.twincoders.twinpush.sdk.services.HmsStatus;
 import com.securepreferences.SecurePreferences;
 import com.twincoders.twinpush.sdk.communications.TwinPushRequestFactory;
+import com.twincoders.twinpush.sdk.communications.pinning.PinningRuntime;
+import com.twincoders.twinpush.sdk.communications.pinning.PinningController;
 import com.twincoders.twinpush.sdk.communications.TwinRequest.DefaultListener;
 import com.twincoders.twinpush.sdk.communications.requests.TwinPushRequest;
 import com.twincoders.twinpush.sdk.communications.requests.notifications.GetInboxRequest;
@@ -110,6 +112,7 @@ public class DefaultTwinPushSDK extends TwinPushSDK implements LocationListener 
     private String deviceId = null;
     private String apiKey = null;
     private String appId = null;
+    private volatile Exception setupValidationFailure;
 
     /* Listeners */
     public interface GetTokenAndPlatformListener {
@@ -172,7 +175,10 @@ public class DefaultTwinPushSDK extends TwinPushSDK implements LocationListener 
                     }
                 });
             } else {
-                registerError(new Exception("Application ID is not setup in TwinPush SDK"));
+                Exception setupError = setupValidationFailure;
+                registerError(setupError == null
+                        ? new Exception("Application ID is not setup in TwinPush SDK; call setup before register")
+                        : new Exception("Cannot register because TwinPush setup failed: " + setupError.getMessage(), setupError));
             }
         });
     }
@@ -437,6 +443,7 @@ public class DefaultTwinPushSDK extends TwinPushSDK implements LocationListener 
     /* Use statistics */
 
     public void activityStart(Activity activity) {
+        PinningRuntime.get(getContext()).refresh();
         if (openedActivities.isEmpty()) {
             onApplicationOpen();
         }
@@ -622,54 +629,68 @@ public class DefaultTwinPushSDK extends TwinPushSDK implements LocationListener 
         return getSharedPreferences().getString(PREF_DEVICE_UDID, Secure.getString(getContext().getContentResolver(), Secure.ANDROID_ID));
     }
 
-    @Override
-    public boolean setup(TwinPushOptions options) {
-        if (options != null) {
-            String appId = options.twinPushAppId;
-            String subdomain = options.subdomain;
-            String serverHost = options.serverHost;
-            RegistrationMode registrationMode = options.registrationMode;
-            boolean validHost = Strings.notEmpty(subdomain) || Strings.notEmpty(serverHost);
-            if (Strings.notEmpty(appId)) {
-                if (registrationMode != null) {
-                    if (Strings.notEmpty(options.twinPushApiKey) || registrationMode != RegistrationMode.INTERNAL) {
-                        if (validHost) {
-                            // If AppId has changed, clear previous data to avoid conflict
-                            String prevAppId = getAppId();
-                            if (Strings.notEmpty(prevAppId) && !Strings.equals(appId, prevAppId)) {
-                                unregister();
-                            }
-                            setAppId(options.twinPushAppId);
-                            setApiKey(options.twinPushApiKey);
-                            setRegistrationMode(options.registrationMode);
-                            setPushAckEnabled(options.pushAckEnabled);
-                            setPreferredPlatform(options.preferredPlatform);
-                            setSilentReceiverClass(options.silentPushReceiverClass);
-                            if (options.serverHost != null) {
-                                setServerHost(options.serverHost);
-                            } else {
-                                setSubdomain(options.subdomain);
-                            }
-                            resetSSLChecks();
-                            createNotificationChannel();
-                            return true;
-                        } else {
-                            Ln.e("TwinPush Setup Error: subdomain or serverHost are required");
-                        }
-                    } else {
-                        Ln.e("TwinPush Setup Error: API Key is required for Internal registrarion mode");
-                    }
+    private SetupCompletion setupCompletion;
 
-                } else {
-                    Ln.e("TwinPush Setup Error: registration mode can not be null");
-                }
-            } else {
-                Ln.e("TwinPush Setup Error: App ID info is missing");
-            }
-        } else {
-            Ln.e("TwinPush Setup Error: options object is null");
+    @Override
+    public synchronized boolean setup(TwinPushOptions options) {
+        return setup(options, null);
+    }
+
+    @Override
+    public synchronized boolean setup(TwinPushOptions options, SetupListener listener) {
+        PinningController controller = PinningRuntime.get(getContext());
+        final long generation;
+        try {
+            if (options == null) throw new IllegalArgumentException("options object is null");
+            if (!Strings.notEmpty(options.twinPushAppId)) throw new IllegalArgumentException("App ID is required");
+            if (options.registrationMode == null) throw new IllegalArgumentException("registration mode is required");
+            if (options.preferredPlatform == null) throw new IllegalArgumentException("preferred platform is required");
+            if (options.preferredPlatform == null) throw new IllegalArgumentException("preferred platform is required");
+            if (!Strings.notEmpty(options.twinPushApiKey) && options.registrationMode == RegistrationMode.INTERNAL)
+                throw new IllegalArgumentException("API Key is required for Internal registration mode");
+            if (!Strings.notEmpty(options.subdomain) && !Strings.notEmpty(options.serverHost))
+                throw new IllegalArgumentException("subdomain or serverHost is required");
+            String origin = options.serverHost != null ? options.serverHost : String.format(DEFAULT_HOST, options.subdomain);
+            generation = controller.configure(options.certificatePinningKey, origin,
+                    options.twinPushAppId, options.twinPushApiKey, () -> {
+                        String previousApp = getAppId();
+                        if (Strings.notEmpty(previousApp) && !Strings.equals(options.twinPushAppId, previousApp)) unregister();
+                        setAppId(options.twinPushAppId);
+                        setApiKey(options.twinPushApiKey);
+                        setRegistrationMode(options.registrationMode);
+                        setPushAckEnabled(options.pushAckEnabled);
+                        setPreferredPlatform(options.preferredPlatform);
+                        setSilentReceiverClass(options.silentPushReceiverClass);
+                        setServerHost(options.serverHost);
+                        if (options.serverHost == null) setSubdomain(options.subdomain);
+                        resetSSLChecks();
+                    });
+        } catch (IllegalArgumentException | IllegalStateException error) {
+            setupValidationFailure = error;
+            Ln.e("TwinPush Setup Error: %s", error.getMessage());
+            if (listener != null) new Handler(Looper.getMainLooper()).post(() -> listener.onError(error));
+            return false;
         }
-        return false;
+        setupValidationFailure = null;
+        if (setupCompletion != null) setupCompletion.cancel();
+        setupCompletion = null;
+        createNotificationChannel();
+        if (listener != null) {
+            setupCompletion = new SetupCompletion(controller, generation, listener);
+            setupCompletion.start();
+        }
+        return true;
+    }
+
+    @Override
+    @Deprecated
+    public synchronized void enableCertificatePinning(String key) {
+        if (getSSLPublicKeyCheck() != null || !getSSLIssuerChecks().isEmpty() || !getSSLSubjectChecks().isEmpty()) {
+            throw new IllegalStateException("Remove legacy SSL checks before enabling remote certificate pinning");
+        }
+        PinningRuntime.get(getContext()).enable(key, getServerHost(), getAppId(), getApiKey());
+        if (setupCompletion != null) setupCompletion.cancel();
+        setupCompletion = null;
     }
 
     public void createNotificationChannel() {
@@ -771,6 +792,9 @@ public class DefaultTwinPushSDK extends TwinPushSDK implements LocationListener 
     }
 
     public void setSSLPublicKeyCheck(String encodedKey) {
+        if (encodedKey != null && PinningRuntime.get(getContext()).isEnabled()) {
+            throw new IllegalStateException("Legacy SSL checks cannot be mixed with remote certificate pinning");
+        }
         getSharedPreferences().edit().putString(PREF_SSL_PUBLIC_KEY, encodedKey).apply();
     }
 
@@ -779,10 +803,12 @@ public class DefaultTwinPushSDK extends TwinPushSDK implements LocationListener 
     }
 
     public void addSSLIssuerCheck(String field, String expectedValue) {
+        if (PinningRuntime.get(getContext()).isEnabled()) throw new IllegalStateException("Remote certificate pinning is enabled");
         getSharedPreferences(PREF_SSL_ISSUER).edit().putString(field, expectedValue).apply();
     }
 
     public void addSSLSubjectCheck(String field, String expectedValue) {
+        if (PinningRuntime.get(getContext()).isEnabled()) throw new IllegalStateException("Remote certificate pinning is enabled");
         getSharedPreferences(PREF_SSL_SUBJECT).edit().putString(field, expectedValue).apply();
     }
 

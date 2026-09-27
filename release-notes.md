@@ -1,5 +1,19 @@
 # TwinPush Android SDK Release Notes
 
+## v3.9.0 - 2026-09-27
+
+* Implemented optional dynamic certificate pinning, configured through `TwinPushOptions.certificatePinningKey`, with automatic retrieval and caching of verified certificate pins.
+* Included `setup` overload with `SetupListener` to report when SDK initialization is ready or has failed.
+* Improved registration error messages to preserve the original setup validation error.
+
+Updated dependencies:
+
+* Firebase Messaging from 25.0.1 to 25.1.3.
+* AndroidX AppCompat from 1.7.1 to 1.8.0.
+* Huawei AGConnect Remote Config from 1.9.5.302 to 1.9.6.300.
+* Gradle version from 9.5.0 to 9.8.0.
+* Google Services plugin from 4.4.4 to 4.5.0.
+
 ## v3.8.5 - 2026-05-06
 
 Dependencies and improvements:
