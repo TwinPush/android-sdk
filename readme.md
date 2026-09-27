@@ -5,30 +5,6 @@
 
 Native Android SDK library for [TwinPush](http://twinpush.com) platform.
 
-## Remote certificate pinning (optional)
-
-Set `options.certificatePinningKey = "tp-pinning-v1:..."` before calling setup,
-using the public integration key from your TwinPush subdomain settings. No PEM files
-are needed. A null or empty key disables pinning; a malformed key makes setup fail.
-
-Use a lambda to register after verified pins are available:
-
-```java
-options.certificatePinningKey = PINNING_INTEGRATION_KEY;
-twinPush.setup(options, () -> twinPush.register(deviceAlias, registrationListener));
-```
-
-The lambda implements `onReady()`. The default `onError(Exception)` logs the error
-through the SDK logger; override it with an explicit `SetupListener` to display an
-error or offer a retry. On failure, the lambda is not executed.
-
-Callbacks run once, asynchronously on the main thread, with a 30-second readiness
-wait limit. Valid cached pins work offline; without them, bootstrap failure reports
-an error and keeps pinning enabled. Requests issued before readiness fail through
-their usual error callback. The existing `setup(options)` remains supported.
-See the [integration guide](docs/certificate-pinning.md) for lifecycle, disabling,
-legacy SSL migration, security boundaries and tests.
-
 ## Setup Firebase Cloud Messaging
 
 TwinPush uses Firebase Cloud Messaging (FCM) to deliver Push Notifications to Android devices.
@@ -581,6 +557,30 @@ public void onCreate(Bundle savedInstanceState) {
 ```
 
 When a push notification is received, the SDK will automatically report the acknowledgement to the TwinPush API for the pair notification-device.
+
+## Remote certificate pinning (optional)
+
+Set `options.certificatePinningKey = "tp-pinning-v1:..."` before calling setup,
+using the public integration key from your TwinPush subdomain settings. No PEM files
+are needed. A null or empty key disables pinning; a malformed key makes setup fail.
+
+Use a lambda to register after verified pins are available:
+
+```java
+options.certificatePinningKey = PINNING_INTEGRATION_KEY;
+twinPush.setup(options, () -> twinPush.register(deviceAlias, registrationListener));
+```
+
+The lambda implements `onReady()`. The default `onError(Exception)` logs the error
+through the SDK logger; override it with an explicit `SetupListener` to display an
+error or offer a retry. On failure, the lambda is not executed.
+
+Callbacks run once, asynchronously on the main thread, with a 30-second readiness
+wait limit. Valid cached pins work offline; without them, bootstrap failure reports
+an error and keeps pinning enabled. Requests issued before readiness fail through
+their usual error callback. The existing `setup(options)` remains supported.
+See the [integration guide](docs/certificate-pinning.md) for lifecycle, disabling,
+legacy SSL migration, security boundaries and tests.
 
 ## Customize behavior
 
