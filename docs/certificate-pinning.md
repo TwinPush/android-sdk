@@ -205,7 +205,7 @@ a 60-second cooldown. No background Android service is installed.
 
 ## Migration from static SSL methods
 
-Version 3.9.0 removes `setSSLPublicKeyCheck`, `getSSLPublicKeyCheck`,
+Version 3.9.1 removes `setSSLPublicKeyCheck`, `getSSLPublicKeyCheck`,
 `addSSLIssuerCheck`, `addSSLSubjectCheck`, `getSSLIssuerChecks` and
 `getSSLSubjectChecks`. These methods only persisted values; the default Volley
 transport did not enforce them. This is a breaking API change for applications

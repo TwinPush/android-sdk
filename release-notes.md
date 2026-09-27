@@ -1,6 +1,6 @@
 # TwinPush Android SDK Release Notes
 
-## v3.9.0 - 2026-09-27
+## v3.9.1 - 2026-09-27
 
 * Implemented optional dynamic certificate pinning, configured through `TwinPushOptions.certificatePinningKey`, with automatic retrieval and caching of verified certificate pins.
 * Included `setup` overload with `SetupListener` to report when SDK initialization is ready or has failed.
